@@ -1,0 +1,11 @@
+﻿html, body{
+    margin: 0px;
+}
+
+#fps{
+	position: absolute;
+	font-family: sans-serif;
+	color: rgb(93, 255, 175);
+	padding: 20px;
+	background: rgba(47, 47, 47, 0.46);
+}
