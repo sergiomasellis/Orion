@@ -1,20 +1,20 @@
 ﻿(function() {
 	'use strict';
 
-	var Logger = O.Class.create('O.Logger', function Logger(){
-	    this.options = {};
-	});
+	var Logger = O.Class.create('O.Logger', function Logger() {});
 
 	Logger.prototype.error = function(msg){
-	    console.error("Error: ", msg);
+	    console.log("%c Log: "+msg+" ", 'background: #222; color: #bada55');
 	}
 
 	Logger.prototype.warning = function (msg) {
-	    console.warn("Warning: ", msg);
+	    console.log("%c Log: "+msg+" ", 'background: #222; color: #bada55');
 	}
 
 	Logger.prototype.log = function (msg) {
-	    console.log("Log: ", msg);
+	    console.log("%c Log: "+msg+" ", 'background: #222; color: #bada55');
 	}
+
+	O.Logger = new Logger;
 
 })();

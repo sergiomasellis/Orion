@@ -1,17 +1,6 @@
 (function() {
 
-	// var utils = O.Class.create('O.Utils', function Utils () {
-
-	// 	//check if already instantiated if not add to dependency checker
-	// 	if(O.Dependencies.check()){
-	// 		O.Dependencies.add(this);
-	// 	}
-
-	// });
-
-	function Utils(){
-
-	};
+	var Utils = O.Class.create('O.Utils', function Utils() {});
 
 	Utils.prototype.extend = function(out) {
 		out = out || {};
