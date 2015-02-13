@@ -3,8 +3,10 @@
 	var Player = O.Class.extend(O.Game.Entity, 'O.Game.Entity.Player', O.Game.Entity);
 
 	Player.prototype.init = function() {
-		var input = new O.Game.Controller.Input({},{utils: this.utils, logger: this.logger, canvas: this.canvas, context: this.context});
+		this.controller = new O.Game.Controller;
 		O.Logger.log("Player Created");
+
+		return this;
 	}
 
 	Player.prototype.getShader = function() {

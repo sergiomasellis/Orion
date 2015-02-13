@@ -13,6 +13,7 @@
 
         //Select Canvas
         this.canvas = document.getElementById("canvas");
+        this.canvas.focus();
 
         this.context = (this.config.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
         this.width = this.canvas.width = window.innerWidth;
@@ -46,8 +47,6 @@
 
         //Initialize game loop
         this.raf();
-
-        console.log(this.config);
 
         O.Logger.log("Engine initialized v"+this.config.version);
     }
