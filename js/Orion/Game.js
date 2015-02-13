@@ -4,6 +4,8 @@
 
         this.dependencies = dependencies;
         this.options = O.Utils.extend({}, this.options, options);
+        this.config = O.Config;
+
         this.init();
     });
 
@@ -12,13 +14,15 @@
         //Select Canvas
         this.canvas = document.getElementById("canvas");
 
-        this.context = (this.options.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
+        this.context = (this.config.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
         this.width = this.canvas.width = window.innerWidth;
         this.height = this.canvas.height = window.innerHeight;
 
+        O.Logger.log(this.config.engine+" Engine Loaded");
+
         //add instances to the injector
         O.Injector.register('canvas', this.canvas);
-         O.Injector.register('context', this.context);
+        O.Injector.register('context', this.context);
 
         //initialize webGL
         // this.gl = this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
@@ -46,7 +50,7 @@
         //Initialize game loop
         this.raf();
 
-        O.Logger.log("Engine initialized v"+O.Config.version);
+        O.Logger.log("Engine initialized v"+this.config.version);
     }
 
     Game.prototype.raf = function () {

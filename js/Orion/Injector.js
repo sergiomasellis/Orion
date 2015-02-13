@@ -6,7 +6,8 @@
 	});
 
 	Injector.prototype.register = function(name, instance){
-	   this.dependecies[name] = instance;
+		O.Logger.log("Added to Injector - "+name+" - "+ instance);
+	    this.dependecies[name] = instance;
 	}
 
 	O.Injector = new Injector;
