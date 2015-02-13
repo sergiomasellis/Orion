@@ -10,28 +10,42 @@
         this.gl = this.context;
 
         this.input = new O.Game.Controller.Input;
+        this.direction = "";
 
 		this.init();
 	});
 
 	controller.prototype.init = function() {
-		document.addEventListener("triggerKeyEvent", this.move);
+		document.addEventListener("triggerkeydownEvent", this.move.bind(this));
+		document.addEventListener("triggerkeyupEvent", this.stop.bind(this));
 	}
 
 	controller.prototype.move = function(details) {
 
-		if(details.detail.keyCode === 119)
+		if(details.detail.keyCode === 87){
 			O.Logger.log("Moving Forward");
+			this.direction = "w";
+		}
 
-		if(details.detail.keyCode === 115)
+		if(details.detail.keyCode === 83){
 			O.Logger.log("Moving Backwards");
+			this.direction = "s";
+		}
 
-		if(details.detail.keyCode === 97)
+		if(details.detail.keyCode === 65){
 			O.Logger.log("Moving Left");
+			this.direction = "a";
+		}
 
-		if(details.detail.keyCode === 100)
+		if(details.detail.keyCode === 68){
 			O.Logger.log("Moving Right");
+			this.direction = "d";
+		}
 
+	}
+
+	controller.prototype.stop = function() {
+		this.direction = "";
 	}
 
 })();

@@ -9,22 +9,25 @@
 	});
 
 	input.prototype.init = function() {
-		this.canvas.addEventListener('keypress', this.captureKeyEvent.bind(this), false);
+		this.canvas.addEventListener('keydown', this.captureKeyEvent.bind(this), false);
+		this.canvas.addEventListener('keyup', this.captureKeyEvent.bind(this), false);
 	}
 
 	input.prototype.captureKeyEvent = function(event) {
-		this.triggerKeyEvent(event.keyCode);
+		this.triggerKeyEvent(event.keyCode, event.type);
 		return event;
 	}
 
-	input.prototype.triggerKeyEvent = function(keyCode) {
+	input.prototype.triggerKeyEvent = function(keyCode, type) {
 
 		if (window.CustomEvent) {
-		  var event = new CustomEvent('triggerKeyEvent', {detail: {keyCode: keyCode}});
+		  var event = new CustomEvent('trigger'+type+'Event', {detail: {keyCode: keyCode}});
 		} else {
-		  var event = document.createEvent('triggerKeyEvent');
-		  event.initCustomEvent('triggerKeyEvent', true, true, {keyCode: keyCode});
+		  var event = document.createEvent('trigger'+type+'Event');
+		  event.initCustomEvent('trigger'+type+'Event', true, true, {keyCode: keyCode});
 		}
+
+		// console.log(event);
 
 		document.dispatchEvent(event);	
 	}
