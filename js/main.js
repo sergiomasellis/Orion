@@ -8,12 +8,12 @@
 
 	Main.prototype.init = function () {
 		
-		O.Config = {
+		O.Config.set({
 			engine: "3d"
-		};
+		});
 
-		this.game =  new O.Game();
-		this.player = this.game.addEntity(new O.Game.Entity.Player({}, {canvas: this.game.canvas, context: this.game.context}));
+		this.game =  new O.Game;
+		this.player = this.game.addEntity(new O.Game.Entity.Player);
 	}
 
 

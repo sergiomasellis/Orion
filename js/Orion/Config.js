@@ -6,6 +6,10 @@
 		this.engine = "2d";
 	});
 
+	Config.prototype.set = function(obj) {
+		O.Utils.extend({}, this, obj)
+	};
+
 
 	O.Config = new Config;
 

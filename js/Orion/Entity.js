@@ -5,8 +5,8 @@
 		this.dependencies = dependencies;
         this.options = O.Utils.extend({}, this.options, options);
 
-        this.canvas = dependencies.canvas;
-        this.context = dependencies.context;
+        this.canvas = O.Injector.dependencies.canvas;
+        this.context =  O.Injector.dependencies.context;
         this.gl = this.context;
 
 		this.buffered = this.options.buffer || false;

@@ -23,9 +23,6 @@
         //add instances to the injector
         O.Injector.register('canvas', this.canvas);
         O.Injector.register('context', this.context);
-
-        //initialize webGL
-        // this.gl = this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
         
         //Select FPS div
         this.fpsContainer = document.getElementById("fps");
@@ -49,6 +46,8 @@
 
         //Initialize game loop
         this.raf();
+
+        console.log(this.config);
 
         O.Logger.log("Engine initialized v"+this.config.version);
     }
