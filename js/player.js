@@ -10,6 +10,8 @@
       	this.y = this.canvas.height / 2;
 
       	this.radius = 70;
+
+      	this.speed = 10;
 	}
 
 	Player.prototype.getShader = function() {
@@ -17,21 +19,21 @@
 	}
 
 	Player.prototype.update = function() {
-		// console.log(this.controller.direction);
 
-		switch(this.controller.direction) {
-		    case "w":
-		        this.y -= 1;
-		        break;
-		    case "s":
-		        this.y += 1;
-		        break;
-		    case "a":
-		    	this.x -= 1;
-		    	break;
-		    case "d":
-		    	this.x += 1;
-		    	break;
+		if (this.controller.direction.W) {
+			this.y -= this.speed;
+		}
+
+		if (this.controller.direction.S) {
+			this.y += this.speed;
+		}
+
+		if (this.controller.direction.A) {
+			this.x -= this.speed;
+		}
+
+		if (this.controller.direction.D) {
+			this.x += this.speed;
 		}
 
 	}

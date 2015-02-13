@@ -10,7 +10,7 @@
         this.gl = this.context;
 
         this.input = new O.Game.Controller.Input;
-        this.direction = "";
+        this.direction = {};
 
 		this.init();
 	});
@@ -22,30 +22,50 @@
 
 	controller.prototype.move = function(details) {
 
-		if(details.detail.keyCode === 87){
+		if(details.detail.keyCode === 87 || details.detail.keyCode === 38){
 			O.Logger.log("Moving Forward");
-			this.direction = "w";
+			this.direction.W = true;
 		}
 
-		if(details.detail.keyCode === 83){
+		if(details.detail.keyCode === 83 || details.detail.keyCode === 40){
 			O.Logger.log("Moving Backwards");
-			this.direction = "s";
+			this.direction.S = true;
 		}
 
-		if(details.detail.keyCode === 65){
+		if(details.detail.keyCode === 65 || details.detail.keyCode === 37){
 			O.Logger.log("Moving Left");
-			this.direction = "a";
+			this.direction.A = true;
 		}
 
-		if(details.detail.keyCode === 68){
+		if(details.detail.keyCode === 68 || details.detail.keyCode === 39){
 			O.Logger.log("Moving Right");
-			this.direction = "d";
+			this.direction.D = true;
 		}
 
 	}
 
-	controller.prototype.stop = function() {
-		this.direction = "";
+	controller.prototype.stop = function(details) {
+
+		if(details.detail.keyCode === 87 || details.detail.keyCode === 38){
+			O.Logger.log("Moving Forward");
+			this.direction.W = false;
+		}
+
+		if(details.detail.keyCode === 83 || details.detail.keyCode === 40){
+			O.Logger.log("Moving Backwards");
+			this.direction.S = false;
+		}
+
+		if(details.detail.keyCode === 65 || details.detail.keyCode === 37){
+			O.Logger.log("Moving Left");
+			this.direction.A = false;
+		}
+
+		if(details.detail.keyCode === 68 || details.detail.keyCode === 39){
+			O.Logger.log("Moving Right");
+			this.direction.D = false;
+		}
+
 	}
 
 })();
