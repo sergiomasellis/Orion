@@ -11,7 +11,7 @@
 
 		this.buffered = this.options.buffer || false;
 		this.rotate = this.options.rotate  || 0;
-		this.uuid = this.options.uuid || 0;
+		this.uuid = this.options.uuid || O.Utils.generateUUID();
 		this.x = this.options.x || 0;
 		this.y = this.options.y || 0;
 		this.z = this.options.z || 0;

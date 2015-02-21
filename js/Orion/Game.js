@@ -43,12 +43,18 @@
         this.framesFps = 0;
 
         //List of Entities
-        this.entityList = [];
+        this.sceneList = [];
 
         //Initialize game loop
         this.raf();
 
         O.Logger.log("Engine initialized v"+this.config.version);
+    }
+
+    Game.prototype.addScene = function(scene) {
+        O.Logger.log("Add Scene - "+ scene.options.sceneName);
+        this.sceneList.push(scene);
+        return scene;
     }
 
     Game.prototype.raf = function () {
@@ -87,16 +93,10 @@
         return time;
     }
 
-    Game.prototype.addEntity = function(entity) {
-        O.Logger.log("Add Entity - "+ entity.__proto__.fullClassName);
-        this.entityList.push(entity);
-        return entity;
-    }
-
     Game.prototype.update = function () {
-        // this.entitylist.update();
-        if( this.entityList.length > 0){
-            this.entityList.forEach(function(item, i){
+
+        if( this.sceneList.length > 0){
+            this.sceneList.forEach(function(item, i){
                 item.update();
             });
         }
@@ -104,8 +104,8 @@
 
     Game.prototype.draw = function () {
 
-        if( this.entityList.length > 0){
-            this.entityList.forEach(function(item, i){
+        if( this.sceneList.length > 0){
+            this.sceneList.forEach(function(item, i){
                 item.draw();
             });
         }
