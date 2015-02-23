@@ -1,6 +1,22 @@
 var O = O || {};
 
+/**
+ * Base class
+ *
+ * @class
+ * @name O.Class
+ *
+ */
 O.Class = (function() {
+    'use strict';
+
+    /**
+     * Creates namespace object path on demand, avoiding manual setup and maintenance.
+     * @private
+     * @param  {string}   namespace   Full namespace of the class to be created
+     * @param  {Function} constructor Constructor method
+     * @return {Function}             Constructor method
+     */
 	function makeNameSpace(namespace, constructor){
 		var parts = namespace.split('.');
 		var parent = window;
@@ -23,6 +39,13 @@ O.Class = (function() {
 	}
 
 	return {
+
+        /**
+         * Creates new class on the right namespace.
+         * @param  {string}   namespace   Full namespace of the class to be created
+         * @param  {Function} constructor Constructor method
+         * @return {Function}             Constructor method
+         */
 		create: function(namespace, constructor) {
 			var newClass = makeNameSpace(namespace, constructor);
 			newClass = constructor;
@@ -33,6 +56,14 @@ O.Class = (function() {
 
 			return newClass;
 		},
+
+        /**
+         * Extends already existing class. Make sure to import base class before children!
+         * @param  {O.Class} parent      Parent class to be extended
+         * @param  {string}    namespace   Full namespace of the child class to be created
+         * @param  {Function}  constructor Constructor method
+         * @return {Function}              Constructor method
+         */
 		extend: function(parent, namespace, constructor) {
 			
 			var F = function() {};

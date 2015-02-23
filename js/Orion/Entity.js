@@ -1,6 +1,19 @@
 (function(){
-
-	var entity = O.Class.extend(O.Game, 'O.Game.Entity', function Entity(options, dependencies) {
+    'use strict';
+    /**
+     * Entity Class
+     *
+     * @class
+     * @name O.Game.Entity
+     * @extends O.Game
+     *
+     * @constructor
+     * @param options config settings of the game class
+     * @param dependencies instances of other classes
+     *
+     * @exports entity as O.Game.Entity
+     */
+	var Entity = O.Class.extend(O.Game, 'O.Game.Entity', function Entity(options, dependencies) {
 		
 		this.dependencies = dependencies;
         this.options = O.Utils.extend({}, this.options, options);
@@ -19,10 +32,10 @@
 		this.init();
 	});
 
-	entity.prototype.init = function() {}
+    Entity.prototype.init = function() {}
 
-	entity.prototype.update = function() {}
+    Entity.prototype.update = function() {}
 
-	entity.prototype.draw = function() {}
+    Entity.prototype.draw = function() {}
 
 })();

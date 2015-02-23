@@ -1,33 +1,38 @@
 (function(){
-
-	var input = O.Class.extend(O.Game.Controller, 'O.Game.Controller.Input', function Input(options, dependencies) {
+    /**
+     * Input Class
+     *
+     * @class
+     * @name O.Game.Controller.Input
+     * @extends O.Game.Controller
+     *
+     * @constructor
+     *
+     * @exports Input as O.Game.Controller.Input
+     */
+	var Input = O.Class.extend(O.Game.Controller, 'O.Game.Controller.Input', function Input() {
 		this.canvas = O.Injector.dependencies.canvas;
-
-		this.whichKey = "";
-
 		this.init();
 	});
 
-	input.prototype.init = function() {
+	Input.prototype.init = function() {
 		this.canvas.addEventListener('keydown', this.captureKeyEvent.bind(this), false);
 		this.canvas.addEventListener('keyup', this.captureKeyEvent.bind(this), false);
 	}
 
-	input.prototype.captureKeyEvent = function(event) {
+	Input.prototype.captureKeyEvent = function(event) {
 		this.triggerKeyEvent(event.keyCode, event.type);
 		return event;
 	}
 
-	input.prototype.triggerKeyEvent = function(keyCode, type) {
+	Input.prototype.triggerKeyEvent = function(keyCode, type) {
 
 		if (window.CustomEvent) {
 		  var event = new CustomEvent('trigger'+type+'Event', {detail: {keyCode: keyCode}});
 		} else {
-		  var event = document.createEvent('trigger'+type+'Event');
-		  event.initCustomEvent('trigger'+type+'Event', true, true, {keyCode: keyCode});
-		}
-
-		// console.log(event);
+            var event = document.createEvent('trigger' + type + 'Event');
+                event.initCustomEvent('trigger' + type + 'Event', true, true, {keyCode: keyCode});
+        }
 
 		document.dispatchEvent(event);	
 	}

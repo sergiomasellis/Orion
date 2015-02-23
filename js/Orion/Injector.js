@@ -1,5 +1,15 @@
 (function() {
-	'use strict';
+    'use strict';
+    /**
+     * Injector Class
+     *
+     * @class
+     * @name O.Injector
+     *
+     * @constructor
+     *
+     * @exports Injector as O.Injector
+     */
 
 	var Injector = O.Class.create('O.Injector', function Injector() {
 		this.dependencies = {};

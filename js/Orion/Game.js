@@ -1,5 +1,18 @@
 ﻿(function() {
-
+    'use strict';
+    /**
+     * Game Class
+     *
+     * @class
+     * @name O.Game
+     * @extends O.Class
+     *
+     * @constructor
+     * @param options config settings of the game class
+     * @param dependencies instances of other classes
+     *
+     * @exports Game as O.Game
+     */
     var Game = O.Class.create('O.Game', function Game(options, dependencies) {
 
         this.dependencies = dependencies;
@@ -57,6 +70,11 @@
     	O.Logger.log("Current Scene is: "+sceneID);
     }
 
+    /**
+     * Adds Scene to current game instance
+     * @param scene
+     * @returns {scene}
+     */
     Game.prototype.addScene = function(scene) {
         O.Logger.log("Add Scene - "+ scene.options.sceneName);
         this.sceneList.push(scene);
@@ -120,6 +138,5 @@
             });
         }
     }
-
     
 })();

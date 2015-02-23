@@ -1,6 +1,19 @@
 (function(){
-
-	var controller = O.Class.extend(O.Game, 'O.Game.Controller', function Controller(options, dependencies) {
+    'use strict';
+    /**
+     * Controller Class
+     *
+     * @class
+     * @name O.Game.Controller
+     * @extends O.Game
+     *
+     * @constructor
+     * @param options config settings of the game class
+     * @param dependencies instances of other classes
+     *
+     * @exports Config as O.Game.Controller
+     */
+	var Controller = O.Class.extend(O.Game, 'O.Game.Controller', function Controller(options, dependencies) {
 		
 		this.dependencies = dependencies;
         this.options = O.Utils.extend({}, this.options, options);
@@ -15,12 +28,12 @@
 		this.init();
 	});
 
-	controller.prototype.init = function() {
+    Controller.prototype.init = function() {
 		document.addEventListener("triggerkeydownEvent", this.move.bind(this));
 		document.addEventListener("triggerkeyupEvent", this.stop.bind(this));
 	}
 
-	controller.prototype.move = function(details) {
+    Controller.prototype.move = function(details) {
 
 		if(details.detail.keyCode === 87 || details.detail.keyCode === 38){
 			O.Logger.log("Moving Forward");
@@ -44,7 +57,7 @@
 
 	}
 
-	controller.prototype.stop = function(details) {
+    Controller.prototype.stop = function(details) {
 
 		if(details.detail.keyCode === 87 || details.detail.keyCode === 38){
 			O.Logger.log("Moving Forward");
@@ -65,7 +78,6 @@
 			O.Logger.log("Moving Right");
 			this.direction.D = false;
 		}
-
 	}
 
 })();

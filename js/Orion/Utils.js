@@ -1,5 +1,15 @@
 (function() {
-
+    'use strict';
+    /**
+     * Util Class
+     *
+     * @class
+     * @name O.Utils
+     *
+     * @constructor
+     *
+     * @exports Utils as O.Utils
+     */
 	var Utils = O.Class.create('O.Utils', function Utils() {});
 
 	Utils.prototype.extend = function(out) {

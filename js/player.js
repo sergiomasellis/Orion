@@ -1,4 +1,18 @@
 (function(){
+    'use strict';
+
+    /**
+     * Player Class
+     *
+     * @class
+     * @name O.Game.Entity.Player
+     *
+     * @constructor
+     * @param options config settings of the game class
+     * @param dependencies instances of other classes
+     *
+     * @exports Player as O.Game.Entity.Player
+     */
 
 	var Player = O.Class.extend(O.Game.Entity, 'O.Game.Entity.Player', O.Game.Entity);
 
