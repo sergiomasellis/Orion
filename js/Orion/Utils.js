@@ -13,7 +13,7 @@
 			for (var key in obj) {
 				if (obj.hasOwnProperty(key)) {
 					if (typeof obj[key] === 'object')
-						extend(out[key], obj[key]);
+						this.extend(out[key], obj[key]);
 					else
 						out[key] = obj[key];
 					}

@@ -10,8 +10,9 @@
       	this.y = this.canvas.height / 2;
 
       	this.radius = 70;
-
       	this.speed = 10;
+
+      		// console.log(this.dependencies.game);
 	}
 
 	Player.prototype.getShader = function() {
@@ -19,6 +20,7 @@
 	}
 
 	Player.prototype.update = function() {
+
 
 		if (this.controller.direction.W) {
 			this.y -= this.speed;

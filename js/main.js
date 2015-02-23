@@ -14,7 +14,7 @@
 
 		this.game =  new O.Game;
         this.welcomeScene = this.game.addScene(new O.Game.Scene({sceneName: "Welcome"}));
-		this.player = this.welcomeScene.addEntity(new O.Game.Entity.Player);
+		this.player = this.welcomeScene.addEntity(new O.Game.Entity.Player({}, {game: this.game}));
 	}
 
 

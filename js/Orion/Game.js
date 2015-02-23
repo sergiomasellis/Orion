@@ -42,13 +42,19 @@
 
         this.framesFps = 0;
 
-        //List of Entities
+        //List of Scenes
         this.sceneList = [];
+        this.currentScene = 0;
 
         //Initialize game loop
         this.raf();
 
         O.Logger.log("Engine initialized v"+this.config.version);
+    }
+
+    Game.prototype.changeScene = function(sceneID){
+    	this.currentScene = sceneID;
+    	O.Logger.log("Current Scene is: "+sceneID);
     }
 
     Game.prototype.addScene = function(scene) {
@@ -97,7 +103,9 @@
 
         if( this.sceneList.length > 0){
             this.sceneList.forEach(function(item, i){
-                item.update();
+            	if(this.currentScene === i){
+            		item.update();
+            	}
             });
         }
     }
@@ -106,7 +114,9 @@
 
         if( this.sceneList.length > 0){
             this.sceneList.forEach(function(item, i){
-                item.draw();
+            	if(this.currentScene === i){
+                	item.draw();
+                }
             });
         }
     }
