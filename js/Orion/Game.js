@@ -118,10 +118,11 @@
     }
 
     Game.prototype.update = function () {
+        var _this = this;
 
         if( this.sceneList.length > 0){
             this.sceneList.forEach(function(item, i){
-            	if(this.currentScene === i){
+            	if(_this.currentScene === i){
             		item.update();
             	}
             });
@@ -129,10 +130,11 @@
     }
 
     Game.prototype.draw = function () {
-
+        var _this = this;
         if( this.sceneList.length > 0){
             this.sceneList.forEach(function(item, i){
-            	if(this.currentScene === i){
+
+            	if(_this.currentScene === i){
                 	item.draw();
                 }
             });
