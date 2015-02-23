@@ -23,6 +23,8 @@
 
         this.entityList = [];
 
+        this.grid = new O.Game.Grid;
+
         this.init();
     });
 
@@ -41,7 +43,6 @@
     Scene.prototype.init = function() {}
 
     Scene.prototype.update = function() {
-
         if( this.entityList.length > 0){
             this.entityList.forEach(function(item, i){
                 item.update();
@@ -50,7 +51,7 @@
     }
 
     Scene.prototype.draw = function() {
-
+        this.grid.draw();
         if( this.entityList.length > 0){
             this.entityList.forEach(function(item, i){
                 item.draw();

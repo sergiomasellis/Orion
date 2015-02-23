@@ -16,8 +16,8 @@
     });
 
     Logger.prototype.init = function(){
-        //this.is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-        this.is_chrome = false;
+        this.is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+        //this.is_chrome = false;
     }
 
 	Logger.prototype.error = function(msg){

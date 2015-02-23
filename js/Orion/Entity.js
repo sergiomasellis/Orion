@@ -19,6 +19,7 @@
         this.options = O.Utils.extend({}, this.options, options);
 
         this.canvas = O.Injector.dependencies.canvas;
+        this.preRenderCanvas = O.Injector.dependencies.preRenderCanvas;
         this.context =  O.Injector.dependencies.context;
         this.gl = this.context;
 

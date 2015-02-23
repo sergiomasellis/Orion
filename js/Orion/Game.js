@@ -25,17 +25,27 @@
     Game.prototype.init = function () {
 
         //Select Canvas
-        this.canvas = document.getElementById("canvas");
+        this.canvas = document.getElementById("mainCanvas");
         this.canvas.focus();
+
+        //Pre render Canvas
+        this.preRenderCanvas = document.getElementById("preRenderCanvas");
+        this.preRenderCanvas.width = window.innerWidth;
+        this.preRenderCanvas.height = window.innerHeight;
+        this.preContext = (this.config.engine === "2d") ? this.preRenderCanvas.getContext('2d') : this.preRenderCanvas.getContext("experimental-webgl", {antialias: true}) || this.preRenderCanvas.getContext("webgl");
+
 
         this.context = (this.config.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
         this.width = this.canvas.width = window.innerWidth;
         this.height = this.canvas.height = window.innerHeight;
 
+
+
         O.Logger.log(this.config.engine+" Engine Loaded");
 
         //add instances to the injector
         O.Injector.register('canvas', this.canvas);
+        O.Injector.register('preRenderCanvas', this.preRenderCanvas);
         O.Injector.register('context', this.context);
         
         //Select FPS div
@@ -131,6 +141,8 @@
 
     Game.prototype.draw = function () {
         var _this = this;
+        this.preContext.clearRect(0,0, this.canvas.width, this.canvas.height);
+        this.context.clearRect(0,0, this.canvas.width, this.canvas.height);
         if( this.sceneList.length > 0){
             this.sceneList.forEach(function(item, i){
 

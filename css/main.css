@@ -10,3 +10,9 @@
 	padding: 20px;
 	background: rgba(47, 47, 47, 0.46);
 }
+
+
+#preRenderCanvas{
+    position: absolute;
+    left: -100%;
+}
