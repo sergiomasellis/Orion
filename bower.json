@@ -1,0 +1,6 @@
+{
+  "name": "Orion-Game-Engine",
+  "dependencies": {
+    "requirejs": "~2.1.16"
+  }
+}

@@ -1,0 +1,30 @@
+﻿html, body{
+    margin: 0px;
+    overflow: hidden;
+    background: #000;
+}
+
+#fps{
+    position: absolute;
+    font-family: sans-serif;
+    color: rgb(93, 255, 175);
+    padding: 10px;
+    background: rgba(47, 47, 47, 0.46);
+    z-index: 100;
+    font-weight: bold;
+}
+
+
+#preRenderCanvas{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 5;
+}
+
+#mainCanvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+}
