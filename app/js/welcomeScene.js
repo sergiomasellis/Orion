@@ -3,7 +3,7 @@ import Player from "player";
 
 class welcomeScene extends Scene {
     init(){
-      this.player = this.addEntity(new Player);
+      this.player = this.addEntity(new Player({name: "player"}));
     }
 }
 

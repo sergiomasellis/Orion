@@ -1,0 +1,68 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/sergiomasellis/.nvm/v0.11.14/bin/node',
+1 verbose cli   '/Users/sergiomasellis/.nvm/v0.11.14/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '-g',
+1 verbose cli   'gulp' ]
+2 info using npm@2.0.0
+3 info using node@v0.11.14
+4 verbose cache add [ 'gulp', null ]
+5 verbose cache add spec="gulp" args=["gulp",null]
+6 verbose parsed spec { raw: 'gulp',
+6 verbose parsed spec   scope: null,
+6 verbose parsed spec   name: 'gulp',
+6 verbose parsed spec   rawSpec: '',
+6 verbose parsed spec   spec: '*',
+6 verbose parsed spec   type: 'range' }
+7 verbose parsed spec { raw: 'gulp',
+7 verbose parsed spec   scope: null,
+7 verbose parsed spec   name: 'gulp',
+7 verbose parsed spec   rawSpec: '',
+7 verbose parsed spec   spec: '*',
+7 verbose parsed spec   type: 'range' }
+8 verbose addNamed [ 'gulp', '*' ]
+9 verbose addNamed [ null, '*' ]
+10 silly lockFile 51046861-gulp gulp@*
+11 verbose lock gulp@* /Users/sergiomasellis/.npm/51046861-gulp.lock
+12 silly addNameRange { name: 'gulp', range: '*', hasData: false }
+13 verbose mapToRegistry name gulp
+14 verbose mapToRegistry uri https://registry.npmjs.org/gulp
+15 verbose request on initialization, where is /gulp
+16 verbose request after pass 1, where is /gulp
+17 verbose request url raw /gulp
+18 verbose request resolving registry [ 'https://registry.npmjs.org/', './gulp' ]
+19 verbose request after pass 2, where is https://registry.npmjs.org/gulp
+20 verbose request no auth needed
+21 info attempt registry request try #1 at 10:32:21
+22 verbose request id c2cd492b0b044031
+23 http request GET https://registry.npmjs.org/gulp
+24 info retry will retry, error on last attempt: Error: tunneling socket could not be established, cause=getaddrinfo ENOTFOUND primary-proxy.barwealth.net
+25 info attempt registry request try #2 at 10:32:31
+26 http request GET https://registry.npmjs.org/gulp
+27 info retry will retry, error on last attempt: Error: tunneling socket could not be established, cause=getaddrinfo ENOTFOUND primary-proxy.barwealth.net
+28 info attempt registry request try #3 at 10:33:31
+29 http request GET https://registry.npmjs.org/gulp
+30 silly lockFile 51046861-gulp gulp@*
+31 silly lockFile 51046861-gulp gulp@*
+32 verbose stack Error: tunneling socket could not be established, cause=getaddrinfo ENOTFOUND primary-proxy.barwealth.net
+32 verbose stack     at ClientRequest.onError (/Users/sergiomasellis/.nvm/v0.11.14/lib/node_modules/npm/node_modules/request/node_modules/tunnel-agent/index.js:168:17)
+32 verbose stack     at ClientRequest.g (events.js:199:16)
+32 verbose stack     at ClientRequest.emit (events.js:107:17)
+32 verbose stack     at Socket.socketErrorListener (_http_client.js:271:9)
+32 verbose stack     at Socket.emit (events.js:107:17)
+32 verbose stack     at net.js:915:16
+32 verbose stack     at process._tickCallback (node.js:372:11)
+33 verbose cwd /Users/sergiomasellis/ownCloud/WebTeam/Orion
+34 error Darwin 14.1.0
+35 error argv "/Users/sergiomasellis/.nvm/v0.11.14/bin/node" "/Users/sergiomasellis/.nvm/v0.11.14/bin/npm" "install" "-g" "gulp"
+36 error node v0.11.14
+37 error npm  v2.0.0
+38 error code ECONNRESET
+39 error network tunneling socket could not be established, cause=getaddrinfo ENOTFOUND primary-proxy.barwealth.net
+39 error network This is most likely not a problem with npm itself
+39 error network and is related to network connectivity.
+39 error network In most cases you are behind a proxy or have bad network settings.
+39 error network
+39 error network If you are behind a proxy, please make sure that the
+39 error network 'proxy' config is set properly.  See: 'npm help config'
+40 verbose exit [ 1, true ]

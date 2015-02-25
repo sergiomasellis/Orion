@@ -13,20 +13,18 @@ class Scene {
         this.init();
     }
 
-    init(){
-
-    }
+    init(){}
 
     addEntity(entity) {
-        console.log("Add Entity - "+ entity);
+        console.log("Add Entity - "+ entity.options.name);
         this.entityList.push(entity);
         return entity;
     }
 
-    update(){
+    update(dt){
         if( this.entityList.length > 0){
             this.entityList.forEach(function(item, i){
-                item.update();
+                item.update(dt);
             });
         }
     }

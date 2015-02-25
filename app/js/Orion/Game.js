@@ -1,5 +1,6 @@
 ﻿import Config from 'Orion/Config';
 import Utils from 'Orion/Utils';
+import Injector from 'Orion/Injector';
 
 export default class Game {
     constructor(options, dependencies){
@@ -24,10 +25,24 @@ export default class Game {
         this.width = this.canvas.width = window.innerWidth;
         this.height = this.canvas.height = window.innerHeight;
 
+        console.log("Orion Engine: ", this.config.engine);
+
+        //add instances to the injector
+        Injector.register('canvas', this.canvas);
+        Injector.register('context', this.context);
+
+
         //Select FPS div
         this.fpsContainer = document.getElementById("fps");
 
-        //Initialize timer
+        //Timer for animation delta
+        this.lastTime = 0;
+        this.currentTime = 0;
+        this.deltaTime = 0;
+
+
+
+        //Initialize timer for FPS Calc
         this.startTime = Date.now();
         this.prevTime = this.startTime;
 
@@ -47,21 +62,27 @@ export default class Game {
 
     // GAME LOOP FUNCTIONS
     raf(){
+      this.currentTime = Date.now();
+      this.deltaTime = (this.currentTime - this.lastTime) / 1000.0;
+
+
         //loop over update and draw functions
         this.timerBegin();
-            this.update();
+            this.update(this.deltaTime);
             this.draw();
         this.timerEnd();
+
+        this.lastTime = this.currentTime;
 
         // call this.raf on every frame
         window.requestAnimationFrame(this.raf.bind(this));
     }
 
-    update(){
+    update(dt){
         var _this = this;
         if( this.sceneList.length > 0){
             this.sceneList.forEach(function(item, i){
-            	if(_this.currentScene === i)item.update();
+            	if(_this.currentScene === i)item.update(dt);
             });
         }
     }
