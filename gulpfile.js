@@ -18,8 +18,8 @@ gulp.task("default", function (cb) {
 gulp.task("watch", function(){
     livereload.listen();
     gulp.watch('app/index.html', ["copy:html"]);
-    //gulp.watch("css/**", ["copy:css"]);
-    //gulp.watch("img/**", ["copy:img"]);
+    gulp.watch("css/**", ["copy:css"]);
+    gulp.watch("img/**", ["copy:img"]);
     gulp.watch("app/js/**/*.js", ["scripts"]);
 });
 

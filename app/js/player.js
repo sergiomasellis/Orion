@@ -1,38 +1,52 @@
 import Entity from "Orion/Entity";
+import Resources from 'Orion/Resource';
 
-class Player extends Entity{
+class Player extends Entity {
 
-    init(){
+    init() {
 
-      this.x = this.canvas.width * Math.random();
-      this.y = this.canvas.height * Math.random();
+        this.img = Resources.get('img/avatar_sprite.png');
 
-      this.radius = Math.floor(Math.random() * 20);
-
-      this.speed = 100;
-      this.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+        this.x = this.canvas.width / 5;
+        this.y = this.canvas.height / 5;
+        this.size = 25;
 
 
-      this.img = new Image();
-      this.img.src = 'img/log_acacia_heart.png';
-    }
-
-    update(dt){
-
-        // random particles bouncing off walls
-        if(this.x < 0) this.speedX = this.speedX * -1
-        if(this.x > this.canvas.width) this.speedX = this.speedX * -1;
-
-        if(this.y < 0) this.speedY = this.speedY * -1;
-        if(this.y > this.canvas.height) this.speedY = this.speedY * -1;
-
-        this.x += this.speed * dt;
-        this.y += this.speed * dt;
+        this.frameIndex = 0;
+        this.tickCount = 0;
+        this.ticksPerFrame = 10;
+        this.numberOfFrames = 6;
 
     }
 
-    draw(){
-        this.context.drawImage(this.img,  (0.5 + this.x) | 0,  (0.5 + this.y) | 0);
+    update() {
+        this.tickCount += 1;
+        if (this.tickCount > this.ticksPerFrame) {
+
+            this.tickCount = 0;
+
+            // If the current frame index is in range
+            if (this.frameIndex < this.numberOfFrames - 1) {
+                // Go to the next frame
+                this.frameIndex += 1;
+            } else {
+                this.frameIndex = 0;
+            }
+        }
+    }
+
+    draw() {
+        this.context.drawImage(
+            this.img,
+            this.frameIndex * this.size,
+            0,
+            this.size,
+            this.size,
+            (0.5 + this.x) | 0,
+            (0.5 + this.y) | 0,
+            this.size,
+            this.size);
+        //console.log(this.frameIndex * this.size);
     }
 }
 

@@ -1,24 +1,29 @@
 ﻿//From Engine
 import Config from 'Orion/Config';
 import Game from 'Orion/Game';
+import Resources from 'Orion/Resource';
 
 //current game
 import welcomeScene from 'welcomeScene';
 
 class Main {
-        constructor() {
-            this.init();
-        }
+    constructor() {
 
-        init() {
+        //get resources
+        Resources.load(['img/avatar_sprite.png', 'img/avatar_sprite2.png']);
+        Resources.onReady(this.init.bind(this));
 
-            Config.setConfig({
-			           engine: "2d"
-		        });
+    }
 
-            this.game = new Game;
-            this.welcomeScene = this.game.addScene(new welcomeScene({sceneName: "Welcome"}));
-        }
+    init() {
+
+        Config.setConfig({
+            engine: "2d"
+        });
+
+        this.game = new Game;
+        this.welcomeScene = this.game.addScene(new welcomeScene({sceneName: "Welcome"}));
+    }
 }
 
 window.Main = new Main;

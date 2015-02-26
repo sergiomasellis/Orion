@@ -1,11 +1,12 @@
 import Utils from 'Orion/Utils';
 
 class Config {
-    constructor(){
+    constructor() {
         this.version = "0.0.1";
         this.engine = "2d";
     }
-    setConfig(obj){
+
+    setConfig(obj) {
         Utils.extend(this, obj);
     }
 }

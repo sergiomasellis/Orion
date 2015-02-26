@@ -2,8 +2,9 @@
 import Utils from 'Orion/Utils';
 import Injector from 'Orion/Injector';
 
-export default class Game {
-    constructor(options, dependencies){
+export default
+class Game {
+    constructor(options, dependencies) {
 
         this.dependencies = dependencies;
         this.options = Utils.extend(this.options, options);
@@ -12,7 +13,7 @@ export default class Game {
         this.init();
     }
 
-    init(){
+    init() {
 
         //select canvas
         this.canvas = document.getElementById("mainCanvas");
@@ -20,6 +21,7 @@ export default class Game {
 
         //get 2d context
         this.context = (this.config.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
+        this.setScale = true;
 
         //set canvas width
         this.width = this.canvas.width = window.innerWidth;
@@ -40,8 +42,6 @@ export default class Game {
         this.currentTime = 0;
         this.deltaTime = 0;
 
-
-
         //Initialize timer for FPS Calc
         this.startTime = Date.now();
         this.prevTime = this.startTime;
@@ -61,15 +61,15 @@ export default class Game {
     }
 
     // GAME LOOP FUNCTIONS
-    raf(){
-      this.currentTime = Date.now();
-      this.deltaTime = (this.currentTime - this.lastTime) / 1000.0;
+    raf() {
+        this.currentTime = Date.now();
+        this.deltaTime = (this.currentTime - this.lastTime) / 1000.0;
 
 
         //loop over update and draw functions
         this.timerBegin();
-            this.update(this.deltaTime);
-            this.draw();
+        this.update(this.deltaTime);
+        this.draw();
         this.timerEnd();
 
         this.lastTime = this.currentTime;
@@ -78,35 +78,39 @@ export default class Game {
         window.requestAnimationFrame(this.raf.bind(this));
     }
 
-    update(dt){
+    update(dt) {
         var _this = this;
-        if( this.sceneList.length > 0){
-            this.sceneList.forEach(function(item, i){
-            	if(_this.currentScene === i)item.update(dt);
+        if (this.sceneList.length > 0) {
+            this.sceneList.forEach(function (item, i) {
+                if (_this.currentScene === i)item.update(dt);
             });
         }
     }
 
-    draw(){
+    draw() {
         var _this = this;
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if( this.sceneList.length > 0){
-            this.sceneList.forEach(function(item, i){
-            	if(_this.currentScene === i) item.draw();
+        if(this.setScale){
+            this.context.scale(2, 2);
+            this.setScale = false;
+        }
+        if (this.sceneList.length > 0) {
+            this.sceneList.forEach(function (item, i) {
+                if (_this.currentScene === i) item.draw();
             });
         }
     }
 
     // TIMER FUNCTIONS
-    timerBegin(){
+    timerBegin() {
         this.startTime = Date.now();
     }
 
-    timerEnd(){
+    timerEnd() {
         var time = Date.now();
         this.framesFps++;
 
-        if ( time > this.prevTime + 1000) {
+        if (time > this.prevTime + 1000) {
             this.fpsValue = Math.round((this.framesFps * 1000) / (time - this.prevTime));
             this.fpsMin = Math.min(this.fpsMin, this.fpsValue);
             this.fpsMax = Math.max(this.fpsMax, this.fpsValue);
@@ -119,7 +123,7 @@ export default class Game {
     }
 
     // SCENE FUNCTIONS
-    addScene(scene){
+    addScene(scene) {
         console.log("Add Scene - ", scene.options.sceneName);
         this.sceneList.push(scene);
         return scene;
