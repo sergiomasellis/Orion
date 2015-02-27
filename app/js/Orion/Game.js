@@ -18,14 +18,15 @@ class Game {
         //select canvas
         this.canvas = document.getElementById("mainCanvas");
         this.canvas.focus();
+        //this.canvas.style.cssText = 'zoom:'+z+';-moz-zoom:'+z+';-moz-transform: scale('+z+', '+z+') translate('+p+'%, '+p+'%);';
 
         //get 2d context
         this.context = (this.config.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
         this.setScale = true;
 
         //set canvas width
-        this.width = this.canvas.width = window.innerWidth;
-        this.height = this.canvas.height = window.innerHeight;
+        this.width = this.canvas.width = 500;
+        this.height = this.canvas.height = 500;
 
         console.log("Orion Engine: ", this.config.engine);
 
@@ -55,6 +56,10 @@ class Game {
         //List of Scenes
         this.sceneList = [];
         this.currentScene = 0;
+
+        //Scale
+        this.scale = 1;
+        Injector.register('scale', this.scale);
 
         //Initialize game loop
         this.raf();
@@ -89,9 +94,11 @@ class Game {
 
     draw() {
         var _this = this;
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        //this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if(this.setScale){
-            this.context.scale(2, 2);
+            //this.context.translate(this.canvas.width / 2, this.canvas.height / 2);
+            //this.context.scale(this.scale, this.scale);
+            this.s
             this.setScale = false;
         }
         if (this.sceneList.length > 0) {

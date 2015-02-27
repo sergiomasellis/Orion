@@ -1,21 +1,30 @@
 import Entity from "Orion/Entity";
 import Resources from 'Orion/Resource';
+import Injector from 'Orion/Injector';
 
 class Player extends Entity {
 
     init() {
 
-        this.img = Resources.get('img/avatar_sprite.png');
+        this.img = Resources.get('img/avatar_sprite32.png');
+        this.scale = Injector.dependencies.scale;
 
-        this.x = this.canvas.width / 5;
-        this.y = this.canvas.height / 5;
-        this.size = 25;
+        this.canvasCenterX = ( this.canvas.width / 2 );
+        this.canvasCenterY = ( this.canvas.height / 2 );
+
+        //pixel size of sprite frame
+        this.size = 32;
+
+        this.x = this.canvasCenterX - (this.size/2);
+        this.y = this.canvasCenterY - (this.size/2);
 
 
         this.frameIndex = 0;
         this.tickCount = 0;
-        this.ticksPerFrame = 10;
-        this.numberOfFrames = 6;
+        this.ticksPerFrame = 30;
+        this.numberOfFrames = 2;
+
+        //console.log(this.img);
 
     }
 
@@ -36,9 +45,10 @@ class Player extends Entity {
     }
 
     draw() {
+        //console.log(this.img);
         this.context.drawImage(
             this.img,
-            this.frameIndex * this.size,
+            this.size * this.frameIndex,
             0,
             this.size,
             this.size,

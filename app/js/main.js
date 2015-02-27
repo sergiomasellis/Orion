@@ -10,7 +10,7 @@ class Main {
     constructor() {
 
         //get resources
-        Resources.load(['img/avatar_sprite.png', 'img/avatar_sprite2.png']);
+        Resources.load(['img/avatar_sprite.png', 'img/avatar_sprite32.png']);
         Resources.onReady(this.init.bind(this));
 
     }
