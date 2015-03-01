@@ -8,26 +8,48 @@ var gulp = require("gulp"),
     del = require('del'),
     runSequence = require('run-sequence'),
     watch = require('gulp-watch'),
-    livereload = require('gulp-livereload'),
+    //livereload = require('gulp-livereload'),
+    webServer = require('gulp-webserver'),
+    opn = require('opn'),
     plumber = require('gulp-plumber');
 
+
+
 gulp.task("default", function (cb) {
-    runSequence('clean', 'copy:html', 'copy:img', 'copy:css', 'copy:vendor','scripts' , 'watch', cb);
+    runSequence('clean', 'copy:html', 'copy:img', 'copy:css', 'copy:vendor', 'scripts', 'webserver', 'watch', 'open:browser', cb);
 });
 
 gulp.task("watch", function(){
-    livereload.listen();
+    //livereload.listen();
     gulp.watch('app/index.html', ["copy:html"]);
     gulp.watch("css/**", ["copy:css"]);
     gulp.watch("img/**", ["copy:img"]);
     gulp.watch("app/js/**/*.js", ["scripts"]);
 });
 
+gulp.task('webserver', function() {
+  gulp.src( '.' )
+    .pipe(webServer({
+      host:             'localhost',
+      port:             '8000',
+      livereload:       true,
+      directoryListing: false
+    }));
+});
+
+gulp.task('open:browser', function() {
+  opn( 'http://' + 'localhost' + ':' + '8000/dist/' );
+});
+
+
+
+// Copy files and assests
+
 gulp.task("copy:html", function () {
     gulp.src("app/index.html")
         .pipe(plumber())
-        .pipe(gulp.dest("dist"))
-        .pipe(livereload());
+        .pipe(gulp.dest("dist"));
+        // .pipe(livereload());
 });
 
 gulp.task("copy:vendor", function () {
@@ -59,6 +81,6 @@ gulp.task("scripts", function () {
         .pipe(sourcemaps.init())
         .pipe(babel({modules: "amd"}))
         .pipe(sourcemaps.write("."))
-        .pipe(gulp.dest("dist/js"))
-        .pipe(livereload());
+        .pipe(gulp.dest("dist/js"));
+        // .pipe(livereload());
 });

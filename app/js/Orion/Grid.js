@@ -1,27 +1,36 @@
 import Utils from 'Orion/Utils';
 import Injector from 'Orion/Injector';
-import Controller from 'Orion/Controller';
 
-export default
-class Grid {
+export default class Grid {
     constructor(options, dependencies) {
         this.dependencies = dependencies;
         this.options = Utils.extend(this.options, options);
 
         this.canvas = Injector.dependencies.canvas;
         this.context = Injector.dependencies.context;
-        this.scale = Injector.dependencies.scale;
-
-        this.controller = new Controller;
+        this.camera = Injector.dependencies.camera;
+        // this.controller = Injector.dependencies.controller;
 
         this.buffered = this.options.buffer || false;
         this.rotate = this.options.rotate || 0;
 
+        this.scale = 1;
+        //size of image square
         this.gridSize = 16;
+        // this.gridSize = this.canvas.width/10;
+        // this.trueSizeOfGridSquare = this.canvas.width/this.gridSize;
+        // this.gridSize = this.trueSizeOfGridSquare;
+        // console.log(this.canvas.width, this.gridSize);
 
-        this.x = 0;
-        this.y = 0;
-        this.speed = 16;
+        var coords = this.camera.screenToWorld(0, 0);
+
+        this.x = coords.x;
+        this.y = coords.y;
+
+        this.camerax = 0;
+        this.cameray = 0;
+
+        this.speed = 50;
 
         this.tiles = [];
 
@@ -29,7 +38,7 @@ class Grid {
         var _this = this;
 
         var request = new XMLHttpRequest();
-        request.open('GET', '../tiles/map3.json', true);
+        request.open('GET', '../tiles/map2.json', true);
 
 
         request.onload = function () {
@@ -72,26 +81,6 @@ class Grid {
 
     update() {
 
-        if (this.controller.direction.W) {
-            this.y += this.speed*this.scale;
-
-            this.controller.direction.W = false;
-        }
-
-        if (this.controller.direction.S) {
-            this.y -= this.speed*this.scale;
-            this.controller.direction.S = false;
-        }
-
-        if (this.controller.direction.A) {
-            this.x += this.speed*this.scale;
-            this.controller.direction.A = false;
-        }
-
-        if (this.controller.direction.D) {
-            this.x -= this.speed*this.scale;
-            this.controller.direction.D = false;
-        }
     }
 
     draw() {

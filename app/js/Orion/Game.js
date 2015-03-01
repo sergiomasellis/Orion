@@ -1,6 +1,8 @@
 ﻿import Config from 'Orion/Config';
 import Utils from 'Orion/Utils';
 import Injector from 'Orion/Injector';
+import Camera from 'Orion/Camera';
+import Controller from 'Orion/Controller';
 
 export default
 class Game {
@@ -18,15 +20,14 @@ class Game {
         //select canvas
         this.canvas = document.getElementById("mainCanvas");
         this.canvas.focus();
-        //this.canvas.style.cssText = 'zoom:'+z+';-moz-zoom:'+z+';-moz-transform: scale('+z+', '+z+') translate('+p+'%, '+p+'%);';
 
         //get 2d context
         this.context = (this.config.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
         this.setScale = true;
 
         //set canvas width
-        this.width = this.canvas.width = 500;
-        this.height = this.canvas.height = 500;
+        this.width = this.canvas.width = window.innerWidth;
+        this.height = this.canvas.height = window.innerHeight;
 
         console.log("Orion Engine: ", this.config.engine);
 
@@ -57,9 +58,19 @@ class Game {
         this.sceneList = [];
         this.currentScene = 0;
 
-        //Scale
-        this.scale = 1;
-        Injector.register('scale', this.scale);
+        // //Scale
+        // this.scale = 1;
+        // Injector.register('scale', this.scale);
+
+        //Create World Camera
+        this.camera = new Camera();
+        this.camera.zoomTo(300);
+        Injector.register('camera', this.camera);
+        
+
+        //setup keyboard controls
+        this.controller = new Controller;
+        Injector.register('controller', this.controller);
 
         //Initialize game loop
         this.raf();
@@ -94,18 +105,16 @@ class Game {
 
     draw() {
         var _this = this;
-        //this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if(this.setScale){
-            //this.context.translate(this.canvas.width / 2, this.canvas.height / 2);
-            //this.context.scale(this.scale, this.scale);
-            this.s
-            this.setScale = false;
-        }
-        if (this.sceneList.length > 0) {
-            this.sceneList.forEach(function (item, i) {
-                if (_this.currentScene === i) item.draw();
-            });
-        }
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.camera.begin();
+
+          if (this.sceneList.length > 0) {
+              this.sceneList.forEach(function (item, i) {
+                  if (_this.currentScene === i) item.draw();
+              });
+          }
+
+        this.camera.end();
     }
 
     // TIMER FUNCTIONS
