@@ -45,6 +45,10 @@ class Utils {
         });
         return uuid;
     }
+
+    lerp(A, B, t){
+        return (A * t) + ((1.0 - t) * B);
+    }
 }
 
 export default new Utils;

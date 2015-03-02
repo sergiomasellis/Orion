@@ -38,7 +38,7 @@ export default class Grid {
         var _this = this;
 
         var request = new XMLHttpRequest();
-        request.open('GET', '../tiles/map2.json', true);
+        request.open('GET', '../tiles/map3.json', true);
 
 
         request.onload = function () {
@@ -85,8 +85,8 @@ export default class Grid {
 
     draw() {
 
-        var w = 10,
-            h = 10,
+        var w = 50,
+            h = 50,
             currentTile = 0;
 
         if (!this.map || this.tiles.length === 0) return;

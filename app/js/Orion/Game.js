@@ -26,8 +26,8 @@ class Game {
         this.setScale = true;
 
         //set canvas width
-        this.width = this.canvas.width = window.innerWidth;
-        this.height = this.canvas.height = window.innerHeight;
+        this.width = this.canvas.width = 500;
+        this.height = this.canvas.height = 300;
 
         console.log("Orion Engine: ", this.config.engine);
 

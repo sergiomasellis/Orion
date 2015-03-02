@@ -12,10 +12,15 @@ class Player extends Entity {
         this.controller = Injector.dependencies.controller;
         this.camera = Injector.dependencies.camera;
 
-        var coords = this.camera.screenToWorld(0, 0);
 
-        this.x = coords.x;
-        this.y = coords.y;
+        this.size = 32;
+        this.speed = 16.0;
+
+        this.coords = this.camera.screenToWorld(0, 0);
+        this.world = this.camera.screenToWorld(0, 0);
+
+        this.x = this.coords.x - 8;
+        this.y = this.coords.y - 8;
 
         // console.log(this);
 
@@ -24,8 +29,8 @@ class Player extends Entity {
 
 
         //pixel size of sprite frame
-        this.size = 32;
-        this.speed = 16.0;
+
+
 
 
         // this.x = this.canvasCenterX;
@@ -46,8 +51,7 @@ class Player extends Entity {
 
         if (this.controller.direction.W) {
 
-          if(this.y > 0) this.y += this.speed;
-          else this.y -= this.speed;
+          this.y -= this.speed;
 
           console.log(this.x, this.y);
 
@@ -55,9 +59,7 @@ class Player extends Entity {
         }
 
         if (this.controller.direction.S) {
-
-          if(this.y > 0) this.y -= this.speed;
-          else this.y += this.speed;
+            this.y += this.speed;
 
           console.log(this.x, this.y);
 
@@ -79,8 +81,15 @@ class Player extends Entity {
 
           console.log(this.x, this.y);
 
+            this.camera.moveTo(this.canvas.width/2, this.canvas.height/2);
+
+
+
           this.controller.direction.D = false;
         }
+
+
+        //this.camera.follow(this);
 
 
 
@@ -100,18 +109,29 @@ class Player extends Entity {
     }
 
     draw() {
-        //console.log(this.img);
-        this.context.drawImage(
-            this.img,
-            this.size * this.frameIndex,
-            0,
-            this.size,
-            this.size,
-            this.x,
-            this.y,
-            this.size,
-            this.size);
+
+        //this.context.drawImage(
+        //    this.img,
+        //    this.size * this.frameIndex,
+        //    0,
+        //    this.size,
+        //    this.size,
+        //    this.x,
+        //    this.y,
+        //    this.size,
+        //    this.size);
         //console.log(this.frameIndex * this.size);
+
+        //this.x++;
+
+
+        this.context.beginPath();
+        this.context.strokeStyle="#FF0000";
+        this.context.rect(this.camera.viewport.top - 25, this.camera.viewport.left - 25, 50,50);
+        this.context.stroke();
+
+        //console.log(this.camera.viewport.top, this.camera.viewport.left);
+
     }
 }
 
