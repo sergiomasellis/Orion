@@ -7,9 +7,31 @@
     <link href="css/main.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- Utils -->
-    <script src="vendor/requirejs/require.js" data-main="js/main"></script>
 
+	  <!-- Shaders -->
+		<script id="shader-fs" type="x-shader/x-fragment">
+	    precision mediump float;
+
+	    void main(void) {
+	        gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
+	    }
+		</script>
+
+		<script id="shader-vs" type="x-shader/x-vertex">
+		    attribute vec3 aVertexPosition;
+
+		    uniform mat4 mVMatrix;
+		    uniform mat4 pMatrix;
+
+		    void main(void) {
+		        gl_Position = pMatrix * mVMatrix * vec4(aVertexPosition, 1.0);
+		    }
+		</script>
+
+
+    <!-- Utils -->
+    <script src="vendor/gl-matrix/dist/gl-matrix.js"></script>
+    <script src="vendor/requirejs/require.js" data-main="js/main"></script>
 
     <!-- Canvas -->
     <div id="fps"></div>

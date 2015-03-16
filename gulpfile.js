@@ -20,7 +20,7 @@ gulp.task("default", function (cb) {
 });
 
 gulp.task("watch", function(){
-    //livereload.listen();
+
     gulp.watch('app/index.html', ["copy:html"]);
     gulp.watch("css/**", ["copy:css"]);
     gulp.watch("img/**", ["copy:img"]);
@@ -40,7 +40,6 @@ gulp.task('webserver', function() {
 gulp.task('open:browser', function() {
   opn( 'http://' + 'localhost' + ':' + '8000/dist/' );
 });
-
 
 
 // Copy files and assests
@@ -76,7 +75,7 @@ gulp.task("clean", function (cb) {
 });
 
 gulp.task("scripts", function () {
-    gulp.src("app/js/**/*.js")
+    gulp.src(["app/js/**/*.js", "!app/js/Utils/*.js"])
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(babel({modules: "amd"}))

@@ -12,85 +12,61 @@ class Player extends Entity {
         this.controller = Injector.dependencies.controller;
         this.camera = Injector.dependencies.camera;
 
-
         this.size = 32;
         this.speed = 16.0;
-
         this.coords = this.camera.screenToWorld(0, 0);
-        this.world = this.camera.screenToWorld(0, 0);
-
-        this.x = this.coords.x - 8;
-        this.y = this.coords.y - 8;
-
-        // console.log(this);
-
-        // this.canvasCenterX = ( this.canvas.width / 2 );
-        // this.canvasCenterY = ( this.canvas.height / 2 );
-
-
-        //pixel size of sprite frame
-
-
-
-
-        // this.x = this.canvasCenterX;
-        // this.y = this.canvasCenterY;
-
+        this.world = this.camera.worldToScreen(0, 0);
+        console.log(this);
+        this.x = this.coords.x;
+        this.y = this.coords.y;
         this.frameIndex = 0;
         this.tickCount = 0;
         this.ticksPerFrame = 30;
         this.numberOfFrames = 2;
-
-        //console.log(this.img);
-
     }
 
     update() {
 
-      // this.camera.moveTo(this.x, this.y);
+        // this.camera.moveTo(this.x, this.y);
 
         if (this.controller.direction.W) {
 
-          this.y -= this.speed;
+            this.y -= this.speed;
 
-          console.log(this.x, this.y);
+            console.log(this.x, this.y);
 
-          this.controller.direction.W = false;
+            this.controller.direction.W = false;
         }
 
         if (this.controller.direction.S) {
+
             this.y += this.speed;
 
-          console.log(this.x, this.y);
+            console.log(this.x, this.y);
 
-          this.controller.direction.S = false;
+            this.controller.direction.S = false;
         }
 
         if (this.controller.direction.A) {
 
-          this.x -= this.speed;
+            this.x -= this.speed;
 
-          console.log(this.x, this.y);
+            console.log(this.x, this.y);
 
-          this.controller.direction.A = false;
+            this.controller.direction.A = false;
         }
 
         if (this.controller.direction.D) {
 
-          this.x += this.speed;
+            this.x += this.speed;
 
-          console.log(this.x, this.y);
+            console.log(this.x, this.y);
 
-            this.camera.moveTo(this.canvas.width/2, this.canvas.height/2);
-
-
-
-          this.controller.direction.D = false;
+            this.controller.direction.D = false;
         }
 
 
-        //this.camera.follow(this);
-
+        this.camera.moveTo(this.x, this.y);
 
 
         this.tickCount += 1;
@@ -110,25 +86,32 @@ class Player extends Entity {
 
     draw() {
 
-        //this.context.drawImage(
-        //    this.img,
-        //    this.size * this.frameIndex,
-        //    0,
-        //    this.size,
-        //    this.size,
-        //    this.x,
-        //    this.y,
-        //    this.size,
-        //    this.size);
-        //console.log(this.frameIndex * this.size);
+        this.context.drawImage(
+            this.img,
+            this.size * this.frameIndex,
+            0,
+            this.size,
+            this.size,
+            this.x,
+            this.y,
+            this.size,
+            this.size);
 
+        //this.context.beginPath();
+        //this.context.strokeStyle = "#FF0000";
+        //this.context.rect(this.x, this.y, 16, 16);
+        //this.context.stroke();
+
+
+
+        //console.log(this.frameIndex * this.size);
         //this.x++;
 
 
-        this.context.beginPath();
-        this.context.strokeStyle="#FF0000";
-        this.context.rect(this.camera.viewport.top - 25, this.camera.viewport.left - 25, 50,50);
-        this.context.stroke();
+        //this.context.beginPath();
+        //this.context.strokeStyle = "#FF0000";
+        //this.context.rect(this.camera.viewport.top - 25, this.camera.viewport.left - 25, 50, 50);
+        //this.context.stroke();
 
         //console.log(this.camera.viewport.top, this.camera.viewport.left);
 

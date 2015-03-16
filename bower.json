@@ -1,6 +1,7 @@
 {
   "name": "Orion-Game-Engine",
   "dependencies": {
-    "requirejs": "~2.1.16"
+    "requirejs": "~2.1.16",
+    "gl-matrix": "~2.2.1"
   }
 }

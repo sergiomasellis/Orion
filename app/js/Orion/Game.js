@@ -7,114 +7,128 @@ import Controller from 'Orion/Controller';
 export default
 class Game {
     constructor(options, dependencies) {
+        var _this = this;
 
-        this.dependencies = dependencies;
-        this.options = Utils.extend(this.options, options);
-        this.config = Config;
+        _this.dependencies = dependencies;
+        _this.options = Utils.extend(_this.options, options);
+        _this.config = Config;
 
-        this.init();
+        _this.init();
     }
 
     init() {
+        var _this = this;
 
         //select canvas
-        this.canvas = document.getElementById("mainCanvas");
-        this.canvas.focus();
+        _this.canvas = document.getElementById("mainCanvas");
+        _this.canvas.focus();
 
         //get 2d context
-        this.context = (this.config.engine === "2d") ? this.canvas.getContext('2d') : this.canvas.getContext("experimental-webgl", {antialias: true}) || this.canvas.getContext("webgl");
-        this.setScale = true;
+        _this.context = (_this.config.engine === "2d") ? _this.canvas.getContext('2d') : _this.canvas.getContext("webgl", {antialias: true}) || _this.canvas.getContext("experimental-webgl");
+        _this.setScale = true;
+        _this.gl = _this.context; //set webgl context
 
         //set canvas width
-        this.width = this.canvas.width = 500;
-        this.height = this.canvas.height = 300;
+        _this.width = _this.canvas.width = 500;
+        _this.height = _this.canvas.height = 300;
 
-        console.log("Orion Engine: ", this.config.engine);
+        //set webgl viewport
+        _this.gl.viewportWidth = _this.width;
+        _this.gl.viewportHeight = _this.height;
+
+        console.log("Orion Engine: ", _this.config.engine);
 
         //add instances to the injector
-        Injector.register('canvas', this.canvas);
-        Injector.register('context', this.context);
+        Injector.register('canvas', _this.canvas);
+        Injector.register('context', _this.context);
 
 
         //Select FPS div
-        this.fpsContainer = document.getElementById("fps");
+        _this.fpsContainer = document.getElementById("fps");
 
         //Timer for animation delta
-        this.lastTime = 0;
-        this.currentTime = 0;
-        this.deltaTime = 0;
+        _this.lastTime = 0;
+        _this.currentTime = 0;
+        _this.deltaTime = 0;
 
         //Initialize timer for FPS Calc
-        this.startTime = Date.now();
-        this.prevTime = this.startTime;
+        _this.startTime = Date.now();
+        _this.prevTime = _this.startTime;
 
         //set default fps values
-        this.fpsValue = 0;
-        this.fpsMin = Infinity;
-        this.fpsMax = 0;
-        this.framesFps = 0;
+        _this.fpsValue = 0;
+        _this.fpsMin = Infinity;
+        _this.fpsMax = 0;
+        _this.framesFps = 0;
 
         //List of Scenes
-        this.sceneList = [];
-        this.currentScene = 0;
+        _this.sceneList = [];
+        _this.currentScene = 0;
 
         // //Scale
         // this.scale = 1;
         // Injector.register('scale', this.scale);
 
         //Create World Camera
-        this.camera = new Camera();
-        this.camera.zoomTo(300);
-        Injector.register('camera', this.camera);
-        
+        _this.camera = new Camera();
+        _this.camera.zoomTo(300);
+        Injector.register('camera', _this.camera);
+
 
         //setup keyboard controls
-        this.controller = new Controller;
-        Injector.register('controller', this.controller);
+        _this.controller = new Controller;
+        Injector.register('controller', _this.controller);
 
         //Initialize game loop
-        this.raf();
+        _this.raf();
     }
 
     // GAME LOOP FUNCTIONS
     raf() {
-        this.currentTime = Date.now();
-        this.deltaTime = (this.currentTime - this.lastTime) / 1000.0;
-
+        var _this = this;
+        _this.currentTime = Date.now();
+        _this.deltaTime = (_this.currentTime - _this.lastTime) / 1000.0;
 
         //loop over update and draw functions
-        this.timerBegin();
-        this.update(this.deltaTime);
-        this.draw();
-        this.timerEnd();
+        _this.timerBegin();
+        _this.update(_this.deltaTime);
+        _this.draw();
+        _this.timerEnd();
 
-        this.lastTime = this.currentTime;
+        _this.lastTime = _this.currentTime;
 
         // call this.raf on every frame
-        window.requestAnimationFrame(this.raf.bind(this));
+        window.requestAnimationFrame(_this.raf.bind(_this));
     }
 
     update(dt) {
-        var _this = this;
-        if (this.sceneList.length > 0) {
-            this.sceneList.forEach(function (item, i) {
-                if (_this.currentScene === i)item.update(dt);
-            });
+        var _this = this,
+            sl = _this.sceneList,
+            l = sl.length;
+
+        if (l > 0) {
+            //fastest possible loop
+            while(l--) {
+                if (_this.currentScene === l) sl[l].update(dt);
+            }
         }
     }
 
     draw() {
-        var _this = this;
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.camera.begin();
+        var _this = this,
+            sl = _this.sceneList,
+            l = sl.length;
 
-          if (this.sceneList.length > 0) {
-              this.sceneList.forEach(function (item, i) {
-                  if (_this.currentScene === i) item.draw();
-              });
-          }
+        _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
+        _this.camera.begin();
 
-        this.camera.end();
+        if (l > 0) {
+            while (l--) {
+                if (_this.currentScene === l) sl[l].draw();
+            }
+        }
+
+        _this.camera.end();
     }
 
     // TIMER FUNCTIONS
@@ -123,16 +137,18 @@ class Game {
     }
 
     timerEnd() {
-        var time = Date.now();
-        this.framesFps++;
+        var _this = this,
+            time = Date.now();
 
-        if (time > this.prevTime + 1000) {
-            this.fpsValue = Math.round((this.framesFps * 1000) / (time - this.prevTime));
-            this.fpsMin = Math.min(this.fpsMin, this.fpsValue);
-            this.fpsMax = Math.max(this.fpsMax, this.fpsValue);
-            this.fpsContainer.innerHTML = this.fpsValue + ' FPS (' + this.fpsMin + '-' + this.fpsMax + ')';
-            this.prevTime = time;
-            this.framesFps = 0;
+        _this.framesFps++;
+
+        if (time > _this.prevTime + 1000) {
+            _this.fpsValue = Math.round((_this.framesFps * 1000) / (time - _this.prevTime));
+            _this.fpsMin = Math.min(_this.fpsMin, _this.fpsValue);
+            _this.fpsMax = Math.max(_this.fpsMax, _this.fpsValue);
+            _this.fpsContainer.innerHTML = _this.fpsValue + ' FPS (' + _this.fpsMin + '-' + _this.fpsMax + ')';
+            _this.prevTime = time;
+            _this.framesFps = 0;
         }
 
         return time;

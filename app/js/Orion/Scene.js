@@ -18,23 +18,31 @@ class Scene {
 
     addEntity(entity) {
         console.log("Add Entity - " + entity.options.name);
-        this.entityList.push(entity);
+        this.entityList.unshift(entity);
         return entity;
     }
 
     update(dt) {
-        if (this.entityList.length > 0) {
-            this.entityList.forEach(function (item, i) {
-                item.update(dt);
-            });
+        var _this = this,
+            el = _this.entityList,
+            l = el.length;
+
+        if (l > 0) {
+            while (l--) {
+                el[l].update(dt);
+            }
         }
     }
 
     draw() {
-        if (this.entityList.length > 0) {
-            this.entityList.forEach(function (item, i) {
-                item.draw();
-            });
+        var _this = this,
+            el = _this.entityList,
+            l = el.length;
+
+        if (l > 0) {
+            while (l--) {
+                el[l].draw();
+            }
         }
     }
 }

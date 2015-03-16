@@ -15,7 +15,6 @@ class Camera {
 
         // this.controller = new Controller;
 
-
         this.speed = 0;
         this.lerpAmount = 1.0;
 
@@ -44,8 +43,8 @@ class Camera {
         this.viewport.left = this.lookat[0] - (this.viewport.width / 2.0);
         this.viewport.top = this.lookat[1] - (this.viewport.height / 2.0);
 
-        console.log("vp left: ",this.viewport.left);
-        console.log("vp top: ",this.viewport.top, this.lookat[1]);
+        //console.log("vp left: ", this.viewport.left);
+        //console.log("vp top: ", this.viewport.top, this.lookat[1]);
 
         this.viewport.right = this.viewport.left + this.viewport.width;
         this.viewport.bottom = this.viewport.top + this.viewport.height;
@@ -83,7 +82,7 @@ class Camera {
         this.dx = (obj.x - this.viewport.width / 2.0);
         this.dy = (obj.y - this.viewport.height / 2.0)
 
-        if(this.lerpAmount < 1.0){
+        if (this.lerpAmount < 1.0) {
             this.lerpAmount += 0.05;
         } else {
             this.prevPosition = this.curPosition;
