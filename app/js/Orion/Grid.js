@@ -94,7 +94,7 @@ export default class Grid {
 
         for (var i = 0; i < w; i++) {
             for (var j = 0; j < h; j++) {
-                this.context.drawImage(this.tiles[this.map[currentTile] - 1], (j * (this.gridSize) * this.scale) + this.x, (i * (this.gridSize) * this.scale) + this.y, this.gridSize * this.scale, this.gridSize*this.scale);
+                // this.context.drawImage(this.tiles[this.map[currentTile] - 1], (j * (this.gridSize) * this.scale) + this.x, (i * (this.gridSize) * this.scale) + this.y, this.gridSize * this.scale, this.gridSize*this.scale);
                 currentTile++;
             }
         }

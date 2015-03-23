@@ -36,11 +36,18 @@ class Game {
         _this.gl.viewportWidth = _this.width;
         _this.gl.viewportHeight = _this.height;
 
+        //clear color init
+        _this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        _this.gl.enable(_this.gl.DEPTH_TEST);
+
+        
+
         console.log("Orion Engine: ", _this.config.engine);
 
         //add instances to the injector
         Injector.register('canvas', _this.canvas);
         Injector.register('context', _this.context);
+        Injector.register('gl', _this.gl);
 
 
         //Select FPS div
@@ -119,8 +126,9 @@ class Game {
             sl = _this.sceneList,
             l = sl.length;
 
-        _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
-        _this.camera.begin();
+        //_this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
+        _this.context.clear(_this.context.COLOR_BUFFER_BIT | _this.context.DEPTH_BUFFER_BIT);
+        //_this.camera.begin();
 
         if (l > 0) {
             while (l--) {
@@ -128,7 +136,7 @@ class Game {
             }
         }
 
-        _this.camera.end();
+        //_this.camera.end();
     }
 
     // TIMER FUNCTIONS

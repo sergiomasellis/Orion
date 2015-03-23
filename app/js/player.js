@@ -85,7 +85,8 @@ class Player extends Entity {
     }
 
     draw() {
-
+        /*
+    
         this.context.drawImage(
             this.img,
             this.size * this.frameIndex,
@@ -96,6 +97,7 @@ class Player extends Entity {
             this.y,
             this.size,
             this.size);
+        */
 
         //this.context.beginPath();
         //this.context.strokeStyle = "#FF0000";
