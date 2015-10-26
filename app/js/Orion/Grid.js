@@ -41,7 +41,7 @@ export default class Grid {
         request.open('GET', '../tiles/map3.json', true);
 
 
-        request.onload = function () {
+        request.onload = () => {
             if (request.status >= 200 && request.status < 400) {
                 // Success!
                 _this.data = JSON.parse(request.responseText);
@@ -52,7 +52,7 @@ export default class Grid {
             }
         };
 
-        request.onerror = function () {
+        request.onerror = () => {
             // There was a connection error of some sort
         };
 
@@ -61,18 +61,18 @@ export default class Grid {
 
     init() {
 
-        var self = this;
+        let self = this;
         this.map = this.data.layers[0].data;
 
-        var tiles = null;
+        let tiles = null;
 
-        for (var index in this.data.tilesets[0].tiles) {
+        for (let index in this.data.tilesets[0].tiles) {
 
             if (tiles === null) {
                 tiles = this.data.tilesets[0].tiles;
             }
 
-            var image = new Image();
+            let image = new Image();
             image.src = tiles[index].image;
             this.tiles.push(image);
 
@@ -85,7 +85,7 @@ export default class Grid {
 
     draw() {
 
-        var w = 50,
+        let w = 50,
             h = 50,
             currentTile = 0;
 

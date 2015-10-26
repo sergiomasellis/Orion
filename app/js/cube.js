@@ -19,6 +19,8 @@ class Cube extends Entity {
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.enable(this.gl.DEPTH_TEST);
 
+        this.currentPosition = 0.1;
+
     }
 
     initShaders(gl){
@@ -54,7 +56,7 @@ class Cube extends Entity {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPositionBuffer);
 
         //vertices
-        var vertices = [
+        let vertices = [
              1.0, 1.0, 0.0, //v0
             -1.0, 1.0, 0.0, //v1
              1.0, -1.0, 0.0, //v2
@@ -87,8 +89,9 @@ class Cube extends Entity {
 
         mat4.perspective(40, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, this.pMatrix);
         mat4.identity(this.mvMatrix);
+        this.currentPosition = (this.currentPosition + 0.01);
         mat4.translate(this.mvMatrix, [0.0, 0.0, -7.0]);
-       
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPositionBuffer);
         gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
         this.setMatrixUniforms();

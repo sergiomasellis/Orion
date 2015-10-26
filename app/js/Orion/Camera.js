@@ -54,7 +54,7 @@ class Camera {
     }
 
     begin() {
-        this.context.save();
+        // this.context.save();
         this.applyScale();
         this.applyTranslation();
     }

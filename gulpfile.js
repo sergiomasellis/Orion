@@ -8,7 +8,7 @@ var gulp = require("gulp"),
     del = require('del'),
     runSequence = require('run-sequence'),
     watch = require('gulp-watch'),
-    //livereload = require('gulp-livereload'),
+    browserSync = require('browser-sync'),
     webServer = require('gulp-webserver'),
     opn = require('opn'),
     plumber = require('gulp-plumber');
@@ -16,7 +16,7 @@ var gulp = require("gulp"),
 
 
 gulp.task("default", function (cb) {
-    runSequence('clean', 'copy:html', 'copy:img', 'copy:css', 'copy:vendor', 'scripts', 'webserver', 'watch', 'open:browser', cb);
+    runSequence('copy:html', 'copy:img', 'copy:css', 'copy:vendor', 'scripts', 'webserver', 'watch', cb);
 });
 
 gulp.task("watch", function(){
@@ -28,38 +28,37 @@ gulp.task("watch", function(){
 });
 
 gulp.task('webserver', function() {
-  gulp.src( '.' )
-    .pipe(webServer({
-      host:             'localhost',
-      port:             '8000',
-      livereload:       true,
-      directoryListing: false
-    }));
-});
+  var _browser_URL = "./dist";
 
-gulp.task('open:browser', function() {
-  opn( 'http://' + 'localhost' + ':' + '8000/dist/' );
-});
+    browserSync({
+      server: _browser_URL
+    });
 
+    gulp.watch("app/index.html", ['copy:html']);
+    gulp.watch("app/img/**", ['copy:img']);
+    gulp.watch("app/js/**/*.js", ['scripts']);
+});
 
 // Copy files and assests
 
 gulp.task("copy:html", function () {
     gulp.src("app/index.html")
         .pipe(plumber())
-        .pipe(gulp.dest("dist"));
-        // .pipe(livereload());
+        .pipe(gulp.dest("dist"))
+        .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task("copy:vendor", function () {
     gulp.src("vendor/**/*.js")
         .pipe(plumber())
-        .pipe(gulp.dest("dist/vendor"));
+        .pipe(gulp.dest("dist/vendor"))
+        .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task("copy:css", function () {
     gulp.src("app/css/**")
-        .pipe(gulp.dest("dist/css"));
+        .pipe(gulp.dest("dist/css"))
+        .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task("copy:img", function () {
@@ -75,11 +74,11 @@ gulp.task("clean", function (cb) {
 });
 
 gulp.task("scripts", function () {
-    gulp.src(["app/js/**/*.js", "!app/js/Utils/*.js"])
-        .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(babel({modules: "amd"}))
-        .pipe(sourcemaps.write("."))
-        .pipe(gulp.dest("dist/js"));
-        // .pipe(livereload());
+    return gulp.src(["app/js/**/*.js", "!app/js/Utils/*.js"])
+      .pipe(plumber())
+      .pipe(sourcemaps.init())
+      .pipe(babel({modules: "amd"}))
+      .pipe(sourcemaps.write("."))
+      .pipe(gulp.dest("dist/js"))
+      .pipe(browserSync.reload({stream: true}));
 });

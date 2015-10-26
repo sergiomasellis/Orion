@@ -13,7 +13,7 @@ class Main {
         Resources.load(['img/avatar_sprite.png', 'img/avatar_sprite32.png']);
         Resources.onReady(this.init.bind(this));
     }
- 
+
     init() {
 
         Config.setConfig({

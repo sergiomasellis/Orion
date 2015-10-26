@@ -7,7 +7,7 @@ import Controller from 'Orion/Controller';
 export default
 class Game {
     constructor(options, dependencies) {
-        var _this = this;
+        let _this = this;
 
         _this.dependencies = dependencies;
         _this.options = Utils.extend(_this.options, options);
@@ -17,7 +17,7 @@ class Game {
     }
 
     init() {
-        var _this = this;
+        let _this = this;
 
         //select canvas
         _this.canvas = document.getElementById("mainCanvas");
@@ -29,8 +29,8 @@ class Game {
         _this.gl = _this.context; //set webgl context
 
         //set canvas width
-        _this.width = _this.canvas.width = 500;
-        _this.height = _this.canvas.height = 300;
+        _this.width = _this.canvas.width = window.innerWidth;
+        _this.height = _this.canvas.height = window.innerHeight;
 
         //set webgl viewport
         _this.gl.viewportWidth = _this.width;
@@ -40,7 +40,6 @@ class Game {
         _this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         _this.gl.enable(_this.gl.DEPTH_TEST);
 
-        
 
         console.log("Orion Engine: ", _this.config.engine);
 
@@ -92,7 +91,7 @@ class Game {
 
     // GAME LOOP FUNCTIONS
     raf() {
-        var _this = this;
+        let _this = this;
         _this.currentTime = Date.now();
         _this.deltaTime = (_this.currentTime - _this.lastTime) / 1000.0;
 
@@ -122,13 +121,13 @@ class Game {
     }
 
     draw() {
-        var _this = this,
+        let _this = this,
             sl = _this.sceneList,
             l = sl.length;
 
         //_this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
         _this.context.clear(_this.context.COLOR_BUFFER_BIT | _this.context.DEPTH_BUFFER_BIT);
-        //_this.camera.begin();
+        // _this.camera.begin();
 
         if (l > 0) {
             while (l--) {
@@ -136,7 +135,7 @@ class Game {
             }
         }
 
-        //_this.camera.end();
+        // _this.camera.end();
     }
 
     // TIMER FUNCTIONS
@@ -145,7 +144,7 @@ class Game {
     }
 
     timerEnd() {
-        var _this = this,
+        let _this = this,
             time = Date.now();
 
         _this.framesFps++;
