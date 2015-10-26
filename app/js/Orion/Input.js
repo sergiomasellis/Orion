@@ -13,18 +13,18 @@ class Input{
 
     captureKeyEvent(event) {
         this.triggerKeyEvent(event.keyCode, event.type);
-		return event;
+		    return event;
     }
 
     triggerKeyEvent(keyCode, type) {
         if (window.CustomEvent) {
-		    var event = new CustomEvent('trigger'+type+'Event', {detail: {keyCode: keyCode}});
-		} else {
+		        var event = new CustomEvent('trigger'+type+'Event', {detail: {keyCode: keyCode}});
+		    } else {
             var event = document.createEvent('trigger' + type + 'Event');
                 event.initCustomEvent('trigger' + type + 'Event', true, true, {keyCode: keyCode});
         }
 
-		document.dispatchEvent(event);
+		    return document.dispatchEvent(event);
     }
 }
 

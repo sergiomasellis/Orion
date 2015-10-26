@@ -7,11 +7,10 @@ class Resource {
     }
 
     load(urlOrArr){
-        var self = this;
         if(urlOrArr instanceof Array){
-            urlOrArr.forEach(function (url) {
-                self._load(url);
-            });
+            urlOrArr.forEach((url) => {
+                this._load(url);
+            }.bind(this));
         }else{
             this._load(urlOrArr);
         }
@@ -19,20 +18,20 @@ class Resource {
 
     _load(url){
         console.log("Fetching Resource From:", url);
-        var self = this;
         if(this.resourceCache[url]){
             return this.resourceCache[url];
         }else{
             var img = new Image();
-            img.onload = function(){
-                self.resourceCache[url] = img;
 
-                if(self.isReady()){
-                    self.readyCallbacks.forEach(function (func) {
+            img.onload = () => {
+                this.resourceCache[url] = img;
+
+                if(this.isReady()){
+                    this.readyCallbacks.forEach((func) => {
                         func();
-                    });
+                    }.bind(this));
                 }
-            }
+            }.bind(this)
 
             this.resourceCache[url] = false;
             img.src = url;

@@ -8,10 +8,7 @@ class Injector {
     }
 
     get(arr) {
-        var self = this;
-        return arr.map(function (value) {
-            return self.dependencies[value];
-        })
+        return arr.map((value) => {return self.dependencies[value];}.bind(this))
     }
 }
 

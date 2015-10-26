@@ -23,7 +23,7 @@ class Scene {
     }
 
     update(dt) {
-        var _this = this,
+        let _this = this,
             el = _this.entityList,
             l = el.length;
 
@@ -35,7 +35,7 @@ class Scene {
     }
 
     draw() {
-        var _this = this,
+        let _this = this,
             el = _this.entityList,
             l = el.length;
 

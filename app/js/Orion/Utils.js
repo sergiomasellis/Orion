@@ -39,7 +39,7 @@ class Utils {
 
     generateUUID() {
         var d = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
             return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -54,13 +54,13 @@ class Utils {
 
     //shader utils
     getShader(gl, id) {
-        var shaderScript = document.getElementById(id);
+        let shaderScript = document.getElementById(id);
         if (!shaderScript) {
             return null;
         }
 
-        var str = "";
-        var k = shaderScript.firstChild;
+        let str = "";
+        let k = shaderScript.firstChild;
         while (k) {
             if (k.nodeType == 3) {
                 str += k.textContent;
@@ -68,7 +68,7 @@ class Utils {
             k = k.nextSibling;
         }
 
-        var shader;
+        let shader;
         if (shaderScript.type == "x-shader/x-fragment") {
             shader = gl.createShader(gl.FRAGMENT_SHADER);
         } else if (shaderScript.type == "x-shader/x-vertex") {
