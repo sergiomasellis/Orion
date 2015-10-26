@@ -19,7 +19,11 @@ class Cube extends Entity {
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.enable(this.gl.DEPTH_TEST);
 
-        this.currentPosition = 0.1;
+        this.speed = 0.05;
+        this.angle = 0;
+        this.range = 0.5;
+        this.x = Math.random()*this.gl.width;
+        this.y = Math.random()*this.gl.height;
 
     }
 
@@ -89,8 +93,11 @@ class Cube extends Entity {
 
         mat4.perspective(40, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, this.pMatrix);
         mat4.identity(this.mvMatrix);
+        
+        this.angle += this.speed;
         this.currentPosition = (this.currentPosition + 0.01);
-        mat4.translate(this.mvMatrix, [0.0, 0.0, -7.0]);
+        mat4.translate(this.mvMatrix, [0.0, 0.0, -7.0+Math.sin(this.angle) * this.range]);
+
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPositionBuffer);
         gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
