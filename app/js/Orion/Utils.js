@@ -51,6 +51,9 @@ class Utils {
         return (A * t) + ((1.0 - t) * B);
     }
 
+    randomInt(range) {
+      return Math.floor(Math.random() * range);
+    }
 
     //shader utils
     getShader(gl, id) {

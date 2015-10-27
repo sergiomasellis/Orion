@@ -14,17 +14,6 @@ class Cube extends Entity {
         //init
         this.gl = Injector.dependencies.gl;
         this.initShaders(this.gl);
-        this.initBuffers(this.gl);
-
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        this.gl.enable(this.gl.DEPTH_TEST);
-
-        this.speed = 0.05;
-        this.angle = 0;
-        this.range = 0.5;
-        this.x = Math.random()*this.gl.width;
-        this.y = Math.random()*this.gl.height;
-
     }
 
     initShaders(gl){
@@ -33,24 +22,25 @@ class Cube extends Entity {
         this.fragmentShader = Utils.getShader(gl, 'shader-fs');
         this.vertextShader = Utils.getShader(gl, 'shader-vs');
 
-        //create gl program
-        this.shaderProgram = gl.createProgram();
-        gl.attachShader(this.shaderProgram, this.vertextShader);
-        gl.attachShader(this.shaderProgram, this.fragmentShader);
-        gl.linkProgram(this.shaderProgram);
+        //initialise program by attaching them via this meathod
+        this.initProgram(gl);
+    }
 
-        if(!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)){
-            throw new Error('Could not initialise shaders');
-        }
+    initProgram(gl){
 
-        gl.useProgram(this.shaderProgram);
+      //create gl program
+      this.shaderProgram = gl.createProgram();
 
-        this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation(this.shaderProgram, "aVertexPosition");
-        gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
+      //attach the shaders to the program
+      gl.attachShader(this.shaderProgram, this.vertextShader);
+      gl.attachShader(this.shaderProgram, this.fragmentShader);
+      gl.linkProgram(this.shaderProgram);
 
-        this.shaderProgram.pMatrixUniform = gl.getUniformLocation(this.shaderProgram, "pMatrix");
-        this.shaderProgram.mvMatrixUniform = gl.getUniformLocation(this.shaderProgram, "mVMatrix");
+      if(!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)){
+          throw new Error('Could not initialise shaders');
+      }
 
+      this.initBuffers(gl);
     }
 
     initBuffers(gl){
@@ -60,24 +50,43 @@ class Cube extends Entity {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPositionBuffer);
 
         //vertices
-        let vertices = [
-             1.0, 1.0, 0.0, //v0
+        let vertices = new Float32Array([
+            1.0, 1.0, 0.0, //v0
             -1.0, 1.0, 0.0, //v1
-             1.0, -1.0, 0.0, //v2
-            -1.0, -1.0, 0.0  //v3
-        ];
+            1.0, -1.0, 0.0, //v2
+            -1.0, -1.0, 0.0 //v3?
+        ]);
 
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+        //once buffer is setup use program
+        gl.useProgram(this.shaderProgram);
+
+        //setup uniforms/attributes
+        this.setupUniformsNAttribs(gl);
+
+        // this should be
         this.vertexPositionBuffer.itemSize = 3;
         this.vertexPositionBuffer.numItems = 4;
-
     }
 
-    setMatrixUniforms() {
-        this.gl.uniformMatrix4fv(this.shaderProgram.pMatrixUniform, false, this.pMatrix);
-        this.gl.uniformMatrix4fv(this.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+    setupUniformsNAttribs(gl) {
+
+      //get color uniform
+      this.shaderProgram.color = gl.getUniformLocation(this.shaderProgram, 'color');
+
+      //set color r,g,b,a
+      gl.uniform4fv(this.shaderProgram.color, [Math.random(), Math.random(), Math.random(), 1.0]);
+
+      this.shaderProgram.position = gl.getAttribLocation(this.shaderProgram, 'position');
+      gl.enableVertexAttribArray(this.shaderProgram.position);
+      gl.vertexAttribPointer(this.shaderProgram.position, 2, gl.FLOAT, false, 0, 0);
     }
 
+    setMatrixUniforms(gl) {
+      gl.uniformMatrix4fv(this.shaderProgram.pMatrixUniform, false, this.pMatrix);
+      gl.uniformMatrix4fv(this.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+    }
 
     update() {
 
@@ -88,20 +97,23 @@ class Cube extends Entity {
         var gl = this.gl;
 
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+
+        // reset background to a grey color
+        gl.clearColor(0.5, 0.5, 0.5, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 
         mat4.perspective(40, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, this.pMatrix);
         mat4.identity(this.mvMatrix);
-        
-        this.angle += this.speed;
-        this.currentPosition = (this.currentPosition + 0.01);
-        mat4.translate(this.mvMatrix, [0.0, 0.0, -7.0+Math.sin(this.angle) * this.range]);
 
+        // sets z to -7
+        mat4.translate(this.mvMatrix, this.mvMatrix, [0.0, 0.0, -7.0]);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPositionBuffer);
         gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        this.setMatrixUniforms();
+
+        this.setMatrixUniforms(gl);
+
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.vertexPositionBuffer.numItems);
 
     }

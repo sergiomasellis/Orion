@@ -37,8 +37,8 @@ class Game {
         _this.gl.viewportHeight = _this.height;
 
         //clear color init
-        _this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        _this.gl.enable(_this.gl.DEPTH_TEST);
+        // _this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        // _this.gl.enable(_this.gl.DEPTH_TEST);
 
 
         console.log("Orion Engine: ", _this.config.engine);
@@ -76,9 +76,9 @@ class Game {
         // Injector.register('scale', this.scale);
 
         //Create World Camera
-        _this.camera = new Camera();
-        _this.camera.zoomTo(300);
-        Injector.register('camera', _this.camera);
+        // _this.camera = new Camera();
+        // _this.camera.zoomTo(300);
+        // Injector.register('camera', _this.camera);
 
 
         //setup keyboard controls
@@ -126,7 +126,7 @@ class Game {
             l = sl.length;
 
         //_this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
-        _this.context.clear(_this.context.COLOR_BUFFER_BIT | _this.context.DEPTH_BUFFER_BIT);
+        // _this.context.clear(_this.context.COLOR_BUFFER_BIT | _this.context.DEPTH_BUFFER_BIT);
         // _this.camera.begin();
 
         if (l > 0) {

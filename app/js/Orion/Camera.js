@@ -1,8 +1,7 @@
 import Utils from 'Orion/Utils';
 import Injector from 'Orion/Injector';
 
-export default
-class Camera {
+export default class Camera {
 
     constructor(options, dependencies) {
 
