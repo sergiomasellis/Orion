@@ -17,7 +17,7 @@ class Resource {
     }
 
     _load(url){
-        console.log("Fetching Resource From:", url);
+        console.log("Resource: Fetching from - ", url);
         if(this.resourceCache[url]){
             return this.resourceCache[url];
         }else{

@@ -12,57 +12,27 @@ class Cube extends Entity {
         this.pMatrix = mat4.create();
         this.vertextPositionBuffer = null;
 
-        //init
+        // Get GL from injector
         this.gl = Injector.dependencies.gl;
-        this.initShaders(this.gl);
+
+        // Run only after shaders are ready!
+        Shader.onReady(() => {
+          this.shaderProgram = Shader.shaderProgram;
+          this.initBuffers.bind(this);
+        });
 
         this.shadersReady = false;
 
         this.speed = 0.05;
         this.angle = 0;
         this.range = 0.5;
+
+        this.shader = Shader;
     }
 
-    initShaders(gl){
+    initBuffers(){
 
-      //creates an instance of the shader class to load shader
-      this.shader = new Shader;
-
-        //get shaders from html script tag
-        this.shader.load(
-          [
-            ['js/shaders/frag.glsl', 'frag'],
-            ['js/shaders/vert.glsl', 'vert']
-          ]
-        );
-
-        this.shader.onReady(this.initProgram.bind(this));
-    }
-
-    initProgram(){
-
-      let gl = this.gl;
-
-      //create gl program
-      this.shaderProgram = gl.createProgram();
-      // console.log(this.shader)
-
-      //attach the shaders to the program
-      gl.attachShader(this.shaderProgram, this.shader.shaderCache["vert"]);
-      gl.attachShader(this.shaderProgram, this.shader.shaderCache["frag"]);
-      gl.linkProgram(this.shaderProgram);
-
-      if(!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)){
-          throw new Error('Could not initialise shaders');
-      }else{
-        // is used to enable drawing by the class
-        this.shadersReady = true;
-      }
-
-      this.initBuffers(gl);
-    }
-
-    initBuffers(gl){
+        let gl = this.gl;
 
         // create buffer for vertices to be stored in
         this.vertexPositionBuffer = gl.createBuffer();
@@ -82,6 +52,9 @@ class Cube extends Entity {
         // this should be
         this.vertexPositionBuffer.itemSize = 3;
         this.vertexPositionBuffer.numItems = vertices.length/this.vertexPositionBuffer.itemSize;
+
+        // Allow Draw() to do its thing;
+        this.shadersReady = true;
     }
 
     setupUniformsNAttribs(gl) {
