@@ -7,36 +7,12 @@
     <link href="css/main.css" rel="stylesheet" />
 </head>
 <body>
-
-	  <!-- Shaders -->
-		<script id="shader-fs" type="x-shader/x-fragment">
-		precision mediump float;
-		uniform vec4 color;
-		void main(void) {
-				gl_FragColor = color;
-		}
-		</script>
-
-		<script id="shader-vs" type="x-shader/x-vertex">
-		attribute vec2 position;
-
-		uniform mat4 mVMatrix;
-		uniform mat4 pMatrix;
-
-		void main(void) {
-				gl_Position = vec4(position, 0.0, 1.0);
-		}
-		</script>
-
-
-    <!-- Utils -->
+	  <!-- Utils -->
     <script src="vendor/gl-matrix/dist/gl-matrix-min.js"></script>
     <script src="vendor/requirejs/require.js" data-main="js/main"></script>
 
     <!-- Canvas -->
     <div id="fps"></div>
-    <!--<canvas id="preRenderCanvas"></canvas>-->
     <canvas id="mainCanvas" tabindex='1'></canvas>
-
 </body>
 </html>

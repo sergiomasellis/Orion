@@ -42,7 +42,7 @@ class Game {
 
 
         console.log("Orion Engine: ", _this.config.engine);
-
+        console.log("checking for gl", _this.gl);
         //add instances to the injector
         Injector.register('canvas', _this.canvas);
         Injector.register('context', _this.context);

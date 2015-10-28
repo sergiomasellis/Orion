@@ -16,7 +16,7 @@ var gulp = require("gulp"),
 
 
 gulp.task("default", function (cb) {
-    runSequence('copy:html', 'copy:img', 'copy:css', 'copy:vendor', 'scripts', 'webserver', 'watch', cb);
+    runSequence('copy:html', 'copy:img', 'copy:css', 'copy:vendor', 'copy:glsl', 'scripts', 'webserver', 'watch', cb);
 });
 
 gulp.task("watch", function(){
@@ -24,7 +24,10 @@ gulp.task("watch", function(){
     gulp.watch('app/index.html', ["copy:html"]);
     gulp.watch("css/**", ["copy:css"]);
     gulp.watch("img/**", ["copy:img"]);
+    gulp.watch("app/js/shaders/*.glsl", ["copy:glsl"]);
     gulp.watch("app/js/**/*.js", ["scripts"]);
+
+
 });
 
 gulp.task('webserver', function() {
@@ -37,10 +40,10 @@ gulp.task('webserver', function() {
     gulp.watch("app/index.html", ['copy:html']);
     gulp.watch("app/img/**", ['copy:img']);
     gulp.watch("app/js/**/*.js", ['scripts']);
+    gulp.watch("app/js/shaders/*.glsl", ["copy:glsl"]);
 });
 
 // Copy files and assests
-
 gulp.task("copy:html", function () {
     gulp.src("app/index.html")
         .pipe(plumber())
@@ -65,6 +68,12 @@ gulp.task("copy:img", function () {
     gulp.src("app/img/**")
         .pipe(plumber())
         .pipe(gulp.dest("dist/img"));
+});
+
+gulp.task("copy:glsl", function() {
+  gulp.src("app/js/shaders/*.glsl")
+      .pipe(plumber())
+      .pipe(gulp.dest("dist/js/shaders"));
 });
 
 gulp.task("clean", function (cb) {

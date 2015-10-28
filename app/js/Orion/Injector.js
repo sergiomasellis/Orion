@@ -5,6 +5,7 @@ class Injector {
 
     register(name, instance) {
         this.dependencies[name] = instance;
+        // console.log(name, " has been registered to the Injector: ", instance);
     }
 
     get(arr) {

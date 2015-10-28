@@ -54,44 +54,6 @@ class Utils {
     randomInt(range) {
       return Math.floor(Math.random() * range);
     }
-
-    //shader utils
-    getShader(gl, id) {
-        let shaderScript = document.getElementById(id);
-        if (!shaderScript) {
-            return null;
-        }
-
-        let str = "";
-        let k = shaderScript.firstChild;
-        while (k) {
-            if (k.nodeType == 3) {
-                str += k.textContent;
-            }
-            k = k.nextSibling;
-        }
-
-        let shader;
-        if (shaderScript.type == "x-shader/x-fragment") {
-            shader = gl.createShader(gl.FRAGMENT_SHADER);
-        } else if (shaderScript.type == "x-shader/x-vertex") {
-            shader = gl.createShader(gl.VERTEX_SHADER);
-        } else {
-            return null;
-        }
-
-        gl.shaderSource(shader, str);
-        gl.compileShader(shader);
-
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            alert(gl.getShaderInfoLog(shader));
-            return null;
-        }
-
-        return shader;
-    }
-
-
 }
 
 export default new Utils;
