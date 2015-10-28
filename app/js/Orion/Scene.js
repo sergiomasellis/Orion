@@ -17,7 +17,7 @@ class Scene {
     }
 
     addEntity(entity) {
-        console.log("Add Entity - " + entity.options.name);
+        console.log("Scene: Add Entity - " + entity.options.name);
         this.entityList.unshift(entity);
         return entity;
     }

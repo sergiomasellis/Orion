@@ -9,7 +9,6 @@ var gulp = require("gulp"),
     runSequence = require('run-sequence'),
     watch = require('gulp-watch'),
     browserSync = require('browser-sync'),
-    webServer = require('gulp-webserver'),
     opn = require('opn'),
     plumber = require('gulp-plumber');
 

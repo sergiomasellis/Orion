@@ -1,15 +1,18 @@
 import Injector from 'Orion/Injector';
 
-export default class Shader {
+
+class Shader {
 
   constructor(){
     this.shaderCache = {};
     this.shaderCompiled = {};
     this.allShaderCompiled = false;
     this.readyCallbacks = [];
-    this.gl = Injector.dependencies.gl;
+  }
 
-    // console.log("Shader Class Started");
+  init(){
+    this.gl = Injector.dependencies.gl;
+    return this;
   }
 
   load(multipleArrayOfShaders){
@@ -19,7 +22,7 @@ export default class Shader {
   }
 
   _load(url, type){
-      console.log("Fetching Resource From:", url);
+      console.log("Shader: Fetching - ", url);
 
       let id = url;
 
@@ -46,7 +49,7 @@ export default class Shader {
             // debugger;
 
 
-            console.log("Added to cache: "+url);
+            console.log("Shader: Added to cache: "+url);
 
             this.compileShader(id, shaderRequest.responseText, type, (completeShaderId, shader) => {
 
@@ -69,10 +72,9 @@ export default class Shader {
               }
 
               if(this.allShaderCompiled){
-                console.log("ALL Shaders compiled");
-                this.readyCallbacks.forEach((func) => {
-                    func();
-                }.bind(this));
+                console.log("Shader: All Shaders compiled");
+
+                this.initProgram();
               }
 
             }.bind(this));
@@ -95,7 +97,7 @@ export default class Shader {
 
     let gl = this.gl;
 
-    console.log("Compiling Shader of type: ", type);
+    // console.log("Compiling Shader of type: ", type);
 
     let shader;
     if (type == "frag") {
@@ -135,4 +137,36 @@ export default class Shader {
   onReady(func){
     this.readyCallbacks.push(func);
   }
+
+  // Used to compile the shaders in the cache
+  initProgram(){
+
+    console.log("Shader: Creating Programs and Linking");
+
+    let gl = this.gl;
+
+    //create gl program
+    this.shaderProgram = gl.createProgram();
+
+    //attach the shaders to the program
+    for(var shader in this.shaderCache){
+        if(this.shaderCache.hasOwnProperty(shader)){
+           gl.attachShader(this.shaderProgram, this.shaderCache[shader]);
+        }
+    }
+
+    gl.linkProgram(this.shaderProgram);
+
+    if(!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)){
+        throw new Error('Shader: Could not initialise shaders');
+    }else{
+      console.log("Shader: Program compiled");
+    }
+
+    this.readyCallbacks.forEach((func) => {
+        func();
+    }.bind(this));
+  }
 }
+
+export default new Shader;
