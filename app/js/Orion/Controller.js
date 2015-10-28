@@ -21,6 +21,12 @@ class Controller {
 
         this.input = new Input;
         this.direction = {};
+        this.keysPressed = {};
+
+        this.direction.W = false;
+        this.direction.A = false;
+        this.direction.S = false;
+        this.direction.D = false;
 
         this.init();
     }
@@ -33,22 +39,21 @@ class Controller {
     move(details) {
 
         if (details.detail.keyCode === 87 || details.detail.keyCode === 38) {
-            console.log("Moving Forward");
             this.direction.W = true;
         }
 
         if (details.detail.keyCode === 83 || details.detail.keyCode === 40) {
-            console.log("Moving Backwards");
+            // console.log("Moving Backwards");
             this.direction.S = true;
         }
 
         if (details.detail.keyCode === 65 || details.detail.keyCode === 37) {
-            console.log("Moving Left");
+            // console.log("Moving Left");
             this.direction.A = true;
         }
 
         if (details.detail.keyCode === 68 || details.detail.keyCode === 39) {
-            console.log("Moving Right");
+            // console.log("Moving Right");
             this.direction.D = true;
         }
 
@@ -57,22 +62,21 @@ class Controller {
     stop(details) {
 
         if (details.detail.keyCode === 87 || details.detail.keyCode === 38) {
-            console.log("Moving Forward");
             this.direction.W = false;
         }
 
         if (details.detail.keyCode === 83 || details.detail.keyCode === 40) {
-            console.log("Moving Backwards");
+            // console.log("Moving Backwards");
             this.direction.S = false;
         }
 
         if (details.detail.keyCode === 65 || details.detail.keyCode === 37) {
-            console.log("Moving Left");
+            // console.log("Moving Left");
             this.direction.A = false;
         }
 
         if (details.detail.keyCode === 68 || details.detail.keyCode === 39) {
-            console.log("Moving Right");
+            // console.log("Moving Right");
             this.direction.D = false;
         }
     }

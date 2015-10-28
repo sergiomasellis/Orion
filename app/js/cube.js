@@ -14,13 +14,19 @@ class Cube extends Entity {
 
         //init
         this.gl = Injector.dependencies.gl;
+        this.controller = Injector.dependencies.controller;
+
+
+        //init shaders
         this.initShaders(this.gl);
 
         this.shadersReady = false;
 
-        this.speed = 0.05;
+        this.speed = 0.1;
         this.angle = 0;
         this.range = 0.5;
+        this.x = 0.0;
+        this.z = 0.0;
     }
 
     initShaders(gl){
@@ -95,7 +101,7 @@ class Cube extends Entity {
 
       this.shaderProgram.position = gl.getAttribLocation(this.shaderProgram, 'position');
       gl.enableVertexAttribArray(this.shaderProgram.position); // <--- ?
-      gl.vertexAttribPointer(this.shaderProgram.position, 2, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribPointer(this.shaderProgram.position, 3, gl.FLOAT, false, 0, 0);
 
       this.shaderProgram.pMatrixUniform = gl.getUniformLocation(this.shaderProgram, "pMatrix");
       this.shaderProgram.mvMatrixUniform = gl.getUniformLocation(this.shaderProgram, "mVMatrix");
@@ -110,6 +116,22 @@ class Cube extends Entity {
 
     update() {
 
+      if (this.controller.direction.W) {
+          this.z -= this.speed;
+      }
+
+      if (this.controller.direction.S) {
+          this.z += this.speed;
+      }
+
+      if (this.controller.direction.A) {
+          this.x -= this.speed;
+      }
+
+      if (this.controller.direction.D) {
+          this.x += this.speed;
+      }
+
     }
 
     draw() {
@@ -120,9 +142,11 @@ class Cube extends Entity {
           mat4.perspective(this.pMatrix, 40, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0);
           mat4.identity(this.mvMatrix);
 
-          this.angle += this.speed;
-          // sets z to -7
-          mat4.translate(this.mvMatrix, this.mvMatrix, [0.0, 0.0, -2.0+Math.sin(this.angle) * this.range]);
+
+          // this.angle += this.speed;
+          // sets z to -7                                x    y     z (up and down)
+          mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, -2.0+this.z]);
+          mat4.rotate(this.mvMatrix, this.mvMatrix, new Date().getTime()/400, [0.0, 1.0, 0.0]);
 
           gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPositionBuffer);
           gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);

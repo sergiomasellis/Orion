@@ -12,8 +12,8 @@ class Input{
     }
 
     captureKeyEvent(event) {
-        this.triggerKeyEvent(event.keyCode, event.type);
-		    return event;
+      event.preventDefault();
+      this.triggerKeyEvent(event.keyCode, event.type);
     }
 
     triggerKeyEvent(keyCode, type) {
