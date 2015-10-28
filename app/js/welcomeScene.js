@@ -9,6 +9,7 @@ class welcomeScene extends Scene {
         // this.map = this.addEntity(new Grid({name: "Map"}));
         // this.player = this.addEntity(new Player({name: "Player"}));
         this.Cube = this.addEntity(new Cube({name: "Cube"}));
+        this.Cube2 = this.addEntity(new Cube({name: "Cube2"}));
     }
 }
 
