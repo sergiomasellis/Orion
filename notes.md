@@ -9,6 +9,7 @@
 - Grid floor for world
 - Normals Data
 - Opacity support
+- Promises for all async loading tasks
 
 ## Later on
 - Add Frinlet as contributor
