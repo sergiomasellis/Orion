@@ -15,7 +15,7 @@ class Entity {
         //this.gl = this.context;
 
         this.buffered = this.options.buffer || false;
-        this.rotate = this.options.rotate || 0;
+        this.rotation = this.options.rotation || {x:0, y:0, z:0};
         this.uuid = this.options.uuid || Utils.generateUUID();
         this.x = this.options.x || 0.0;
         this.y = this.options.y || 0.0;

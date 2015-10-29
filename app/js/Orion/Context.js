@@ -17,7 +17,11 @@ class Context {
       this.gl = this.context; //set webgl context
 
       //enable depth test or you get weird shit.. D: (thanks frinlet)
-      this.gl.enable(this.gl.DEPTH_TEST); 
+      this.gl.enable(this.gl.DEPTH_TEST);
+      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+      this.gl.enable(this.gl.BLEND);
+      this.gl.enable(this.gl.CULL_FACE);
+
 
       //set canvas width
       this.width = this.canvas.width = window.innerWidth;

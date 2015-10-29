@@ -8,17 +8,30 @@ import owl from "owl";
 class welcomeScene extends Scene {
     init() {
 
-    	// let owlEntity = new owl({name: "Stevoid1990"});
-    	// this.addEntity(owlEntity);
+
+
 
      	let player = [];
+        let grid = 50;
 
-        for (var i = 0; i < 1; i++) {
-        	let name = "frinlet"+i;
-        		player[i] = new frinlet({name: name});
-        		player[i].z = -i;
-        	this.addEntity(player[i]);
+        for (let x = -grid; x < grid; x += 5) {
+            for (let z = -grid; z < grid; z += 5) {
+
+            	let name = "frinlet"+z+x;
+
+            		player[x] = new frinlet({name: name});
+                    player[x].update = () => {};
+            		player[x].x = x;
+                    player[x].z = z;
+
+            	this.addEntity(player[x]);
+
+            }
         }
+
+        let frinlet2 = new frinlet({name: "Stevoid1990"});
+        frinlet2.playable = true;
+        this.addEntity(frinlet2);
 
 
     }

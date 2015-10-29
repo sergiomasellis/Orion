@@ -25,7 +25,8 @@ class frinlet extends Entity {
         this.speed = this.speed || 0.05;
         this.angle = 0;
         this.range = 0.5;
-        this.color = [Math.random(), Math.random(), Math.random(), 1.0];
+        this.color = [1.0, 1.0, 1.0, 1.0];
+
     }
 
     initBuffers(){
@@ -74,8 +75,12 @@ class frinlet extends Entity {
       Shader.shaderProgram.color = gl.getUniformLocation(Shader.shaderProgram, 'color');
 
 
-      //set color r,g,b,a
-      gl.uniform4fv(Shader.shaderProgram.color, [Math.random(), Math.random(), Math.random(), 1.0]);
+      // //set color r,g,b,a
+      // if(this.playable){
+      //   gl.uniform4fv(Shader.shaderProgram.color, [1.0, 0.0, 0.0, 0.5]);
+      // }else{
+      //   gl.uniform4fv(Shader.shaderProgram.color, [1.0, 1.0, 1.0, 1.0]);
+      // }
 
       Shader.shaderProgram.position = gl.getAttribLocation(Shader.shaderProgram, 'position');
       gl.enableVertexAttribArray(Shader.shaderProgram.position); // <--- ?
@@ -92,7 +97,6 @@ class frinlet extends Entity {
     }
 
     setMatrixUniforms(gl) {
-      gl.uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
       gl.uniformMatrix4fv(Shader.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
       gl.uniform1i(Shader.shaderProgram.samplerUniform, 0);
     }
@@ -100,19 +104,21 @@ class frinlet extends Entity {
     update() {
 
       if (this.controller.direction.W) {
-          this.z -= this.speed;
+          this.x += this.speed * Math.cos(this.rotation.y-Math.PI/2);
+          this.z -= this.speed * Math.sin(this.rotation.y-Math.PI/2);
       }
 
       if (this.controller.direction.S) {
-          this.z += this.speed;
+          this.x -= this.speed * Math.cos(this.rotation.y-Math.PI/2);
+          this.z += this.speed * Math.sin(this.rotation.y-Math.PI/2);
       }
 
       if (this.controller.direction.A) {
-          this.x -= this.speed;
+          this.rotation.y += this.speed;
       }
 
       if (this.controller.direction.D) {
-          this.x += this.speed;
+          this.rotation.y -= this.speed;
       }
       
     }
@@ -121,12 +127,32 @@ class frinlet extends Entity {
 
           this.gl.uniform4fv(Shader.shaderProgram.color, this.color);
 
-          mat4.perspective(this.pMatrix, 40, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 1000.0);
           mat4.identity(this.mvMatrix);
+          mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, this.z]);
 
-          // sets z to -7                                x    y     z (up and down)
-          mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, -2.0+this.z]);
-          mat4.rotate(this.mvMatrix, this.mvMatrix, new Date().getTime()/400, [0.0, 1.0, 0.0]);
+          if(this.playable){
+
+            this.color = [1,0,0, 0.5];
+
+            mat4.identity(this.pMatrix);
+
+            mat4.perspective(this.pMatrix, Math.PI*0.3, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 1000.0);
+
+
+            mat4.translate(this.pMatrix, this.pMatrix, [0.0, -4.0, -7.0]);
+
+            // mat4.rotate(this.pMatrix, this.pMatrix, -this.rotation.y+Math.PI, [0.0, 1.0, 0.0]); //later D:
+            mat4.rotate(this.pMatrix, this.pMatrix, -this.rotation.y+Math.PI, [0.0, 1.0, 0.0]);
+
+            mat4.translate(this.pMatrix, this.pMatrix, [-this.x, 0.0, -this.z]);
+
+
+            this.gl.uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
+
+          }
+
+          mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
+          
 
           this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
           this.gl.vertexAttribPointer(Shader.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
