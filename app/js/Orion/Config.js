@@ -6,7 +6,7 @@ class Config {
         this.engine = "2d";
     }
 
-    setConfig(obj) {
+    set(obj) {
         Utils.extend(this, obj);
     }
 }

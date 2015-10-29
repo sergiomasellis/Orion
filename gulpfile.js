@@ -15,7 +15,7 @@ var gulp = require("gulp"),
 
 
 gulp.task("default", function (cb) {
-    runSequence('copy:html', 'copy:img', 'copy:css', 'copy:vendor', 'copy:glsl', 'scripts', 'webserver', 'watch', cb);
+    runSequence('copy:html', 'copy:img', 'copy:css', 'copy:vendor','copy:models', 'copy:glsl', 'scripts', 'webserver', 'watch', cb);
 });
 
 gulp.task("watch", function(){
@@ -25,21 +25,14 @@ gulp.task("watch", function(){
     gulp.watch("img/**", ["copy:img"]);
     gulp.watch("app/js/shaders/*.glsl", ["copy:glsl"]);
     gulp.watch("app/js/**/*.js", ["scripts"]);
-
-
+    gulp.watch("app/js/models/*.json", ['copy:models']);
 });
 
 gulp.task('webserver', function() {
   var _browser_URL = "./dist";
-
     browserSync({
       server: _browser_URL
     });
-
-    gulp.watch("app/index.html", ['copy:html']);
-    gulp.watch("app/img/**", ['copy:img']);
-    gulp.watch("app/js/**/*.js", ['scripts']);
-    gulp.watch("app/js/shaders/*.glsl", ["copy:glsl"]);
 });
 
 // Copy files and assests
@@ -73,6 +66,12 @@ gulp.task("copy:glsl", function() {
   gulp.src("app/js/shaders/*.glsl")
       .pipe(plumber())
       .pipe(gulp.dest("dist/js/shaders"));
+});
+
+gulp.task("copy:models", function() {
+  gulp.src("app/js/models/*.json")
+      .pipe(plumber())
+      .pipe(gulp.dest("dist/js/models"));
 });
 
 gulp.task("clean", function (cb) {

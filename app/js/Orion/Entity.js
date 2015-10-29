@@ -1,5 +1,6 @@
 import Utils from 'Orion/Utils';
 import Injector from "Orion/Injector";
+import Game from "Orion/Game";
 
 class Entity {
 
@@ -16,14 +17,24 @@ class Entity {
         this.buffered = this.options.buffer || false;
         this.rotate = this.options.rotate || 0;
         this.uuid = this.options.uuid || Utils.generateUUID();
-        this.x = this.options.x || 0;
-        this.y = this.options.y || 0;
-        this.z = this.options.z || 0;
+        this.x = this.options.x || 0.0;
+        this.y = this.options.y || 0.0;
+        this.z = this.options.z || 0.0;
 
-        this.init();
+
+
+        // Before init check if game engine ready?
+        if(Injector.dependencies.game.isReady){ 
+            this.init();
+        }else{
+            Injector.dependencies.game.onReady(()=>{
+                this.init();
+            }.bind(this));
+        }
     }
 
     init() {
+        
     }
 
     update() {

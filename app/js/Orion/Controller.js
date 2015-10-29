@@ -2,8 +2,7 @@ import Utils from 'Orion/Utils';
 import Injector from "Orion/Injector";
 import Input from "Orion/Input";
 
-export default
-class Controller {
+export default class Controller {
     constructor(options, dependencies) {
 
         this.dependencies = dependencies;

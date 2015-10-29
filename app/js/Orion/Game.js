@@ -7,6 +7,7 @@ import Controller from 'Orion/Controller';
 
 import Resources from 'Orion/Resource';
 import Shaders from 'Orion/Shader';
+import Models from 'Orion/Model';
 
 export default class Game {
     constructor(options = {}, dependencies = {}) {
@@ -17,6 +18,9 @@ export default class Game {
         // Get Context
         this.gl = Context.init();
         this.shaders = Shaders.init();
+
+        this.readyCallbacks = [];
+        this.isReady = false;
 
         this.init();
     }
@@ -50,19 +54,57 @@ export default class Game {
         this.controller = new Controller;
         Injector.register('controller', this.controller);
 
+        // Setup gameOnReady Callback
+        Injector.register('game', this);
+
         // Get Resources
         Resources.load(this.config.images);
-        Resources.onReady(()=>{
+        Resources.onReady(() => {
 
-          // Get shaders from html script tag
+          // Request for models via AJAX
+          Models.load(this.config.models);
+
+          // Models are done loading
+          Models.onReady(() =>{
+            // Check if shaders are compiled too if they are run raf
+            if(Shaders.allShaderCompiled){
+
+                console.log("Game: All Models loaded and Shaders too"); 
+                this.notifyReadyState();
+
+            } 
+          });
+
+          // Request for shaders via AJAX
           Shaders.load(this.config.shaders);
 
           // Initialize game loop
-          Shaders.onReady(this.raf.bind(this));
+          Shaders.onReady(() => {
+            // Check if models are done too if they are run raf
+            if(Models.allModelsLoaded) {
+
+                console.log("Game: All Shaders loaded and Models too");
+                this.notifyReadyState();
+
+            }
+          });
 
         }.bind(this));
     }
 
+
+    onReady(func){
+        this.readyCallbacks.push(func);
+    }
+
+    notifyReadyState(){
+        this.isReady = true;
+        this.readyCallbacks.forEach((func) => {
+                func();
+        }.bind(this));
+
+        this.raf();
+    }
 
     // GAME LOOP FUNCTIONS
     raf() {
@@ -113,7 +155,6 @@ export default class Game {
                 if (this.currentScene === l) sl[l].draw();
             }
         }
-
 
     }
 

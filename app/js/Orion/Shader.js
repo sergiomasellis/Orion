@@ -123,16 +123,6 @@ class Shader {
     // return shader;
   }
 
-  isReady(){
-        console.log("A Shader is Ready");
-        var ready = true;
-        for(var k in this.shaderCache){
-            if(this.shaderCache.hasOwnProperty(k) && !this.shaderCache[k]){
-                ready = false;
-            }
-        }
-        return ready;
-  }
 
   onReady(func){
     this.readyCallbacks.push(func);

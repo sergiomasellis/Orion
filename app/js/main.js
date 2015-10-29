@@ -10,14 +10,17 @@ class Main {
     constructor() {
 
       // Config engine first listing images and shaders
-      Config.setConfig({
+      Config.set({
           engine: "3d",
           images: ['img/avatar_sprite.png', 'img/avatar_sprite32.png'],
           shaders: [
             ['js/shaders/frag.glsl', 'frag'],
             ['js/shaders/vert.glsl', 'vert']
           ],
-          models: ['js/models/frinlet.json']
+          models: [
+            ['frinlet','js/models/frinlet.json'],
+            ['owl','js/models/owl.json']
+          ]
       });
 
       this.init();
