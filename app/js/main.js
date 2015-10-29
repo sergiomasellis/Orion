@@ -17,7 +17,8 @@ class Main {
               'img/avatar_sprite32.png'
           ],
           textures: [
-            ['img/character.png']
+              ['dragon', 'img/micro_dragon_col.png'],
+              ['frinlet', 'img/character.png']
           ],
           shaders: [
             ['js/shaders/frag.glsl', 'frag'],
@@ -25,7 +26,8 @@ class Main {
           ],
           models: [
             ['frinlet','js/models/frinlet.json'],
-            ['owl','js/models/owl.json']
+            ['owl','js/models/owl.json'],
+            ['dragon','js/models/dragon.json']
           ]
       });
 

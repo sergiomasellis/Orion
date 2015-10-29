@@ -19,10 +19,9 @@ export default class Game {
         // Get Context
         this.gl = Context.init();
         this.shaders = Shaders.init();
-
-
-        // init textures
-        Texture.pre();
+        this.textures = Texture.init();
+        
+        this.resources = new Resources;
 
         this.readyCallbacks = [];
         this.isReady = false;
@@ -54,7 +53,6 @@ export default class Game {
         this.sceneList = [];
         this.currentScene = 0;
 
-
         // Setup keyboard controls
         this.controller = new Controller;
         Injector.register('controller', this.controller);
@@ -63,8 +61,10 @@ export default class Game {
         Injector.register('game', this);
 
         // Get Resources
-        Resources.load(this.config.images);
-        Resources.onReady(() => {
+        this.resources.load(this.config.images);
+        this.textures.load(this.config.textures);
+
+        this.resources.onReady(() => {
 
           // Request for models via AJAX
           Models.load(this.config.models);
@@ -94,9 +94,15 @@ export default class Game {
             }
           });
 
-          // Do textures stuff
-          Texture.init();
+          this.textures.onReady(() => {
+            // Check if models are done too if they are run raf
+            if(Models.allModelsLoaded && Shaders.allShaderCompiled) {
 
+                console.log("Game: All Shaders loaded and Models too");
+                this.notifyReadyState();
+
+            }
+          });
 
         }.bind(this));
     }

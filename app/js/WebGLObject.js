@@ -7,7 +7,7 @@ import Injector from 'Orion/Injector';
 import Models from 'Orion/Model';
 import Texture from 'Orion/Texture';
 
-class frinlet extends Entity {
+class WebGLObject extends Entity {
 
     init() {
         //variables
@@ -27,12 +27,13 @@ class frinlet extends Entity {
         this.range = 0.5;
         this.color = [1.0, 1.0, 1.0, 1.0];
 
+
     }
 
     initBuffers(){
 
 
-        if(!Models.bufferedModels["frinlet"]){
+        if(!Models.bufferedModels[this.options.model]){
 
             // create buffer for vertices to be stored in
             this.vertexPositionBuffer = this.gl.createBuffer();
@@ -40,8 +41,8 @@ class frinlet extends Entity {
 
 
             // vertices
-            let vertices = new Float32Array(Models.modelCache["frinlet"].verts);
-            let uvs = new Float32Array(Models.modelCache["frinlet"].uv);
+            let vertices = new Float32Array(Models.modelCache[this.options.model].verts);
+            let uvs = new Float32Array(Models.modelCache[this.options.model].uv);
 
             this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
             this.gl.bufferData(this.gl.ARRAY_BUFFER, vertices, this.gl.STATIC_DRAW);
@@ -59,9 +60,9 @@ class frinlet extends Entity {
             this.vertexPositionBuffer.itemSize = 3;
             this.vertexPositionBuffer.numItems = vertices.length/this.vertexPositionBuffer.itemSize;
 
-            Models.bufferedModels["frinlet"] = this.vertexPositionBuffer;
+            Models.bufferedModels[this.options.model] = this.vertexPositionBuffer;
         }else{
-            this.vertexPositionBuffer = Models.bufferedModels["frinlet"];
+            this.vertexPositionBuffer = Models.bufferedModels[this.options.model];
         }
     
 
@@ -132,7 +133,7 @@ class frinlet extends Entity {
 
           if(this.playable){
 
-            this.color = [1,0,0, 0.5];
+            // this.color = [1,0,0, 0.5];
 
             mat4.identity(this.pMatrix);
 
@@ -149,6 +150,9 @@ class frinlet extends Entity {
 
             this.gl.uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
 
+          }else{
+              this.x += (0.3 * Math.sin(this.z))/8;
+              this.z += (0.3 * Math.cos(this.x))/8;
           }
 
           mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
@@ -158,7 +162,9 @@ class frinlet extends Entity {
           this.gl.vertexAttribPointer(Shader.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
 
           this.gl.activeTexture(this.gl.TEXTURE0);
-          this.gl.bindTexture(this.gl.TEXTURE_2D, Texture.textureCache['character']);
+
+          this.gl.bindTexture(this.gl.TEXTURE_2D, Texture.textureCache[this.options.texture].compiledTexture);
+          // console.log(Texture.textureCache);
 
           this.setMatrixUniforms(this.gl);
 
@@ -167,4 +173,4 @@ class frinlet extends Entity {
     }
 }
 
-export default frinlet;
+export default WebGLObject;

@@ -2,7 +2,7 @@ import Scene from "Orion/Scene";
 import Grid from "Orion/Grid";
 
 import Player from "player";
-import frinlet from "frinlet";
+import WebGLObject from "WebGLObject";
 import owl from "owl";
 
 class welcomeScene extends Scene {
@@ -19,17 +19,16 @@ class welcomeScene extends Scene {
 
             	let name = "frinlet"+z+x;
 
-            		player[x] = new frinlet({name: name});
+            		player[x] = new owl({name: name, model: "frinlet", texture: "dragon"});
                     player[x].update = () => {};
             		player[x].x = x;
                     player[x].z = z;
 
             	this.addEntity(player[x]);
-
             }
         }
 
-        let frinlet2 = new frinlet({name: "Stevoid1990"});
+        let frinlet2 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet"});
         frinlet2.playable = true;
         this.addEntity(frinlet2);
 

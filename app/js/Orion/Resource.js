@@ -57,4 +57,4 @@ class Resource {
     }
 }
 
-export default new Resource;
+export default Resource;
