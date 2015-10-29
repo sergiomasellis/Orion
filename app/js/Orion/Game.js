@@ -8,6 +8,7 @@ import Controller from 'Orion/Controller';
 import Resources from 'Orion/Resource';
 import Shaders from 'Orion/Shader';
 import Models from 'Orion/Model';
+import Texture from 'Orion/Texture';
 
 export default class Game {
     constructor(options = {}, dependencies = {}) {
@@ -18,6 +19,10 @@ export default class Game {
         // Get Context
         this.gl = Context.init();
         this.shaders = Shaders.init();
+
+
+        // init textures
+        Texture.pre();
 
         this.readyCallbacks = [];
         this.isReady = false;
@@ -88,6 +93,10 @@ export default class Game {
 
             }
           });
+
+          // Do textures stuff
+          Texture.init();
+
 
         }.bind(this));
     }

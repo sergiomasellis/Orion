@@ -16,6 +16,9 @@ class Context {
       this.setScale = true;
       this.gl = this.context; //set webgl context
 
+      //enable depth test or you get weird shit.. D: (thanks frinlet)
+      this.gl.enable(this.gl.DEPTH_TEST); 
+
       //set canvas width
       this.width = this.canvas.width = window.innerWidth;
       this.height = this.canvas.height = window.innerHeight;

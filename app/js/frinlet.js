@@ -1,9 +1,11 @@
 import Entity from "Orion/Entity";
 import Utils from "Orion/Utils";
 import Resources from 'Orion/Resource';
+
 import Shader from 'Orion/Shader';
 import Injector from 'Orion/Injector';
 import Models from 'Orion/Model';
+import Texture from 'Orion/Texture';
 
 class frinlet extends Entity {
 
@@ -33,12 +35,18 @@ class frinlet extends Entity {
 
             // create buffer for vertices to be stored in
             this.vertexPositionBuffer = this.gl.createBuffer();
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
+            this.uvBuffer = this.gl.createBuffer();
 
-            //vertices
+
+            // vertices
             let vertices = new Float32Array(Models.modelCache["frinlet"].verts);
+            let uvs = new Float32Array(Models.modelCache["frinlet"].uv);
 
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
             this.gl.bufferData(this.gl.ARRAY_BUFFER, vertices, this.gl.STATIC_DRAW);
+
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.uvBuffer);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, uvs, this.gl.STATIC_DRAW);
 
             //once buffer is setup use program
             this.gl.useProgram(Shader.shaderProgram);
@@ -71,16 +79,22 @@ class frinlet extends Entity {
 
       Shader.shaderProgram.position = gl.getAttribLocation(Shader.shaderProgram, 'position');
       gl.enableVertexAttribArray(Shader.shaderProgram.position); // <--- ?
-      gl.vertexAttribPointer(Shader.shaderProgram.position, 3, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribPointer(Shader.shaderProgram.position, 3, gl.FLOAT, false, 0, 0);      
+
+      Shader.shaderProgram.uv = gl.getAttribLocation(Shader.shaderProgram, 'uv');
+      gl.enableVertexAttribArray(Shader.shaderProgram.uv); // <--- ?
+      gl.vertexAttribPointer(Shader.shaderProgram.uv, 2, gl.FLOAT, false, 0, 0);
 
       Shader.shaderProgram.pMatrixUniform = gl.getUniformLocation(Shader.shaderProgram, "pMatrix");
       Shader.shaderProgram.mvMatrixUniform = gl.getUniformLocation(Shader.shaderProgram, "mVMatrix");
+      Shader.shaderProgram.samplerUniform = gl.getUniformLocation(Shader.shaderProgram, "uSampler");
 
     }
 
     setMatrixUniforms(gl) {
       gl.uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
       gl.uniformMatrix4fv(Shader.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+      gl.uniform1i(Shader.shaderProgram.samplerUniform, 0);
     }
 
     update() {
@@ -105,7 +119,6 @@ class frinlet extends Entity {
 
     draw() {
 
-
           this.gl.uniform4fv(Shader.shaderProgram.color, this.color);
 
           mat4.perspective(this.pMatrix, 40, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 1000.0);
@@ -117,6 +130,9 @@ class frinlet extends Entity {
 
           this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
           this.gl.vertexAttribPointer(Shader.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
+
+          this.gl.activeTexture(this.gl.TEXTURE0);
+          this.gl.bindTexture(this.gl.TEXTURE_2D, Texture.textureCache['character']);
 
           this.setMatrixUniforms(this.gl);
 

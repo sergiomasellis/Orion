@@ -12,7 +12,13 @@ class Main {
       // Config engine first listing images and shaders
       Config.set({
           engine: "3d",
-          images: ['img/avatar_sprite.png', 'img/avatar_sprite32.png'],
+          images: [
+              'img/avatar_sprite.png', 
+              'img/avatar_sprite32.png'
+          ],
+          textures: [
+            ['img/character.png']
+          ],
           shaders: [
             ['js/shaders/frag.glsl', 'frag'],
             ['js/shaders/vert.glsl', 'vert']
