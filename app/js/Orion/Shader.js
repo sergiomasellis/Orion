@@ -22,7 +22,7 @@ class Shader {
   }
 
   _load(url, type){
-      console.log("Shader: Fetching - ", url);
+      // console.log("Shader: Fetching - ", url);
 
       let id = url;
 
@@ -62,7 +62,7 @@ class Shader {
               // debugger;
               //check if all are completed
               this.allShaderCompiled = true;
-              for (var prop in this.shaderCompiled) {
+              for (let prop in this.shaderCompiled) {
                 if (this.shaderCompiled.hasOwnProperty(prop)) {
                   if(this.shaderCompiled[prop].ready == false){
                      this.allShaderCompiled = false;
@@ -147,6 +147,8 @@ class Shader {
 
     gl.linkProgram(this.shaderProgram);
 
+    this.useProgram();
+
     if(!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)){
         throw new Error('Shader: Could not initialise shaders');
     }else{
@@ -156,6 +158,32 @@ class Shader {
     this.readyCallbacks.forEach((func) => {
         func();
     }.bind(this));
+  }
+
+  useProgram(){
+        //once buffer is setup use program
+        this.gl.useProgram(this.shaderProgram);
+        //setup uniforms/attributes
+        this.setupUniformsNAttribs();
+  }
+
+  setupUniformsNAttribs(){
+
+    //get color uniform
+    this.shaderProgram.color = this.gl.getUniformLocation(this.shaderProgram, 'color');
+
+    this.shaderProgram.position = this.gl.getAttribLocation(this.shaderProgram, 'position');
+    this.gl.enableVertexAttribArray(this.shaderProgram.position); // <--- ?
+    // this.gl.vertexAttribPointer(this.shaderProgram.position, 3, this.gl.FLOAT, false, 0, 0);      
+
+    this.shaderProgram.uv = this.gl.getAttribLocation(this.shaderProgram, 'uv');
+    this.gl.enableVertexAttribArray(this.shaderProgram.uv); // <--- ?
+    // this.gl.vertexAttribPointer(this.shaderProgram.uv, 2, this.gl.FLOAT, false, 0, 0);
+
+    this.shaderProgram.pMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "pMatrix");
+    this.shaderProgram.mvMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "mVMatrix");
+    this.shaderProgram.samplerUniform = this.gl.getUniformLocation(this.shaderProgram, "uSampler");
+
   }
 }
 

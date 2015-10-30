@@ -1,5 +1,7 @@
 ﻿import Config from 'Orion/Config';
+import Logger from 'Orion/Logger';
 import Utils from 'Orion/Utils';
+
 import Injector from 'Orion/Injector';
 import Context from 'Orion/Context';
 import Camera from 'Orion/Camera';
@@ -72,9 +74,9 @@ export default class Game {
           // Models are done loading
           Models.onReady(() =>{
             // Check if shaders are compiled too if they are run raf
-            if(Shaders.allShaderCompiled){
+            if(Shaders.allShaderCompiled && Texture.allTextureCompiled){
 
-                console.log("Game: All Models loaded and Shaders too"); 
+                // console.log("Game: All Models loaded and Shaders too"); 
                 this.notifyReadyState();
 
             } 
@@ -86,19 +88,19 @@ export default class Game {
           // Initialize game loop
           Shaders.onReady(() => {
             // Check if models are done too if they are run raf
-            if(Models.allModelsLoaded) {
+            if(Models.allModelsLoaded && Texture.allTextureCompiled) {
 
-                console.log("Game: All Shaders loaded and Models too");
+                // console.log("Game: All Shaders loaded and Models too");
                 this.notifyReadyState();
 
             }
           });
 
-          this.textures.onReady(() => {
+          Texture.onReady(() => {
             // Check if models are done too if they are run raf
             if(Models.allModelsLoaded && Shaders.allShaderCompiled) {
 
-                console.log("Game: All Shaders loaded and Models too");
+                // console.log("Game: All Textures loaded and Models too");
                 this.notifyReadyState();
 
             }
@@ -117,6 +119,8 @@ export default class Game {
         this.readyCallbacks.forEach((func) => {
                 func();
         }.bind(this));
+
+        console.log("Game: Engine Starting ");
 
         this.raf();
     }

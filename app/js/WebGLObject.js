@@ -1,105 +1,67 @@
 import Entity from "Orion/Entity";
 import Utils from "Orion/Utils";
-import Resources from 'Orion/Resource';
+import Injector from 'Orion/Injector';
+
 
 import Shader from 'Orion/Shader';
-import Injector from 'Orion/Injector';
 import Models from 'Orion/Model';
 import Texture from 'Orion/Texture';
 
 class WebGLObject extends Entity {
 
     init() {
-        //variables
+
+        // variables
         this.mvMatrix = mat4.create();
         this.pMatrix = mat4.create();
-        this.vertextPositionBuffer = null;
+        this.texture = this.options.texture || false;
+        this.model = this.options.model || "cube";
+        this.playable = this.options.playable || false;
 
-        // Get GL from injector
+        // movement Variable
+        this.speed = this.options.speed || 0.05;
+        this.angle = this.options.angle || 0;
+        this.range = this.options.range || 0.5;
+        this.color = this.options.color || [1.0, 1.0, 1.0, 1.0];
+
+        // Get GL from injector and controller if needed
         this.gl = Injector.dependencies.gl;
         this.controller = Injector.dependencies.controller;
 
         // Run only after shaders are ready!
-        this.initBuffers();
-
-        this.speed = this.speed || 0.05;
-        this.angle = 0;
-        this.range = 0.5;
-        this.color = [1.0, 1.0, 1.0, 1.0];
-
+        this.vertexPositionBuffer = (!Models.bufferedModels[this.model]) ? this.initBuffers() : Models.bufferedModels[this.model];
 
     }
 
     initBuffers(){
 
+        // create buffer for vertices to be stored in
+        let vertBuffer = this.gl.createBuffer();
+        this.uvBuffer = this.gl.createBuffer();
 
-        if(!Models.bufferedModels[this.options.model]){
+        // vertices
+        let vertices = new Float32Array(Models.modelCache[this.model].verts);
+        let uvs = new Float32Array(Models.modelCache[this.model].uv);
 
-            // create buffer for vertices to be stored in
-            this.vertexPositionBuffer = this.gl.createBuffer();
-            this.uvBuffer = this.gl.createBuffer();
+        // bind vert buffers and add vertices to it
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, vertices, this.gl.STATIC_DRAW);
 
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.uvBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, uvs, this.gl.STATIC_DRAW);
 
-            // vertices
-            let vertices = new Float32Array(Models.modelCache[this.options.model].verts);
-            let uvs = new Float32Array(Models.modelCache[this.options.model].uv);
+        // this should be
+        vertBuffer.itemSize = 3;
+        vertBuffer.numItems = vertices.length/vertBuffer.itemSize;
 
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
-            this.gl.bufferData(this.gl.ARRAY_BUFFER, vertices, this.gl.STATIC_DRAW);
+        Models.bufferedModels[this.model] = vertBuffer;
 
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.uvBuffer);
-            this.gl.bufferData(this.gl.ARRAY_BUFFER, uvs, this.gl.STATIC_DRAW);
-
-            //once buffer is setup use program
-            this.gl.useProgram(Shader.shaderProgram);
-
-            //setup uniforms/attributes
-            this.setupUniformsNAttribs(this.gl);
-
-            // this should be
-            this.vertexPositionBuffer.itemSize = 3;
-            this.vertexPositionBuffer.numItems = vertices.length/this.vertexPositionBuffer.itemSize;
-
-            Models.bufferedModels[this.options.model] = this.vertexPositionBuffer;
-        }else{
-            this.vertexPositionBuffer = Models.bufferedModels[this.options.model];
-        }
-    
-
-
-        // console.log("Cube: InitBuffers");
-    }
-
-    setupUniformsNAttribs(gl) {
-
-      //get color uniform
-      Shader.shaderProgram.color = gl.getUniformLocation(Shader.shaderProgram, 'color');
-
-
-      // //set color r,g,b,a
-      // if(this.playable){
-      //   gl.uniform4fv(Shader.shaderProgram.color, [1.0, 0.0, 0.0, 0.5]);
-      // }else{
-      //   gl.uniform4fv(Shader.shaderProgram.color, [1.0, 1.0, 1.0, 1.0]);
-      // }
-
-      Shader.shaderProgram.position = gl.getAttribLocation(Shader.shaderProgram, 'position');
-      gl.enableVertexAttribArray(Shader.shaderProgram.position); // <--- ?
-      gl.vertexAttribPointer(Shader.shaderProgram.position, 3, gl.FLOAT, false, 0, 0);      
-
-      Shader.shaderProgram.uv = gl.getAttribLocation(Shader.shaderProgram, 'uv');
-      gl.enableVertexAttribArray(Shader.shaderProgram.uv); // <--- ?
-      gl.vertexAttribPointer(Shader.shaderProgram.uv, 2, gl.FLOAT, false, 0, 0);
-
-      Shader.shaderProgram.pMatrixUniform = gl.getUniformLocation(Shader.shaderProgram, "pMatrix");
-      Shader.shaderProgram.mvMatrixUniform = gl.getUniformLocation(Shader.shaderProgram, "mVMatrix");
-      Shader.shaderProgram.samplerUniform = gl.getUniformLocation(Shader.shaderProgram, "uSampler");
-
+        return vertBuffer;
     }
 
     setMatrixUniforms(gl) {
       gl.uniformMatrix4fv(Shader.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
-      gl.uniform1i(Shader.shaderProgram.samplerUniform, 0);
+      gl.uniform1i(Shader.shaderProgram.samplerUniform, Texture.textureCache[this.options.texture].id);
     }
 
     update() {
@@ -133,18 +95,14 @@ class WebGLObject extends Entity {
 
           if(this.playable){
 
-            // this.color = [1,0,0, 0.5];
+            this.color = [1,0,0, 0.5];
 
             mat4.identity(this.pMatrix);
-
             mat4.perspective(this.pMatrix, Math.PI*0.3, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 1000.0);
-
-
             mat4.translate(this.pMatrix, this.pMatrix, [0.0, -4.0, -7.0]);
 
             // mat4.rotate(this.pMatrix, this.pMatrix, -this.rotation.y+Math.PI, [0.0, 1.0, 0.0]); //later D:
             mat4.rotate(this.pMatrix, this.pMatrix, -this.rotation.y+Math.PI, [0.0, 1.0, 0.0]);
-
             mat4.translate(this.pMatrix, this.pMatrix, [-this.x, 0.0, -this.z]);
 
 
@@ -156,20 +114,15 @@ class WebGLObject extends Entity {
           }
 
           mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
-          
+
+          this.gl.activeTexture(this.gl.TEXTURE0+Texture.textureCache[this.options.texture].id);
 
           this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
           this.gl.vertexAttribPointer(Shader.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
 
-          this.gl.activeTexture(this.gl.TEXTURE0);
-
-          this.gl.bindTexture(this.gl.TEXTURE_2D, Texture.textureCache[this.options.texture].compiledTexture);
-          // console.log(Texture.textureCache);
 
           this.setMatrixUniforms(this.gl);
-
           this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertexPositionBuffer.numItems);
-          window.polys += this.vertexPositionBuffer.numItems/3;
     }
 }
 

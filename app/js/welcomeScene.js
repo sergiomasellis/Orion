@@ -8,8 +8,8 @@ import owl from "owl";
 class welcomeScene extends Scene {
     init() {
 
-
-
+        let frinlet2 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet", playable: true});
+        this.addEntity(frinlet2);
 
      	let player = [];
         let grid = 50;
@@ -28,10 +28,8 @@ class welcomeScene extends Scene {
             }
         }
 
-        let frinlet2 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet"});
-        frinlet2.playable = true;
-        this.addEntity(frinlet2);
-
+        // let frinlet3 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet"});
+        // this.addEntity(frinlet3);
 
     }
 }

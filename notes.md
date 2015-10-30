@@ -1,10 +1,11 @@
 #TODO
 
 ## Soonish
-- Multiple Texture Support
+- ~~Multiple Texture Support~~
 - Mouse Input Support
 	- Add Mouse control to camera
 - Move all camera code to Camera Class
+	- Ensure working rendering without playable property enabled
 - Move GL stuff out of frinlet.js OR rename to player..
 - Grid floor for world
 - Normals Data

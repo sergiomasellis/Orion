@@ -27,7 +27,8 @@ class Main {
           models: [
             ['frinlet','js/models/frinlet.json'],
             ['owl','js/models/owl.json'],
-            ['dragon','js/models/dragon.json']
+            ['dragon','js/models/dragon.json'],
+            ['cube','js/models/cube.json']
           ]
       });
 

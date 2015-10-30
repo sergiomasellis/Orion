@@ -15,7 +15,7 @@ class Model {
 
 	_load(id, url){
 
-		console.log("Model: Fetching - ", url);
+		// console.log("Model: Fetching - ", url);
 		
 		if(this.modelCache[id] != undefined && this.modelCache[id].ready == true){
           return this.modelCache[id]; // return model information
