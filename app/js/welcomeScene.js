@@ -19,10 +19,11 @@ class welcomeScene extends Scene {
 
             	let name = "frinlet"+z+x;
 
-            		player[x] = new owl({name: name, model: "frinlet", texture: "dragon"});
+            		player[x] = new owl({name: name, model: "stormtrooper", texture: "stormtrooper", scale: 2});
                     player[x].update = () => {};
             		player[x].x = x;
                     player[x].z = z;
+                    
 
             	this.addEntity(player[x]);
             }

@@ -19,17 +19,22 @@ class WebGLObject extends Entity {
         this.playable = this.options.playable || false;
 
         // movement Variable
-        this.speed = this.options.speed || 0.05;
+        this.speed = this.options.speed || 8.05;
+        this.turnRate = this.options.turnRate || 2.0;
         this.angle = this.options.angle || 0;
         this.range = this.options.range || 0.5;
         this.color = this.options.color || [1.0, 1.0, 1.0, 1.0];
 
         // Get GL from injector and controller if needed
         this.gl = Injector.dependencies.gl;
-        this.controller = Injector.dependencies.controller;
+        this.controller = (this.playable) ? Injector.dependencies.controller : false;
+
+        //hacky fix, change later
+        this.gl.activeTexture(this.gl.TEXTURE0+Texture.textureCache[this.texture].id);
+		    this.gl.bindTexture(this.gl.TEXTURE_2D, Texture.textureCache[this.texture].compiledTexture);
 
         // Run only after shaders are ready!
-        this.vertexPositionBuffer = (!Models.bufferedModels[this.model]) ? this.initBuffers() : Models.bufferedModels[this.model];
+        if(!Models.bufferedModels[this.model]) this.initBuffers();
 
     }
 
@@ -54,7 +59,10 @@ class WebGLObject extends Entity {
         vertBuffer.itemSize = 3;
         vertBuffer.numItems = vertices.length/vertBuffer.itemSize;
 
-        Models.bufferedModels[this.model] = vertBuffer;
+        Models.bufferedModels[this.model] = {};
+        Models.bufferedModels[this.model].numItems = vertBuffer.numItems;
+        Models.bufferedModels[this.model].verts = vertBuffer;
+        Models.bufferedModels[this.model].uvs = this.uvBuffer;
 
         return vertBuffer;
     }
@@ -64,24 +72,30 @@ class WebGLObject extends Entity {
       gl.uniform1i(Shader.shaderProgram.samplerUniform, Texture.textureCache[this.options.texture].id);
     }
 
-    update() {
+    update(dt) {
 
       if (this.controller.direction.W) {
-          this.x += this.speed * Math.cos(this.rotation.y-Math.PI/2);
-          this.z -= this.speed * Math.sin(this.rotation.y-Math.PI/2);
+          this.x += this.speed * Math.cos(this.rotation.y-Math.PI/2) * dt;
+          this.z -= this.speed * Math.sin(this.rotation.y-Math.PI/2) * dt;
       }
 
       if (this.controller.direction.S) {
-          this.x -= this.speed * Math.cos(this.rotation.y-Math.PI/2);
-          this.z += this.speed * Math.sin(this.rotation.y-Math.PI/2);
+          this.x -= this.speed * Math.cos(this.rotation.y-Math.PI/2) * dt;
+          this.z += this.speed * Math.sin(this.rotation.y-Math.PI/2) * dt;
       }
 
       if (this.controller.direction.A) {
-          this.rotation.y += this.speed;
+          this.rotation.y += this.turnRate * dt;
       }
 
       if (this.controller.direction.D) {
-          this.rotation.y -= this.speed;
+          this.rotation.y -= this.turnRate * dt;
+      }
+      
+      if(this.controller.mouse.isDown) {
+        let deltaX = this.controller.mouse.down.x - this.controller.mouse.x;
+        this.rotation.y += deltaX/300;
+        this.controller.mouse.down.x = this.controller.mouse.x;
       }
       
     }
@@ -112,17 +126,23 @@ class WebGLObject extends Entity {
               this.x += (0.3 * Math.sin(this.z))/8;
               this.z += (0.3 * Math.cos(this.x))/8;
           }
+          
+          if(this.options.scale) mat4.scale(this.mvMatrix, this.mvMatrix,  [this.options.scale,this.options.scale,this.options.scale]);
+
 
           mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
 
           this.gl.activeTexture(this.gl.TEXTURE0+Texture.textureCache[this.options.texture].id);
 
-          this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexPositionBuffer);
-          this.gl.vertexAttribPointer(Shader.shaderProgram.vertexPositionAttribute, this.vertexPositionBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
+          this.gl.bindBuffer(this.gl.ARRAY_BUFFER,  Models.bufferedModels[this.model].verts);
+          this.gl.vertexAttribPointer(Shader.shaderProgram.position, 3, this.gl.FLOAT, false, 0, 0);
 
+          this.gl.bindBuffer(this.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].uvs);
+          this.gl.vertexAttribPointer(Shader.shaderProgram.uv, 2, this.gl.FLOAT, false, 0, 0);
+            
 
           this.setMatrixUniforms(this.gl);
-          this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertexPositionBuffer.numItems);
+          this.gl.drawArrays(this.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);
     }
 }
 

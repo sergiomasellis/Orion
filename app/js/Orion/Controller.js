@@ -26,14 +26,35 @@ export default class Controller {
         this.direction.A = false;
         this.direction.S = false;
         this.direction.D = false;
+        
+        this.mouse = {};
+        this.mouse.down = {};
+        this.mouse.isDown = false;
 
         this.init();
     }
 
     init() {
-        document.addEventListener("triggerkeydownEvent", this.move.bind(this));
-        document.addEventListener("triggerkeyupEvent", this.stop.bind(this));
+        document.addEventListener("triggerKeydownEvent", this.move.bind(this));
+        document.addEventListener("triggerKeyupEvent", this.stop.bind(this));
+        
+        document.addEventListener("triggerMousedownEvent", (e) => {
+            this.mouse.down.x = e.detail.page.x;
+            this.mouse.down.y = e.detail.page.y;
+            this.mouse.isDown = true;
+            
+        });
+        
+        document.addEventListener("triggerMouseupEvent", (e) => {
+            this.mouse.isDown = false;
+        });
+        
+        document.addEventListener("triggerMousemoveEvent", (e) => {
+            this.mouse.x = e.detail.page.x;
+            this.mouse.y = e.detail.page.y;
+        });
     }
+    
 
     move(details) {
 

@@ -2,8 +2,9 @@
 
 ## Soonish
 - ~~Multiple Texture Support~~
-- Mouse Input Support
-	- Add Mouse control to camera
+- ~~Mouse Input Support~~
+	- ~~Add Mouse control to camera~~ -kinda
+	- Rotate camera on the X axis
 - Move all camera code to Camera Class
 	- Ensure working rendering without playable property enabled
 - Move GL stuff out of frinlet.js OR rename to player..

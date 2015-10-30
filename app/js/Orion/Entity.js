@@ -8,6 +8,7 @@ class Entity {
 
         this.dependencies = dependencies;
         this.options = Utils.extend(this.options, options);
+        // this is an example
 
         this.canvas = Injector.dependencies.canvas;
         //this.preRenderCanvas = O.Injector.dependencies.preRenderCanvas;
@@ -20,6 +21,7 @@ class Entity {
         this.x = this.options.x || 0.0;
         this.y = this.options.y || 0.0;
         this.z = this.options.z || 0.0;
+        // this.scale = this.options.scale || 1.0;
 
 
 

@@ -31,7 +31,9 @@ gulp.task("watch", function(){
 gulp.task('webserver', function() {
   var _browser_URL = "./dist";
     browserSync({
-      server: _browser_URL
+      server: _browser_URL,
+      port: process.env.PORT,
+      host: process.env.IP
     });
 });
 

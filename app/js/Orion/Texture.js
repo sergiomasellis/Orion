@@ -54,6 +54,7 @@ class Texture {
 		this.textureCount++;
 
 		// after texture was setup
+		this.gl.bindTexture(this.gl.TEXTURE_2D, null);
 		this.gl.activeTexture(this.gl.TEXTURE0+this.textureCache[name].id);
 		this.gl.bindTexture(this.gl.TEXTURE_2D, this.textureCache[name].compiledTexture);
 

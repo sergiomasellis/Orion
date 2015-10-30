@@ -1,4 +1,4 @@
-﻿//From Engine
+//From Engine
 import Config from 'Orion/Config';
 import Game from 'Orion/Game';
 
@@ -18,7 +18,8 @@ class Main {
           ],
           textures: [
               ['dragon', 'img/micro_dragon_col.png'],
-              ['frinlet', 'img/character.png']
+              ['frinlet', 'img/character.png'],
+              ['stormtrooper', 'img/stormtrooper.png']
           ],
           shaders: [
             ['js/shaders/frag.glsl', 'frag'],
@@ -28,7 +29,8 @@ class Main {
             ['frinlet','js/models/frinlet.json'],
             ['owl','js/models/owl.json'],
             ['dragon','js/models/dragon.json'],
-            ['cube','js/models/cube.json']
+            ['cube','js/models/cube.json'],
+            ['stormtrooper','js/models/stormtrooper.json']
           ]
       });
 
