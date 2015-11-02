@@ -13,13 +13,13 @@ class Main {
       Config.set({
           engine: "3d",
           images: [
-              'img/avatar_sprite.png', 
-              'img/avatar_sprite32.png'
+            'img/avatar_sprite.png', 
+            'img/avatar_sprite32.png'
           ],
           textures: [
-              ['dragon', 'img/micro_dragon_col.png'],
-              ['frinlet', 'img/character.png'],
-              ['stormtrooper', 'img/stormtrooper.png']
+            ['dragon', 'img/micro_dragon_col.png'],
+            ['frinlet', 'img/character.png'],
+            ['stormtrooper', 'img/stormtrooper.png']
           ],
           shaders: [
             ['js/shaders/frag.glsl', 'frag'],

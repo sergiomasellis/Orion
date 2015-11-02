@@ -13,7 +13,6 @@ class WebGLObject extends Entity {
 
         // variables
         this.mvMatrix = mat4.create();
-        this.pMatrix = mat4.create();
         this.texture = this.options.texture || false;
         this.model = this.options.model || "cube";
         this.playable = this.options.playable || false;
@@ -24,10 +23,11 @@ class WebGLObject extends Entity {
         this.angle = this.options.angle || 0;
         this.range = this.options.range || 0.5;
         this.color = this.options.color || [1.0, 1.0, 1.0, 1.0];
+        this.mouseSensitivity = this.options.mouseSensitivity || 200;
 
         // Get GL from injector and controller if needed
         this.gl = Injector.dependencies.gl;
-        this.controller = (this.playable) ? Injector.dependencies.controller : false;
+        // this.controller = (this.playable) ? Injector.dependencies.controller : false;
 
         //hacky fix, change later
         this.gl.activeTexture(this.gl.TEXTURE0+Texture.textureCache[this.texture].id);
@@ -42,7 +42,7 @@ class WebGLObject extends Entity {
 
         // create buffer for vertices to be stored in
         let vertBuffer = this.gl.createBuffer();
-        this.uvBuffer = this.gl.createBuffer();
+        let uvBuffer = this.gl.createBuffer();
 
         // vertices
         let vertices = new Float32Array(Models.modelCache[this.model].verts);
@@ -52,7 +52,8 @@ class WebGLObject extends Entity {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, vertices, this.gl.STATIC_DRAW);
 
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.uvBuffer);
+        // bind uv buffer 
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, uvBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, uvs, this.gl.STATIC_DRAW);
 
         // this should be
@@ -62,9 +63,8 @@ class WebGLObject extends Entity {
         Models.bufferedModels[this.model] = {};
         Models.bufferedModels[this.model].numItems = vertBuffer.numItems;
         Models.bufferedModels[this.model].verts = vertBuffer;
-        Models.bufferedModels[this.model].uvs = this.uvBuffer;
+        Models.bufferedModels[this.model].uvs = uvBuffer;
 
-        return vertBuffer;
     }
 
     setMatrixUniforms(gl) {
@@ -74,29 +74,31 @@ class WebGLObject extends Entity {
 
     update(dt) {
 
-      if (this.controller.direction.W) {
+      if (Injector.dependencies.controller.direction.W) {
           this.x += this.speed * Math.cos(this.rotation.y-Math.PI/2) * dt;
           this.z -= this.speed * Math.sin(this.rotation.y-Math.PI/2) * dt;
       }
 
-      if (this.controller.direction.S) {
+      if (Injector.dependencies.controller.direction.S) {
           this.x -= this.speed * Math.cos(this.rotation.y-Math.PI/2) * dt;
           this.z += this.speed * Math.sin(this.rotation.y-Math.PI/2) * dt;
       }
 
-      if (this.controller.direction.A) {
+      if (Injector.dependencies.controller.direction.A) {
           this.rotation.y += this.turnRate * dt;
       }
 
-      if (this.controller.direction.D) {
+      if (Injector.dependencies.controller.direction.D) {
           this.rotation.y -= this.turnRate * dt;
       }
       
-      if(this.controller.mouse.isDown) {
-        let deltaX = this.controller.mouse.down.x - this.controller.mouse.x;
-        this.rotation.y += deltaX/300;
-        this.controller.mouse.down.x = this.controller.mouse.x;
-      }
+      // if(this.controller.mouse.isDown) {
+        // let deltaX = this.controller.mouse.down.x - this.controller.mouse.x;
+        // console.log(Injector.dependencies.controller.mouse.movement.x);
+        this.rotation.y -= Injector.dependencies.controller.mouse.movement.x/this.mouseSensitivity;
+        this.rotation.x -= Injector.dependencies.controller.mouse.movement.y/this.mouseSensitivity;
+        // this.controller.mouse.down.x = this.controller.mouse.x;
+      // }
       
     }
 
@@ -111,16 +113,10 @@ class WebGLObject extends Entity {
 
             this.color = [1,0,0, 0.5];
 
-            mat4.identity(this.pMatrix);
-            mat4.perspective(this.pMatrix, Math.PI*0.3, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 1000.0);
-            mat4.translate(this.pMatrix, this.pMatrix, [0.0, -4.0, -7.0]);
+            
+            //pushes camera up and back
 
-            // mat4.rotate(this.pMatrix, this.pMatrix, -this.rotation.y+Math.PI, [0.0, 1.0, 0.0]); //later D:
-            mat4.rotate(this.pMatrix, this.pMatrix, -this.rotation.y+Math.PI, [0.0, 1.0, 0.0]);
-            mat4.translate(this.pMatrix, this.pMatrix, [-this.x, 0.0, -this.z]);
-
-
-            this.gl.uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
+           
 
           }else{
               this.x += (0.3 * Math.sin(this.z))/8;
@@ -139,7 +135,9 @@ class WebGLObject extends Entity {
 
           this.gl.bindBuffer(this.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].uvs);
           this.gl.vertexAttribPointer(Shader.shaderProgram.uv, 2, this.gl.FLOAT, false, 0, 0);
-            
+
+          Injector.dependencies.controller.mouse.movement.x = 0;
+          Injector.dependencies.controller.mouse.movement.y = 0;
 
           this.setMatrixUniforms(this.gl);
           this.gl.drawArrays(this.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);

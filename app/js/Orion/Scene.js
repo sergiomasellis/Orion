@@ -9,6 +9,7 @@ class Scene {
         this.uuid = this.options.uuid || Utils.generateUUID();
 
         this.entityList = [];
+        this.cameraList = [];
 
         this.init();
     }
@@ -22,6 +23,17 @@ class Scene {
         return entity;
     }
 
+    addCamera(camera) {
+        // console.log("Scene: Add Entity - " + entity.options.name);
+        this.cameraList.unshift(camera);
+        // console.log(this.cameraList);
+        return camera;
+    }
+
+    setCurrentCamera(camera){
+        this.currentCamera = camera;
+    }
+
     update(dt) {
         let _this = this,
             el = _this.entityList,
@@ -32,18 +44,29 @@ class Scene {
                 el[l].update(dt);
             }
         }
+
+        this.cameraList[0].update(dt);
     }
 
     draw() {
         let _this = this,
             el = _this.entityList,
-            l = el.length;
+            l = el.length,
+            cL = this.cameraList.length
 
         if (l > 0) {
             while (l--) {
                 el[l].draw();
             }
         }
+
+
+        // if(cL > 0){
+            // while(cL--){
+                
+            // }
+        // }
+
     }
 }
 

@@ -1,117 +1,65 @@
 import Utils from 'Orion/Utils';
 import Injector from 'Orion/Injector';
+import Entity from "Orion/Entity";
 
-export default class Camera {
+import Shader from 'Orion/Shader';
 
-    constructor(options, dependencies) {
-
-        this.dependencies = dependencies;
-        this.options = Utils.extend(this.options, options);
-
-        this.canvas = Injector.dependencies.canvas;
-        this.context = Injector.dependencies.context;
-        this.scale = Injector.dependencies.scale;
-
-        // this.controller = new Controller;
-
-        this.speed = 0;
-        this.lerpAmount = 1.0;
-
-        this.distance = 1000.0;
-        this.lookat = [0, 0];
-        this.fieldOfView = this.options.fieldOfView || Math.PI / 4.0;
-        this.viewport = {
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: 0,
-            height: 0,
-            scale: [1.0, 1.0]
-        };
-
-        this.init();
-    }
+export default class Camera extends Entity{
 
     init() {
 
-        this.aspectRatio = this.canvas.width / this.canvas.height;
-        this.viewport.width = this.distance * Math.tan(this.fieldOfView);
-        this.viewport.height = this.viewport.width / this.aspectRatio;
+        console.log(this.options.distance);
+        
+        this.canvas = Injector.dependencies.canvas;
+        this.gl = Injector.dependencies.gl;
 
-        this.viewport.left = this.lookat[0] - (this.viewport.width / 2.0);
-        this.viewport.top = this.lookat[1] - (this.viewport.height / 2.0);
+        this.nearClip = this.options.nearClip || 0.1;
+        this.farClip = this.options.farClip || 1000.0;
+        this.distance = this.options.distance || {x:0, y:0, z:0};
+        // this.lookAt = this.options.lookAt || null;
+        this.fieldOfView = this.options.fieldOfView || Math.PI*0.3;
+        this.aspectRatio = this.options.aspectRatio || this.canvas.width / this.canvas.height;
 
-        //console.log("vp left: ", this.viewport.left);
-        //console.log("vp top: ", this.viewport.top, this.lookat[1]);
-
-        this.viewport.right = this.viewport.left + this.viewport.width;
-        this.viewport.bottom = this.viewport.top + this.viewport.height;
-        this.viewport.scale[0] = this.context.canvas.width / this.viewport.width;
-        this.viewport.scale[1] = this.context.canvas.height / this.viewport.height;
-
+        this.pMatrix = mat4.create();
     }
 
-    begin() {
-        // this.context.save();
-        this.applyScale();
-        this.applyTranslation();
-    }
+    update() {
+  
+        if(this.lookAt != null){
+            this.x = -this.lookAt.x;
+            this.y = -this.lookAt.y;
+            this.z = -this.lookAt.z;
 
-    end() {
-        this.context.restore();
-    }
-
-    applyScale() {
-        this.context.scale(this.viewport.scale[0], this.viewport.scale[1]);
-    }
-
-    applyTranslation() {
-        this.context.translate(-this.viewport.left, -this.viewport.top);
-    }
-
-    moveTo(x, y) {
-        this.lookat[0] = x;
-        this.lookat[1] = y;
-        this.init();
-    }
-
-    follow(obj) {
-        // Get the distance from the player to the middle of the screen (our focal point)
-        this.dx = (obj.x - this.viewport.width / 2.0);
-        this.dy = (obj.y - this.viewport.height / 2.0)
-
-        if (this.lerpAmount < 1.0) {
-            this.lerpAmount += 0.05;
-        } else {
-            this.prevPosition = this.curPosition;
+            this.rotation.x = -this.lookAt.rotation.x;
+            this.rotation.y = -this.lookAt.rotation.y;
+            this.rotation.z = -this.lookAt.rotation.z;
         }
-        // Interpolate the  current position on the x-axis
-        this.xScroll = Utils.lerp(this.dx, this.lookat[0], this.lerpAmount);
-        // Interpolate the current position on the y-axis
-        this.yScroll = Utils.lerp(this.dy, this.lookat[1], this.lerpAmount);
 
-        //this.moveTo(this.lookat[0] - this.xScroll, this.lookat[1] - this.yScroll);
+        mat4.identity(this.pMatrix);
+        mat4.perspective(this.pMatrix, this.fieldOfView, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 1000.0);
+        mat4.translate(this.pMatrix, this.pMatrix, [0.0, 0.0, this.distance.z]);
+
+        mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
+        mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.y+Math.PI, [0.0, 1.0, 0.0]);
+
+        mat4.translate(this.pMatrix, this.pMatrix, [0.0, this.distance.y, 0.0]);
+
+        mat4.translate(this.pMatrix, this.pMatrix, [this.x, this.y, this.z]);
+
+        this.gl.uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
 
     }
 
-    zoomTo(z) {
-        this.distance = z;
-        this.init();
+    draw() {
+
     }
 
-    screenToWorld(x, y, obj) {
-        obj = obj || {};
-        obj.x = (x / this.viewport.scale[0]) + this.viewport.left;
-        obj.y = (y / this.viewport.scale[1]) + this.viewport.top;
-        return obj;
+    screenToWorld() {
+
     }
 
-    worldToScreen(x, y, obj) {
-        obj = obj || {};
-        obj.x = (x - this.viewport.left) * (this.viewport.scale[0]);
-        obj.y = (y - this.viewport.top) * (this.viewport.scale[1]);
-        return obj;
+    worldToScreen() {
+
     }
 
 

@@ -1,5 +1,6 @@
 import Scene from "Orion/Scene";
 import Grid from "Orion/Grid";
+import Camera from "Orion/Camera";
 
 import Player from "player";
 import WebGLObject from "WebGLObject";
@@ -8,7 +9,7 @@ import owl from "owl";
 class welcomeScene extends Scene {
     init() {
 
-        let frinlet2 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet", playable: true});
+        var frinlet2 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet", playable: true});
         this.addEntity(frinlet2);
 
      	let player = [];
@@ -29,9 +30,11 @@ class welcomeScene extends Scene {
             }
         }
 
-        // let frinlet3 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet"});
-        // this.addEntity(frinlet3);
+        //add camera
+        this.currentCamera = this.addCamera(new Camera({distance: {x: 0.0, y:-4.0, z:-7.0}}));
 
+        this.currentCamera.lookAt = player[20];
+        console.log(this.currentCamera);
     }
 }
 

@@ -13,7 +13,7 @@ export default class Controller {
 
         this.buffered = this.options.buffer || false;
         this.rotate = this.options.rotate || 0;
-        this.uuid = this.options.uuid || Utils.generateUUID();
+        // this.uuid = this.options.uuid || Utils.generateUUID();
         this.x = this.options.x || 0;
         this.y = this.options.y || 0;
         this.z = this.options.z || 0;
@@ -29,30 +29,31 @@ export default class Controller {
         
         this.mouse = {};
         this.mouse.down = {};
+        this.mouse.movement = {x: 0, y:0};
         this.mouse.isDown = false;
 
-        this.init();
+        this.init(); 
     }
 
     init() {
-        document.addEventListener("triggerKeydownEvent", this.move.bind(this));
-        document.addEventListener("triggerKeyupEvent", this.stop.bind(this));
+        document.addEventListener("triggerKeydownEvent", this.move.bind(this), false);
+        document.addEventListener("triggerKeyupEvent", this.stop.bind(this), false);
         
-        document.addEventListener("triggerMousedownEvent", (e) => {
-            this.mouse.down.x = e.detail.page.x;
-            this.mouse.down.y = e.detail.page.y;
+        document.addEventListener("triggerMousedownEvent", (msg) => {
+            this.mouse.down.x = msg.detail.e.pageX;
+            this.mouse.down.y = msg.detail.e.pageY;
             this.mouse.isDown = true;
-            
-        });
+
+        }.bind(this), false);
         
-        document.addEventListener("triggerMouseupEvent", (e) => {
-            this.mouse.isDown = false;
-        });
+        document.addEventListener("triggerMouseupEvent", (e) => this.mouse.isDown = false, false);
         
-        document.addEventListener("triggerMousemoveEvent", (e) => {
-            this.mouse.x = e.detail.page.x;
-            this.mouse.y = e.detail.page.y;
-        });
+        document.addEventListener("triggerMousemoveEvent", (msg) => {
+            this.mouse.x = msg.detail.e.pageX;
+            this.mouse.y = msg.detail.e.pageY;
+            this.mouse.movement.x = msg.detail.e.movementX;
+            this.mouse.movement.y = msg.detail.e.movementY;
+        }.bind(this), false);
     }
     
 
