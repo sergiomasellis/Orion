@@ -2,7 +2,7 @@ import Injector from "Orion/Injector";
 
 class Input{
     constructor(){
-        this.canvas = Injector.dependencies.canvas;
+        this.canvas = Injector.get("canvas");
         this.init();
     }
 

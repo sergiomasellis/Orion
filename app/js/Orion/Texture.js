@@ -2,84 +2,86 @@ import Config from "Orion/Config";
 import Injector from "Orion/Injector";
 
 class Texture {
-	
-	constructor(){
-		this.textureCache = {};
-    	this.allTextureCompiled = false;
-    	this.readyCallbacks = [];
-    	this.textureCount = 0;
-	}
 
-	init(){
-	    this.gl = Injector.dependencies.gl;
-	    return this;
-	}
+    constructor() {
+        this.textureCache = {};
+        this.allTextureCompiled = false;
+        this.readyCallbacks = [];
+        this.textureCount = 0;
+    }
 
-	load(multipleArrayOfTextures){
-      for(let item of multipleArrayOfTextures) {
-        this._load(item[0], item[1]); // go through array pass Name and URL
-      }
-  	}
+    init() {
+        this.gl = Injector.dependencies.gl;
+        return this;
+    }
 
-  	_load(name, url){
-  		console.log("Texture: Fetching - ", url);
+    load(multipleArrayOfTextures) {
+        for (let item of multipleArrayOfTextures) {
+            this._load(item[0], item[1]); // go through array pass Name and URL
+        }
+    }
 
-  		if(this.textureCache[name]){
-			return this.textureCache[name]; // return texture
-      	}else{
-			this.textureCache[name] = {};
-			this.textureCache[name].ready = false;
-			this.textureCache[name].texture = this.gl.createTexture();
-			this.textureCache[name].image = new Image();
-			this.textureCache[name].image.onload = () => { this.handleTextureLoaded(name); }.bind(this)
-			this.textureCache[name].image.src = url;
-      	}
-  	}
+    _load(name, url) {
+        console.log("Texture: Fetching - ", url);
 
-  	onReady(func){
-    	this.readyCallbacks.push(func);
-  	}
+        if (this.textureCache[name]) {
+            return this.textureCache[name]; // return texture
+        } else {
+            this.textureCache[name] = {};
+            this.textureCache[name].ready = false;
+            this.textureCache[name].texture = this.gl.createTexture();
+            this.textureCache[name].image = new Image();
+            this.textureCache[name].image.onload = () => {
+                this.handleTextureLoaded(name);
+            }.bind(this)
+            this.textureCache[name].image.src = url;
+        }
+    }
 
-	handleTextureLoaded(name) {
-		this.gl.bindTexture(this.gl.TEXTURE_2D, this.textureCache[name].texture);
-		this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.textureCache[name].image);
-		this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-		this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_NEAREST);
-		this.gl.generateMipmap(this.gl.TEXTURE_2D);
-		this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+    onReady(func) {
+        this.readyCallbacks.push(func);
+    }
 
-		this.textureCache[name].compiledTexture = this.textureCache[name].texture;
-		this.textureCache[name].ready = true;
-		this.textureCache[name].id = this.textureCount;
-		this.textureCount++;
+    handleTextureLoaded(name) {
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.textureCache[name].texture);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.textureCache[name].image);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_NEAREST);
+        this.gl.generateMipmap(this.gl.TEXTURE_2D);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
 
-		// after texture was setup
-		this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-		this.gl.activeTexture(this.gl.TEXTURE0+this.textureCache[name].id);
-		this.gl.bindTexture(this.gl.TEXTURE_2D, this.textureCache[name].compiledTexture);
+        this.textureCache[name].compiledTexture = this.textureCache[name].texture;
+        this.textureCache[name].ready = true;
+        this.textureCache[name].id = this.textureCount;
+        this.textureCount++;
 
-		// check if all are completed
-		this.allTextureCompiled = true;
-		for (let prop in this.textureCache) {
+        // after texture was setup
+        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+        this.gl.activeTexture(this.gl.TEXTURE0 + this.textureCache[name].id);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.textureCache[name].compiledTexture);
 
-			if (this.textureCache.hasOwnProperty(prop)) {
+        // check if all are completed
+        this.allTextureCompiled = true;
+        for (let prop in this.textureCache) {
 
-			  if(this.textureCache[prop].ready == false){
-			     this.allTextureCompiled = false;
-			     break;
-			  }
-			}
-		}
+            if (this.textureCache.hasOwnProperty(prop)) {
 
-		if(this.allTextureCompiled){
-			console.log("Texture: All textures compiled");
+                if (this.textureCache[prop].ready == false) {
+                    this.allTextureCompiled = false;
+                    break;
+                }
+            }
+        }
 
-			this.readyCallbacks.forEach((func) => {
-		        func();
-		    }.bind(this));
+        if (this.allTextureCompiled) {
+            console.log("Texture: All textures compiled");
 
-		}
-	}
+            this.readyCallbacks.forEach((func) => {
+                func();
+            }.bind(this));
+
+        }
+    }
 }
 
 

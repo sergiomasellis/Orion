@@ -3,7 +3,6 @@ import Injector from 'Orion/Injector';
 
 class Context {
     constructor() {
-
     }
 
     init(){
@@ -36,8 +35,12 @@ class Context {
 
       // Add instances to the injector
       Injector.register('canvas', this.canvas);
-      Injector.register('context', this.context);
-      Injector.register('gl', this.gl);
+
+      if(Config.get("engine") == "2d") { 
+        Injector.register('context', this.context); 
+      }else{
+        Injector.register('gl', this.gl);
+      }
 
       return this.context;
     }

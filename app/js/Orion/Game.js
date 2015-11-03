@@ -16,7 +16,6 @@ export default class Game {
     constructor(options = {}, dependencies = {}) {
         this.dependencies = dependencies;
         this.options = Utils.extend(this.options, options);
-        this.config = Config;
 
         // Get Context
         this.gl = Context.init();
@@ -63,13 +62,13 @@ export default class Game {
         Injector.register('game', this);
 
         // Get Resources
-        this.resources.load(this.config.images);
-        this.textures.load(this.config.textures);
+        this.resources.load(Config.get("images"));
+        this.textures.load(Config.get("textures"));
 
         this.resources.onReady(() => {
 
           // Request for models via AJAX
-          Models.load(this.config.models);
+          Models.load(Config.get("models"));
 
           // Models are done loading
           Models.onReady(() =>{
@@ -83,7 +82,7 @@ export default class Game {
           });
 
           // Request for shaders via AJAX
-          Shaders.load(this.config.shaders);
+          Shaders.load(Config.get("shaders"));
 
           // Initialize game loop
           Shaders.onReady(() => {

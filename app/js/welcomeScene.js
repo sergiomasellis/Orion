@@ -2,40 +2,56 @@ import Scene from "Orion/Scene";
 import Grid from "Orion/Grid";
 import Camera from "Orion/Camera";
 
-import Player from "player";
-import WebGLObject from "WebGLObject";
-import owl from "owl";
+import Player from "Player";
+import StormTrooper from "StormTrooper";
 
-class welcomeScene extends Scene {
+class WelcomeScene extends Scene {
+
     init() {
 
-        var frinlet2 = new WebGLObject({name: "Stevoid1990", model: "frinlet", texture: "frinlet", playable: true});
+        var frinlet2 = new Player({
+            name: "Stevoid1990",
+            model: "frinlet",
+            texture: "frinlet",
+            playable: true
+        });
+
         this.addEntity(frinlet2);
 
-     	let player = [];
+        let st = [];
         let grid = 50;
 
         for (let x = -grid; x < grid; x += 5) {
             for (let z = -grid; z < grid; z += 5) {
 
-            	let name = "frinlet"+z+x;
+                let name = "frinlet" + z + x;
 
-            		player[x] = new owl({name: name, model: "stormtrooper", texture: "stormtrooper", scale: 2});
-                    player[x].update = () => {};
-            		player[x].x = x;
-                    player[x].z = z;
-                    
+                st[x] = new StormTrooper({
+                    name: name,
+                    model: "stormtrooper",
+                    texture: "stormtrooper",
+                    scale: 2
+                });
 
-            	this.addEntity(player[x]);
+                st[x].x = x;
+                st[x].z = z;
+
+                this.addEntity(st[x]);
             }
         }
 
         //add camera
-        this.currentCamera = this.addCamera(new Camera({distance: {x: 0.0, y:-4.0, z:-7.0}}));
+        this.currentCamera = this.addCamera(new Camera({
+            distance: {
+                x: 0.0,
+                y: -4.0,
+                z: -7.0
+            }
+        }));
 
-        this.currentCamera.lookAt = player[20];
-        console.log(this.currentCamera);
+        this.currentCamera.lookAt(frinlet2);
+
     }
 }
 
-export default welcomeScene;
+export default WelcomeScene;

@@ -9,6 +9,10 @@ class Config {
     set(obj) {
         Utils.extend(this, obj);
     }
+
+    get(prop){
+    	return this[prop];
+    }
 }
 
 //initalized automatically
