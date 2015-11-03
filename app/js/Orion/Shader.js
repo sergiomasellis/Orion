@@ -172,12 +172,16 @@ class Shader {
         this.shaderProgram.color = this.gl.getUniformLocation(this.shaderProgram, 'color');
 
         this.shaderProgram.position = this.gl.getAttribLocation(this.shaderProgram, 'position');
-        this.gl.enableVertexAttribArray(this.shaderProgram.position); // <--- ?
-        // this.gl.vertexAttribPointer(this.shaderProgram.position, 3, this.gl.FLOAT, false, 0, 0);      
+        this.gl.enableVertexAttribArray(this.shaderProgram.position); // <--- ?    
 
         this.shaderProgram.uv = this.gl.getAttribLocation(this.shaderProgram, 'uv');
         this.gl.enableVertexAttribArray(this.shaderProgram.uv); // <--- ?
-        // this.gl.vertexAttribPointer(this.shaderProgram.uv, 2, this.gl.FLOAT, false, 0, 0);
+
+        this.shaderProgram.vColor = this.gl.getAttribLocation(this.shaderProgram, 'aVertexColor');
+        this.gl.enableVertexAttribArray(this.shaderProgram.vColor); // <--- ?
+
+        this.shaderProgram.normals = this.gl.getAttribLocation(this.shaderProgram, 'normals');
+        this.gl.enableVertexAttribArray(this.shaderProgram.normals); // <--- ?
 
         this.shaderProgram.pMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "pMatrix");
         this.shaderProgram.mvMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "mVMatrix");

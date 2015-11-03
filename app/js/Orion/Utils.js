@@ -1,5 +1,22 @@
 class Utils {
 
+    constructor() {
+        this.fillArrayWith();
+    }
+
+    fillArrayWith(arr, size) {
+                // [1,2,3], [1,2,3] 2
+        let nArray = [];
+
+        for (var i = 0; i < size; i++) {
+            for (var j = 0; j < arr.length; j++) {
+                  nArray.push(arr[j]);
+            }
+        }
+
+        return nArray;
+    }
+
     deepExtend(out) {
         out = out || {};
         for (var i = 1; i < arguments.length; i++) {
@@ -47,13 +64,16 @@ class Utils {
         return uuid;
     }
 
-    lerp(A, B, t){
+    lerp(A, B, t) {
         return (A * t) + ((1.0 - t) * B);
     }
 
     randomInt(range) {
-      return Math.floor(Math.random() * range);
+        return Math.floor(Math.random() * range);
     }
+
+
 }
 
-export default new Utils;
+export
+default new Utils;

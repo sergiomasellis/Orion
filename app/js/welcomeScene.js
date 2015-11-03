@@ -12,8 +12,7 @@ class WelcomeScene extends Scene {
         var frinlet2 = new Player({
             name: "Stevoid1990",
             model: "frinlet",
-            texture: "frinlet",
-            playable: true
+            texture: "frinlet"
         });
 
         this.addEntity(frinlet2);

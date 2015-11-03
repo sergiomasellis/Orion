@@ -10,7 +10,7 @@ class Model {
 		// console.log("Models: loading - ", multipleArrayOfModels);
 	  for(let item of multipleArrayOfModels) {
         this._load(item[0], item[1]); // go through array pass ID/NAME and URL
-      }
+    }
 	}
 
 	_load(id, url){
