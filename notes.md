@@ -20,4 +20,5 @@
 	- Add support for pointerlock
 - Move GL stuff out of frinlet.js or rename to player.
 - Move all camera code to Camera Class
+	- Added Multiple camera support per scene
 	- Ensure working rendering without playable property enabled
