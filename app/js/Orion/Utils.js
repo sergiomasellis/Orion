@@ -75,5 +75,4 @@ class Utils {
 
 }
 
-export
-default new Utils;
+export default new Utils;

@@ -89,7 +89,7 @@ class WebGLObject extends Entity {
         Models.bufferedModels[this.model].vColor = colorBuffer;
         Models.bufferedModels[this.model].normals = normalBuffer;
 
-        console.log(Models.modelCache[this.model], Models.bufferedModels[this.model]);
+        // console.log(Models.modelCache[this.model], Models.bufferedModels[this.model]);
 
 
     }

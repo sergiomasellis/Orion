@@ -12,7 +12,7 @@ class Scene {
         this.entityList = [];
         this.cameraList = [];
 
-        // Don't start till game is ready
+        // // Don't start till game is ready
         if(Injector.dependencies.game.isReady){ 
             this.init();
         }else{
@@ -22,8 +22,7 @@ class Scene {
         }
     }
 
-    init() {
-    }
+    init() {}
 
     addEntity(entity) {
         // console.log("Scene: Add Entity - " + entity.options.name);
@@ -32,20 +31,21 @@ class Scene {
     }
 
     addCamera(camera) {
-        // console.log("Scene: Add Entity - " + entity.options.name);
-        this.cameraList.unshift(camera);
-        // console.log(this.cameraList);
+        this.cameraList[camera.uuid] = camera;
+        this.cameraList.length++;
         return camera;
     }
 
     setCurrentCamera(camera){
-        this.currentCamera = camera;
+        this.currentCamera = camera.uuid;
     }
 
     update(dt) {
         let _this = this,
             el = _this.entityList,
-            l = el.length;
+            l = el.length,
+            cl = _this.cameraList,
+            cll = _this.cameraList.length;
 
         if (l > 0) {
             while (l--) {
@@ -53,7 +53,12 @@ class Scene {
             }
         }
 
-        this.cameraList[0].update(dt);
+        
+        if(cll > 0) { 
+            cl[_this.currentCamera].update(dt); 
+        }else{
+            throw Error("Please add a camera to the scene");
+        }
     }
 
     draw() {

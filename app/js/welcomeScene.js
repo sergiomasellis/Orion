@@ -11,8 +11,8 @@ class WelcomeScene extends Scene {
 
         var frinlet2 = new Player({
             name: "Stevoid1990",
-            model: "frinlet",
-            texture: "frinlet"
+            model: "stormtrooper",
+            texture: "stormtrooper"
         });
 
         this.addEntity(frinlet2);
@@ -28,8 +28,7 @@ class WelcomeScene extends Scene {
                 st[x] = new StormTrooper({
                     name: name,
                     model: "stormtrooper",
-                    texture: "stormtrooper",
-                    scale: 2
+                    texture: "stormtrooper"
                 });
 
                 st[x].x = x;
@@ -39,17 +38,30 @@ class WelcomeScene extends Scene {
             }
         }
 
-        //add camera
-        this.currentCamera = this.addCamera(new Camera({
+        // Add camera set distance and set focus entity
+        let myCamera = this.addCamera(new Camera({
             distance: {
                 x: 0.0,
-                y: -4.0,
-                z: -7.0
-            }
+                y: -2.0,
+                z: -3.0
+            },
+            focus: frinlet2
         }));
 
-        this.currentCamera.lookAt(frinlet2);
+        this.setCurrentCamera(myCamera);
 
+        // used to test multiple cameras working
+        // window.myCamera = myCamera;
+
+        // window.myCamera2 = this.addCamera(new Camera({
+        //     distance: {
+        //         x: 0.0,
+        //         y: -6.0,
+        //         z: -3.0
+        //     }
+        // }));
+
+        // window.scene = this;
     }
 }
 

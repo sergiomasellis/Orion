@@ -17,19 +17,17 @@ class Main {
             'img/avatar_sprite32.png'
           ],
           textures: [
-            ['dragon', 'img/micro_dragon_col.png'],
             ['frinlet', 'img/character.png'],
             ['stormtrooper', 'img/stormtrooper.png']
           ],
           shaders: [
-            ['js/shaders/frag.glsl', 'frag'],
-            ['js/shaders/vert.glsl', 'vert']
+            ['frag','js/shaders/frag.glsl'],
+            ['vert','js/shaders/vert.glsl']
           ],
           models: [
             ['frinlet','js/models/frinlet.json'],
-            ['owl','js/models/owl.json'],
-            ['cube','js/models/cube.json'],
-            ['stormtrooper','js/models/stormtrooper.json']
+            ['stormtrooper','js/models/stormtrooper.json'],
+            ['girl','js/models/girl.json']
           ]
       });
 

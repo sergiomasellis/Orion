@@ -12,7 +12,8 @@ export default class Camera extends Entity {
         this.distance = this.options.distance || {x:0, y:0, z:0};
         this.fieldOfView = this.options.fieldOfView || Math.PI*0.3;
         this.aspectRatio = this.options.aspectRatio || this.canvas.width / this.canvas.height;
-        this.focus = null;
+        this.focus = this.options.focus || null;
+
 
         this.pMatrix = mat4.create();
     }

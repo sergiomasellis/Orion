@@ -9,6 +9,6 @@ varying lowp vec3 vNormals;
 
 void main(void) {
 	vec2 tempUv = vec2(vUv.x, 1.0-vUv.y);
-    // gl_FragColor = vec4(vColor, 1.0) * color * texture2D(uSampler, tempUv);
-    gl_FragColor = vec4(vNormals, 1.0);
+    gl_FragColor = vec4(vColor, 1.0) * color * texture2D(uSampler, tempUv);
+    // gl_FragColor = vec4(vNormals, 1.0);
 }

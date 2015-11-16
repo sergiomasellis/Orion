@@ -17,7 +17,7 @@ class Shader {
 
     load(multipleArrayOfShaders) {
         for (let item of multipleArrayOfShaders) {
-            this._load(item[0], item[1]); // go through array pass URL and TYPE
+            this._load(item[1], item[0]); // go through array pass TYPE and URL
         }
     }
 
@@ -46,7 +46,6 @@ class Shader {
                     this.shaderCache[id] = shaderRequest.responseText;
 
                     // debugger;
-
 
                     console.log("Shader: Added to cache: " + url);
 
@@ -190,4 +189,5 @@ class Shader {
     }
 }
 
-export default new Shader;
+export
+default new Shader;
