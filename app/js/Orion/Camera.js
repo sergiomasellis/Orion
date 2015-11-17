@@ -6,15 +6,12 @@ export default class Camera extends Entity {
 
     init() {
 
-        this.gl = Injector.get("gl");
         this.nearClip = this.options.nearClip || 0.1;
         this.farClip = this.options.farClip || 1000.0;
         this.distance = this.options.distance || {x:0, y:0, z:0};
         this.fieldOfView = this.options.fieldOfView || Math.PI*0.3;
-        this.aspectRatio = this.options.aspectRatio || this.canvas.width / this.canvas.height;
+        this.aspectRatio = this.options.aspectRatio || Injector.get("canvas").width / Injector.get("canvas").height;
         this.focus = this.options.focus || null;
-
-
         this.pMatrix = mat4.create();
     }
 
@@ -31,7 +28,7 @@ export default class Camera extends Entity {
         }
 
         mat4.identity(this.pMatrix);
-        mat4.perspective(this.pMatrix, this.fieldOfView, this.gl.viewportWidth / this.gl.viewportHeight, this.nearClip, this.farClip);
+        mat4.perspective(this.pMatrix, this.fieldOfView, Injector.get("gl").viewportWidth / Injector.get("gl").viewportHeight, this.nearClip, this.farClip);
         mat4.translate(this.pMatrix, this.pMatrix, [0.0, 0.0, this.distance.z]);
 
         mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
@@ -41,7 +38,7 @@ export default class Camera extends Entity {
 
         mat4.translate(this.pMatrix, this.pMatrix, [this.x, this.y, this.z]);
 
-        this.gl.uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
+        Injector.get("gl").uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
 
     }
 
@@ -50,17 +47,17 @@ export default class Camera extends Entity {
         console.log("Camera: focus changed to", entity.options.name);
     }
 
-    draw() {
+    // draw() {
 
-    }
+    // }
 
-    screenToWorld() {
+    // screenToWorld() {
 
-    }
+    // }
 
-    worldToScreen() {
+    // worldToScreen() {
 
-    }
+    // }
 
 
 }

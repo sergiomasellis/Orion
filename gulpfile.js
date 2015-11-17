@@ -29,11 +29,14 @@ gulp.task("watch", function(){
 });
 
 gulp.task('webserver', function() {
-  var _browser_URL = "./dist";
+  var _browser_URL = "./dist",
+      port = 8000,
+      host = "localhost";
+
     browserSync({
       server: _browser_URL,
-      port: process.env.PORT,
-      host: process.env.IP
+      port: port,
+      host: host 
     });
 });
 

@@ -41,20 +41,21 @@ class Scene {
     }
 
     update(dt) {
-        let _this = this,
+        let i = 0,
+            _this = this,
             el = _this.entityList,
             l = el.length,
             cl = _this.cameraList,
             cll = _this.cameraList.length;
 
-        if (l > 0) {
-            while (l--) {
-                el[l].update(dt);
-            }
+        if (l) {
+            while (i < l) {
+                el[i].update(dt);
+                i++;
+            };
         }
-
         
-        if(cll > 0) { 
+        if(cll) { 
             cl[_this.currentCamera].update(dt); 
         }else{
             throw Error("Please add a camera to the scene");
@@ -62,24 +63,17 @@ class Scene {
     }
 
     draw() {
-        let _this = this,
+        let i = 0,
+            _this = this,
             el = _this.entityList,
-            l = el.length,
-            cL = this.cameraList.length
+            l = el.length;
 
-        if (l > 0) {
-            while (l--) {
-                el[l].draw();
-            }
+        if (l) {
+            while (i < l) {
+                el[i].draw();
+                i++;
+            };
         }
-
-
-        // if(cL > 0){
-            // while(cL--){
-                
-            // }
-        // }
-
     }
 }
 

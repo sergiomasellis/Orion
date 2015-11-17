@@ -143,20 +143,23 @@ export default class Game {
     }
 
     update(dt) {
-        let sl = this.sceneList,
+        let i = 0,
+            sl = this.sceneList,
             l = sl.length;
 
         if (l > 0) {
             // Fastest possible loop
-            while(l--) {
-                if (this.currentScene === l) sl[l].update(dt);
-            }
+            while (i < l) {
+                if (this.currentScene === i) sl[i].update(dt);
+             i++;
+            };
         }
     }
 
     draw() {
         // console.log(this);
-        let sl = this.sceneList,
+        let i = 0,
+            sl = this.sceneList,
             l = sl.length,
             gl = this.gl;
 
@@ -169,8 +172,9 @@ export default class Game {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         if (l > 0) {
-            while (l--) {
-                if (this.currentScene === l) sl[l].draw();
+            while (i < l) {
+                if (this.currentScene === i) sl[i].draw();
+                i++;
             }
         }
 

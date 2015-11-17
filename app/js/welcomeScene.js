@@ -25,7 +25,7 @@ class WelcomeScene extends Scene {
         this.addEntity(plane);
         
         let st = [];
-        let grid = 50;
+        let grid = 10;
 
         for (let x = -grid; x < grid; x += 5) {
             for (let z = -grid; z < grid; z += 5) {
@@ -35,7 +35,8 @@ class WelcomeScene extends Scene {
                 st[x] = new StormTrooper({
                     name: name,
                     model: "stormtrooper",
-                    texture: "stormtrooper"
+                    texture: "stormtrooper",
+                    scale: {x:2,y:2,z:2}
                 });
 
                 st[x].x = x;
