@@ -5,13 +5,14 @@
 	- Lighting 
 - Grid floor for world
 - Opacity support
+- create planes within engine classes
 - Add Support for vertex indicies (D:)
-- Add Frinlet as contributor
 - Promises for all async loading tasks - Devon
 - http://schteppe.github.io/cannon.js/
 - Multiple Texture Support for stormtrooper faces
 
 ## Completed
+- Add Frinlet as contributor
 - Vertex Colors
 - Multiple Texture Support
 - Mouse Input Support

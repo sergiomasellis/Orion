@@ -1,7 +1,7 @@
 import Injector from 'Orion/Injector';
-import WebGlObject from 'Orion/WebGlObject';
+import WebGLObject from 'Orion/WebGLObject';
 
-class Player extends WebGlObject {
+class Player extends WebGLObject {
 
     init() {
         super.init();
@@ -28,8 +28,8 @@ class Player extends WebGlObject {
             this.rotation.y -= this.turnRate * dt;
         }
 
-        this.rotation.y -= Injector.dependencies.controller.mouse.movement.x / this.mouseSensitivity;
-        this.rotation.x -= Injector.dependencies.controller.mouse.movement.y / this.mouseSensitivity;
+        // this.rotation.y -= Injector.dependencies.controller.mouse.movement.x / this.mouseSensitivity;
+        // this.rotation.x -= Injector.dependencies.controller.mouse.movement.y / this.mouseSensitivity;
     }
 
 }

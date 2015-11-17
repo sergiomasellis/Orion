@@ -1,8 +1,8 @@
 import Scene from "Orion/Scene";
-import Grid from "Orion/Grid";
+import Plane from "Orion/Plane";
 import Camera from "Orion/Camera";
 
-import Player from "Player";
+import Player from "player";
 import StormTrooper from "StormTrooper";
 
 class WelcomeScene extends Scene {
@@ -11,12 +11,19 @@ class WelcomeScene extends Scene {
 
         var frinlet2 = new Player({
             name: "Stevoid1990",
-            model: "stormtrooper",
-            texture: "stormtrooper"
+            model: "frinlet",
+            texture: "frinlet"
         });
 
         this.addEntity(frinlet2);
 
+        var plane = new Plane({
+            name: "myPlane",
+            texture: "stormtrooper"
+        });
+        
+        this.addEntity(plane);
+        
         let st = [];
         let grid = 50;
 
@@ -42,8 +49,8 @@ class WelcomeScene extends Scene {
         let myCamera = this.addCamera(new Camera({
             distance: {
                 x: 0.0,
-                y: -2.0,
-                z: -3.0
+                y: -4.0,
+                z: -10.0
             },
             focus: frinlet2
         }));

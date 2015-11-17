@@ -7,12 +7,14 @@ import Utils from 'Orion/Utils';
 
 class WebGLObject extends Entity {
 
-    init() {
-
+    init(dependencies = {}) {
+        //merge it
+        Utils.extend(this.options, dependencies);
+        
         // variables
         this.mvMatrix = mat4.create();
-        this.texture = this.options.texture || false;
-        this.model = this.options.model || "cube";
+        this.texture = this.options.texture || "base";
+        this.model = this.options.model || this.model || "cube";
         this.playable = this.options.playable || false;
 
         // movement Variable
@@ -25,19 +27,21 @@ class WebGLObject extends Entity {
 
         // Get GL from injector and controller if needed
         this.gl = Injector.dependencies.gl;
-
-        //hacky fix, change later
-        this.gl.activeTexture(this.gl.TEXTURE0 + Texture.textureCache[this.texture].id);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, Texture.textureCache[this.texture].compiledTexture);
+    
+        // Check wether model has a texture
+        this.initTextures();
 
         // Run only after shaders are ready!
         if (!Models.bufferedModels[this.model]) this.initBuffers();
 
-
+    }
+    
+    initTextures(){
+        this.gl.activeTexture(this.gl.TEXTURE0 + Texture.textureCache[this.texture].id);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, Texture.textureCache[this.texture].compiledTexture);
     }
 
     initBuffers() {
-
 
         // create buffer for vertices to be stored in
         let vertBuffer = this.gl.createBuffer();
@@ -45,7 +49,8 @@ class WebGLObject extends Entity {
         let colorBuffer = this.gl.createBuffer();
         let normalBuffer = this.gl.createBuffer();
         let polyCount = Models.modelCache[this.model].verts.length/3;
-
+    
+        // sergio is awesome fsdfs
         //check
         if(Models.modelCache[this.model].vColor === undefined) {
             Models.modelCache[this.model].vColor = Utils.fillArrayWith([1,1,1], polyCount);
@@ -54,7 +59,10 @@ class WebGLObject extends Entity {
         if(Models.modelCache[this.model].normals === undefined) {
             Models.modelCache[this.model].normals = Utils.fillArrayWith([0,0,0], polyCount);
         }
-
+        
+        if(Models.modelCache[this.model].uv === undefined) {
+            Models.modelCache[this.model].uv = Utils.fillArrayWith([0,0,0], polyCount*(2/3));
+        }
 
         // vertices
         let vertices = new Float32Array(Models.modelCache[this.model].verts);
@@ -89,9 +97,6 @@ class WebGLObject extends Entity {
         Models.bufferedModels[this.model].vColor = colorBuffer;
         Models.bufferedModels[this.model].normals = normalBuffer;
 
-        // console.log(Models.modelCache[this.model], Models.bufferedModels[this.model]);
-
-
     }
 
     update() {
@@ -109,7 +114,7 @@ class WebGLObject extends Entity {
 
         mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
 
-        this.gl.activeTexture(this.gl.TEXTURE0 + Texture.textureCache[this.options.texture].id);
+        this.gl.activeTexture(this.gl.TEXTURE0 + Texture.textureCache[this.texture].id);
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].verts);
         this.gl.vertexAttribPointer(Shader.shaderProgram.position, 3, this.gl.FLOAT, false, 0, 0);
@@ -127,7 +132,7 @@ class WebGLObject extends Entity {
         Injector.dependencies.controller.mouse.movement.y = 0;
 
         this.gl.uniformMatrix4fv(Shader.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
-        this.gl.uniform1i(Shader.shaderProgram.samplerUniform, Texture.textureCache[this.options.texture].id);
+        this.gl.uniform1i(Shader.shaderProgram.samplerUniform, Texture.textureCache[this.texture].id);
         this.gl.drawArrays(this.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);
     }
 }

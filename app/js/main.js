@@ -17,6 +17,7 @@ class Main {
             'img/avatar_sprite32.png'
           ],
           textures: [
+            ['base', 'img/baseTexture.png'],
             ['frinlet', 'img/character.png'],
             ['stormtrooper', 'img/stormtrooper.png']
           ],
@@ -27,7 +28,8 @@ class Main {
           models: [
             ['frinlet','js/models/frinlet.json'],
             ['stormtrooper','js/models/stormtrooper.json'],
-            ['girl','js/models/girl.json']
+            ['girl','js/models/girl.json'],
+            ['cube' , 'js/models/cube.json']
           ]
       });
 
