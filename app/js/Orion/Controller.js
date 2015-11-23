@@ -3,9 +3,8 @@ import Injector from "Orion/Injector";
 import Input from "Orion/Input";
 
 export default class Controller {
-    constructor(options = {}, dependencies = {}) {
+    constructor(options = {}) {
 
-        this.dependencies = dependencies;
         this.options = Utils.extend(this.options, options);
 
         this.canvas = Injector.get("canvas");

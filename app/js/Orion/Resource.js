@@ -2,40 +2,40 @@
 class Resource {
     constructor(){
         this.resourceCache = {};
-        this.loading = [];
-        this.readyCallbacks = [];
+        this.allReasourcesLoaded = false;
     }
 
     load(urlOrArr){
-        if(urlOrArr instanceof Array){
+        return new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+            if(urlOrArr.length == 0) {
+                // throw new Error("there are no reasources to load!");
+                resolve();
+            }
+
             urlOrArr.forEach((url) => {
                 this._load(url);
-            }.bind(this));
-        }else{
-            this._load(urlOrArr);
-        }
+            });
+        });
     }
 
-    _load(url){
-        // console.log("Resource: Fetching from - ", url);
-        if(this.resourceCache[url]){
-            return this.resourceCache[url];
-        }else{
-            var img = new Image();
+    _load(url, resolve, reject){
+        console.log("Resource: Fetching from - ", url);
+        var img = new Image();
 
-            img.onload = () => {
-                this.resourceCache[url] = img;
+        img.onload = () => {
+            this.resourceCache[url] = img;
+            this.resourceCache[url].ready = true;
+            if(this.isReady()){
+               this.resolve();
+            }
+        }.bind(this)
 
-                if(this.isReady()){
-                    this.readyCallbacks.forEach((func) => {
-                        func();
-                    }.bind(this));
-                }
-            }.bind(this)
-
-            this.resourceCache[url] = false;
-            img.src = url;
-        }
+        this.resourceCache[url] = {};
+        this.resourceCache[url].ready = false;
+        img.src = url;
+        
     }
 
     get(url){
@@ -43,18 +43,21 @@ class Resource {
     }
 
     isReady(){
-        var ready = true;
-        for(var k in this.resourceCache){
-            if(this.resourceCache.hasOwnProperty(k) && !this.resourceCache[k]){
-                ready = false;
+        // check if all are completed
+        this.allReasourcesLoaded = true;
+        for (let prop in this.resourceCache) {
+
+            if (this.resourceCache.hasOwnProperty(prop)) {
+
+                if (this.resourceCache[prop].ready == false) {
+                    this.allReasourcesLoaded = false;
+                    break;
+                }
             }
         }
-        return ready;
-    }
 
-    onReady(func){
-        this.readyCallbacks.push(func);
+        return this.allReasourcesLoaded;
     }
 }
 
-export default Resource;
+export default new Resource;

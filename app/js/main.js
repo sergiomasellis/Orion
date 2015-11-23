@@ -12,10 +12,6 @@ class Main {
       // Config engine first listing images and shaders
       Config.set({
           engine: "3d",
-          images: [
-            'img/avatar_sprite.png', 
-            'img/avatar_sprite32.png'
-          ],
           textures: [
             ['base', 'img/baseTexture.png'],
             ['frinlet', 'img/character.png'],
@@ -27,9 +23,7 @@ class Main {
           ],
           models: [
             ['frinlet','js/models/frinlet.json'],
-            ['stormtrooper','js/models/stormtrooper.json'],
-            ['girl','js/models/girl.json'],
-            ['cube' , 'js/models/cube.json']
+            ['stormtrooper','js/models/stormtrooper.json']
           ]
       });
 

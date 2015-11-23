@@ -1,17 +1,29 @@
 import Injector from 'Orion/Injector';
-import Entity from "Orion/Entity";
 import Shader from 'Orion/Shader';
+import Utils from 'Orion/Utils';
 
-export default class Camera extends Entity {
+class Camera {
+    
+    constructor(options = {}) {
+        this.options = Utils.extend(this.options, options);
+        this.init();   
+    }
 
     init() {
 
+        this.uuid = this.options.uuid || Utils.generateUUID();
         this.nearClip = this.options.nearClip || 0.1;
         this.farClip = this.options.farClip || 1000.0;
         this.distance = this.options.distance || {x:0, y:0, z:0};
         this.fieldOfView = this.options.fieldOfView || Math.PI*0.3;
         this.aspectRatio = this.options.aspectRatio || Injector.get("canvas").width / Injector.get("canvas").height;
         this.focus = this.options.focus || null;
+        this.rotation = this.options.rotation || {x:0, y:0, z:0};
+
+        this.x = this.options.x || 0.0;
+        this.y = this.options.y || 0.0;
+        this.z = this.options.z || 0.0;
+        
         this.pMatrix = mat4.create();
     }
 
@@ -46,18 +58,7 @@ export default class Camera extends Entity {
         this.focus = entity;
         console.log("Camera: focus changed to", entity.options.name);
     }
-
-    // draw() {
-
-    // }
-
-    // screenToWorld() {
-
-    // }
-
-    // worldToScreen() {
-
-    // }
-
-
 }
+
+
+export default Camera;

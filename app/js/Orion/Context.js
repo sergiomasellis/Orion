@@ -3,9 +3,6 @@ import Injector from 'Orion/Injector';
 
 class Context {
     constructor() {
-    }
-
-    init(){
       //select canvas
       this.canvas = document.getElementById("mainCanvas");
       this.canvas.focus();
@@ -33,7 +30,7 @@ class Context {
       console.log("Context: Orion Engine - ", Config.engine);
       // console.log("Orion Engine Context: ", this.gl);
 
-      // Add instances to the injector
+      // Add instances to the injector used in input.js
       Injector.register('canvas', this.canvas);
 
       if(Config.get("engine") == "2d") { 
@@ -46,4 +43,4 @@ class Context {
     }
 }
 
-export default new Context;
+export default Context;

@@ -1,5 +1,4 @@
 ﻿import Config from 'Orion/Config';
-import Logger from 'Orion/Logger';
 import Utils from 'Orion/Utils';
 
 import Injector from 'Orion/Injector';
@@ -7,26 +6,21 @@ import Context from 'Orion/Context';
 import Camera from 'Orion/Camera';
 import Controller from 'Orion/Controller';
 
-import Resources from 'Orion/Resource';
+import Resource from 'Orion/Resource';
 import Shaders from 'Orion/Shader';
 import Models from 'Orion/Model';
 import Texture from 'Orion/Texture';
 
 export default class Game {
-    constructor(options = {}, dependencies = {}) {
-        this.dependencies = dependencies;
+    constructor(options = {}) {
+
         this.options = Utils.extend(this.options, options);
 
         // Get Context
-        this.gl = Context.init();
-        this.shaders = Shaders.init();
-        this.textures = Texture.init();
-        
-        this.resources = new Resources;
+        this.gl = new Context();
 
-        this.readyCallbacks = [];
         this.isReady = false;
-
+        this.readyCallbacks = [];
         this.init();
     }
 
@@ -62,65 +56,32 @@ export default class Game {
         Injector.register('game', this);
 
         // Get Resources
-        this.resources.load(Config.get("images"));
-        this.textures.load(Config.get("textures"));
-
-        this.resources.onReady(() => {
-
-          // Request for models via AJAX
-          Models.load(Config.get("models"));
-
-          // Models are done loading
-          Models.onReady(() =>{
-            // Check if shaders are compiled too if they are run raf
-            if(Shaders.allShaderCompiled && Texture.allTextureCompiled){
-
-                // console.log("Game: All Models loaded and Shaders too"); 
-                this.notifyReadyState();
-
-            } 
-          });
-
-          // Request for shaders via AJAX
-          Shaders.load(Config.get("shaders"));
-
-          // Initialize game loop
-          Shaders.onReady(() => {
-            // Check if models are done too if they are run raf
-            if(Models.allModelsLoaded && Texture.allTextureCompiled) {
-
-                // console.log("Game: All Shaders loaded and Models too");
-                this.notifyReadyState();
-
-            }
-          });
-
-          Texture.onReady(() => {
-            // Check if models are done too if they are run raf
-            if(Models.allModelsLoaded && Shaders.allShaderCompiled) {
-
-                // console.log("Game: All Textures loaded and Models too");
-                this.notifyReadyState();
-
-            }
-          });
-
-        }.bind(this));
+        Promise.all([
+            Resource.load(Config.get("images")),
+            Texture.load(Config.get("textures")),
+            Shaders.load(Config.get("shaders")),
+            Models.load(Config.get("models"))
+        ]).then(() => {
+            console.log("Game: All resources loaded and compiled");
+            this.startGameEngine();
+        }).catch(err => {
+            console.error(err);
+        });
     }
-
-
+    
+    
     onReady(func){
         this.readyCallbacks.push(func);
     }
 
-    notifyReadyState(){
+    startGameEngine(){
+        console.log("Game: Engine Starting ");
         this.isReady = true;
+
+        // let scenes know to init now
         this.readyCallbacks.forEach((func) => {
                 func();
         }.bind(this));
-
-        console.log("Game: Engine Starting ");
-
         this.raf();
     }
 

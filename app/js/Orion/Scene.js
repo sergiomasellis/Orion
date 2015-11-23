@@ -2,24 +2,23 @@ import Utils from 'Orion/Utils';
 import Injector from 'Orion/Injector';
 
 class Scene {
-    constructor(options = {}, dependencies = {}) {
-        this.dependencies = dependencies;
+    constructor(options = {}) {
+       
         this.options = Utils.extend(this.options, options);
-
-        // this.buffered = this.options.buffer || false;
         this.uuid = this.options.uuid || Utils.generateUUID();
 
         this.entityList = [];
         this.cameraList = [];
 
-        // // Don't start till game is ready
-        if(Injector.dependencies.game.isReady){ 
+        // Don't start till game is ready
+        if(Injector.get("game").isReady){
             this.init();
         }else{
-            Injector.dependencies.game.onReady(()=>{
+            Injector.get("game").onReady(()=>{
                 this.init();
             }.bind(this));
         }
+        // this.init();
     }
 
     init() {}

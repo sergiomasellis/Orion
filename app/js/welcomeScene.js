@@ -17,15 +17,15 @@ class WelcomeScene extends Scene {
 
         this.addEntity(frinlet2);
 
-        var plane = new Plane({
-            name: "myPlane",
-            texture: "stormtrooper"
-        });
-        
-        this.addEntity(plane);
-        
+        // var plane = new Plane({
+        //     name: "myPlane",
+        //     texture: "stormtrooper"
+        // });
+
+        // this.addEntity(plane);
+
         let st = [];
-        let grid = 10;
+        let grid = 50;
 
         for (let x = -grid; x < grid; x += 5) {
             for (let z = -grid; z < grid; z += 5) {
@@ -36,7 +36,11 @@ class WelcomeScene extends Scene {
                     name: name,
                     model: "stormtrooper",
                     texture: "stormtrooper",
-                    scale: {x:2,y:2,z:2}
+                    scale: {
+                        x: 2.0,
+                        y: 2.0,
+                        z: 2.0
+                    }
                 });
 
                 st[x].x = x;
@@ -73,4 +77,5 @@ class WelcomeScene extends Scene {
     }
 }
 
-export default WelcomeScene;
+export
+default WelcomeScene;

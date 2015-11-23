@@ -7,25 +7,23 @@ class Shader {
         this.shaderCache = {};
         this.shaderCompiled = {};
         this.allShaderCompiled = false;
-        this.readyCallbacks = [];
-    }
-
-    init() {
-        this.gl = Injector.get("gl");
-        return this;
     }
 
     load(multipleArrayOfShaders) {
-        for (let item of multipleArrayOfShaders) {
-            this._load(item[1], item[0]); // go through array pass TYPE and URL
-        }
+        return new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+
+            for (let item of multipleArrayOfShaders) {
+                this._load(item[1], item[0]); // go through array pass TYPE and URL
+            }
+        });
     }
 
     _load(url, type) {
-        // console.log("Shader: Fetching - ", url);
+        console.log("Shader: Fetching - ", url);
 
         let id = url;
-
         // split out the slashes from url
         // split out the .glsl
         id = id.split("/");
@@ -34,84 +32,77 @@ class Shader {
         this.shaderCompiled[id] = {};
         this.shaderCompiled[id].ready = false;
 
-        if (this.shaderCache[id]) {
-            return this.shaderCache[id]; // return compiled shader
-        } else {
-            // ELSE GO GET THE SHADER
-            let shaderRequest = new XMLHttpRequest(),
-                shaderResponse = false;
 
-            shaderRequest.onreadystatechange = () => {
-                if (shaderRequest.readyState == 4 && shaderRequest.status == 200) {
-                    this.shaderCache[id] = shaderRequest.responseText;
+        // ELSE GO GET THE SHADER
+        let shaderRequest = new XMLHttpRequest(),
+            shaderResponse = false;
+
+        shaderRequest.onreadystatechange = () => {
+            if (shaderRequest.readyState == 4 && shaderRequest.status == 200) {
+                this.shaderCache[id] = shaderRequest.responseText;
+
+                console.log("Shader: Added to cache: " + url);
+
+                this.compileShader(id, shaderRequest.responseText, type, (completeShaderId, shader) => {
+
+                    // cache the shader for use in other classes
+                    this.shaderCache[completeShaderId] = shader;
+
+                    // if all shaders are compiled call every callback
+                    this.shaderCompiled[completeShaderId].ready = true;
 
                     // debugger;
-
-                    console.log("Shader: Added to cache: " + url);
-
-                    this.compileShader(id, shaderRequest.responseText, type, (completeShaderId, shader) => {
-
-                        // cache the shader for use in other classes
-                        this.shaderCache[completeShaderId] = shader;
-
-                        // if all shaders are compiled call every callback
-                        this.shaderCompiled[completeShaderId].ready = true;
-
-                        // debugger;
-                        //check if all are completed
-                        this.allShaderCompiled = true;
-                        for (let prop in this.shaderCompiled) {
-                            if (this.shaderCompiled.hasOwnProperty(prop)) {
-                                if (this.shaderCompiled[prop].ready == false) {
-                                    this.allShaderCompiled = false;
-                                    break;
-                                }
+                    //check if all are completed
+                    this.allShaderCompiled = true;
+                    for (let prop in this.shaderCompiled) {
+                        if (this.shaderCompiled.hasOwnProperty(prop)) {
+                            if (this.shaderCompiled[prop].ready == false) {
+                                this.allShaderCompiled = false;
+                                break;
                             }
                         }
+                    }
 
-                        if (this.allShaderCompiled) {
-                            console.log("Shader: All Shaders compiled");
+                    if (this.allShaderCompiled) {
+                        console.log("Shader: All Shaders compiled");
 
-                            this.initProgram();
-                        }
+                        this.initProgram();
+                    }
 
-                    }.bind(this));
+                }.bind(this));
 
 
-                    return shaderResponse;
-                }
+                return shaderResponse;
+            }
 
-            }.bind(this);
+        }.bind(this);
 
-            shaderRequest.open("GET", url, true);
-            shaderRequest.send();
-
-        }
+        shaderRequest.open("GET", url, true);
+        shaderRequest.send();
     }
 
 
 
     compileShader(url, shaderText, type, cb) {
 
-        let gl = this.gl;
 
         // console.log("Compiling Shader of type: ", type);
 
         let shader;
         if (type == "frag") {
-            shader = gl.createShader(gl.FRAGMENT_SHADER);
+            shader = Injector.get("gl").createShader(Injector.get("gl").FRAGMENT_SHADER);
         } else if (type == "vert") {
-            shader = gl.createShader(gl.VERTEX_SHADER);
+            shader = Injector.get("gl").createShader(Injector.get("gl").VERTEX_SHADER);
         } else {
             return null;
         }
 
         // debugger;
-        gl.shaderSource(shader, shaderText);
-        gl.compileShader(shader);
+        Injector.get("gl").shaderSource(shader, shaderText);
+        Injector.get("gl").compileShader(shader);
 
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            console.error(gl.getShaderInfoLog(shader));
+        if (!Injector.get("gl").getShaderParameter(shader, Injector.get("gl").COMPILE_STATUS)) {
+            console.error(Injector.get("gl").getShaderInfoLog(shader));
             return null;
         } else {
             //when success
@@ -121,46 +112,37 @@ class Shader {
         // return shader;
     }
 
-
-    onReady(func) {
-        this.readyCallbacks.push(func);
-    }
-
     // Used to compile the shaders in the cache
     initProgram() {
 
         console.log("Shader: Creating Programs and Linking");
 
-        let gl = this.gl;
-
         //create gl program
-        this.shaderProgram = gl.createProgram();
+        this.shaderProgram = Injector.get("gl").createProgram();
 
         //attach the shaders to the program
         for (var shader in this.shaderCache) {
             if (this.shaderCache.hasOwnProperty(shader)) {
-                gl.attachShader(this.shaderProgram, this.shaderCache[shader]);
+                Injector.get("gl").attachShader(this.shaderProgram, this.shaderCache[shader]);
             }
         }
 
-        gl.linkProgram(this.shaderProgram);
+        Injector.get("gl").linkProgram(this.shaderProgram);
 
         this.useProgram();
 
-        if (!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)) {
+        if (!Injector.get("gl").getProgramParameter(this.shaderProgram, Injector.get("gl").LINK_STATUS)) {
             throw new Error('Shader: Could not initialise shaders');
         } else {
             console.log("Shader: Program compiled");
         }
 
-        this.readyCallbacks.forEach((func) => {
-            func();
-        }.bind(this));
+        this.resolve();
     }
 
     useProgram() {
         //once buffer is setup use program
-        this.gl.useProgram(this.shaderProgram);
+        Injector.get("gl").useProgram(this.shaderProgram);
         //setup uniforms/attributes
         this.setupUniformsNAttribs();
     }
@@ -168,26 +150,25 @@ class Shader {
     setupUniformsNAttribs() {
 
         //get color uniform
-        this.shaderProgram.color = this.gl.getUniformLocation(this.shaderProgram, 'color');
+        this.shaderProgram.color = Injector.get("gl").getUniformLocation(this.shaderProgram, 'color');
 
-        this.shaderProgram.position = this.gl.getAttribLocation(this.shaderProgram, 'position');
-        this.gl.enableVertexAttribArray(this.shaderProgram.position); // <--- ?    
+        this.shaderProgram.position = Injector.get("gl").getAttribLocation(this.shaderProgram, 'position');
+        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.position); // <--- ?    
 
-        this.shaderProgram.uv = this.gl.getAttribLocation(this.shaderProgram, 'uv');
-        this.gl.enableVertexAttribArray(this.shaderProgram.uv); // <--- ?
+        this.shaderProgram.uv = Injector.get("gl").getAttribLocation(this.shaderProgram, 'uv');
+        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.uv); // <--- ?
 
-        this.shaderProgram.vColor = this.gl.getAttribLocation(this.shaderProgram, 'aVertexColor');
-        this.gl.enableVertexAttribArray(this.shaderProgram.vColor); // <--- ?
+        this.shaderProgram.vColor = Injector.get("gl").getAttribLocation(this.shaderProgram, 'aVertexColor');
+        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.vColor); // <--- ?
 
-        this.shaderProgram.normals = this.gl.getAttribLocation(this.shaderProgram, 'normals');
-        this.gl.enableVertexAttribArray(this.shaderProgram.normals); // <--- ?
+        this.shaderProgram.normals = Injector.get("gl").getAttribLocation(this.shaderProgram, 'normals');
+        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.normals); // <--- ?
 
-        this.shaderProgram.pMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "pMatrix");
-        this.shaderProgram.mvMatrixUniform = this.gl.getUniformLocation(this.shaderProgram, "mVMatrix");
-        this.shaderProgram.samplerUniform = this.gl.getUniformLocation(this.shaderProgram, "uSampler");
+        this.shaderProgram.pMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "pMatrix");
+        this.shaderProgram.mvMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "mVMatrix");
+        this.shaderProgram.samplerUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSampler");
 
     }
 }
 
-export
-default new Shader;
+export default new Shader;

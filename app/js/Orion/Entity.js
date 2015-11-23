@@ -3,15 +3,9 @@ import Injector from "Orion/Injector";
 
 class Entity {
 
-    constructor(options = {}, dependencies = {}) {
-
-        this.dependencies = dependencies;
+    constructor(options = {}) {
+        
         this.options = Utils.extend(this.options, options);
-
-        // console.log(this.options);
-        // this.canvas = Injector.get("canvas");
-        // this.context = Injector.get("context");
-        // this.gl = Injector.get("gl");
 
         this.uuid = this.options.uuid || Utils.generateUUID();
         this.buffered = this.options.buffer || false;
@@ -24,10 +18,6 @@ class Entity {
         // Before init check if game engine ready?
         if(Injector.get("game").isReady){ 
             this.init();
-        }else{
-            Injector.get("game").onReady(()=>{
-                this.init();
-            }.bind(this));
         }
     }
 

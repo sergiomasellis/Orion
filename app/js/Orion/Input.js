@@ -33,6 +33,7 @@ class Input{
         if ("onpointerlockchange" in document) {
             document.addEventListener('pointerlockchange', this.pointerLockChange.bind(this), false);
         } else if ("onmozpointerlockchange" in document) {
+            debugger;            
             document.addEventListener('mozpointerlockchange', this.pointerLockChange.bind(this), false);
         } else if ("onwebkitpointerlockchange" in document) {
             document.addEventListener('webkitpointerlockchange', this.pointerLockChange.bind(this), false);

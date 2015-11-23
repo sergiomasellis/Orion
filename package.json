@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/sargentsurg/Orion",
   "devDependencies": {
+    "browser-sync": "*",
     "del": "*",
+    "eslint": "^1.9.0",
     "gulp": "*",
     "gulp-babel": "*",
     "gulp-concat": "*",
@@ -25,7 +27,6 @@
     "gulp-plumber": "*",
     "gulp-sourcemaps": "*",
     "gulp-watch": "*",
-    "browser-sync": "*",
     "opn": "*",
     "run-sequence": "*"
   },
