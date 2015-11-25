@@ -14,7 +14,7 @@ class Plane extends WebGLObject {
             -1.0, 0.0, -1.0
         ];
         
-        super.init({model: 'primativePlane', color: [1,0,0,1]});
+        super.init({model: 'primativePlane', color: [1,1,0,1]});
     }
 }
 

@@ -53,17 +53,7 @@ class Shader {
 
                     // debugger;
                     //check if all are completed
-                    this.allShaderCompiled = true;
-                    for (let prop in this.shaderCompiled) {
-                        if (this.shaderCompiled.hasOwnProperty(prop)) {
-                            if (this.shaderCompiled[prop].ready == false) {
-                                this.allShaderCompiled = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (this.allShaderCompiled) {
+                    if (this.isReady()) {
                         console.log("Shader: All Shaders compiled");
 
                         this.initProgram();
@@ -81,12 +71,22 @@ class Shader {
         shaderRequest.send();
     }
 
+    isReady(){
+        this.allShaderCompiled = true;
+        for (let prop in this.shaderCompiled) {
+            if (this.shaderCompiled.hasOwnProperty(prop)) {
+                if (this.shaderCompiled[prop].ready == false) {
+                    this.allShaderCompiled = false;
+                    break;
+                }
+            }
+        }
+        return this.allShaderCompiled;
+    }
+
 
 
     compileShader(url, shaderText, type, cb) {
-
-
-        // console.log("Compiling Shader of type: ", type);
 
         let shader;
         if (type == "frag") {
@@ -133,11 +133,11 @@ class Shader {
 
         if (!Injector.get("gl").getProgramParameter(this.shaderProgram, Injector.get("gl").LINK_STATUS)) {
             throw new Error('Shader: Could not initialise shaders');
+            this.reject();
         } else {
             console.log("Shader: Program compiled");
+            this.resolve();
         }
-
-        this.resolve();
     }
 
     useProgram() {

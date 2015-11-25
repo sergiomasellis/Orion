@@ -4,7 +4,7 @@ import Game from 'Orion/Game';
 
 
 //current game
-import welcomeScene from 'welcomeScene';
+import welcomeScene from 'scenes/welcomeScene';
 
 class Main {
     constructor() {

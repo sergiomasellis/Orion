@@ -3,7 +3,6 @@ import Utils from 'Orion/Utils';
 
 import Injector from 'Orion/Injector';
 import Context from 'Orion/Context';
-import Camera from 'Orion/Camera';
 import Controller from 'Orion/Controller';
 
 import Resource from 'Orion/Resource';
@@ -68,19 +67,19 @@ export default class Game {
             console.error(err);
         });
     }
-    
-    
-    onReady(func){
+
+
+    onReady(func) {
         this.readyCallbacks.push(func);
     }
 
-    startGameEngine(){
+    startGameEngine() {
         console.log("Game: Engine Starting ");
         this.isReady = true;
 
         // let scenes know to init now
         this.readyCallbacks.forEach((func) => {
-                func();
+            func();
         }.bind(this));
         this.raf();
     }
@@ -112,7 +111,7 @@ export default class Game {
             // Fastest possible loop
             while (i < l) {
                 if (this.currentScene === i) sl[i].update(dt);
-             i++;
+                i++;
             };
         }
     }
@@ -127,6 +126,10 @@ export default class Game {
 
         // set viewport
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+
+
+
+        // window.polyCount = 0;
 
         // reset background to a grey color
         gl.clearColor(0.5, 0.5, 0.5, 1);
@@ -165,8 +168,10 @@ export default class Game {
 
     // SCENE FUNCTIONS
     addScene(scene) {
-        console.log("Game: Add Scene - ", scene.options.sceneName);
-        this.sceneList.push(scene);
+        this.onReady(() => {
+            console.log("Game: Add Scene - ", scene.options.sceneName);
+            this.sceneList.push(scene);
+        });
         return scene;
     }
 }

@@ -22,7 +22,6 @@ class WebGLObject extends Entity {
         this.color = this.options.color || [1.0, 1.0, 1.0, 1.0];
         this.scale = this.options.scale || {x:1, y:1, z:1};
 
-
         // Run only after shaders are ready!
         if (!Models.bufferedModels[this.model]) this.initBuffers();
     }

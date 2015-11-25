@@ -22,18 +22,14 @@ class Texture {
     _load(name, url) {
         console.log("Texture: Fetching - ", url);
 
-        if (this.textureCache[name]) {
-            return this.textureCache[name]; // return texture
-        } else {
-            this.textureCache[name] = {};
-            this.textureCache[name].ready = false;
-            this.textureCache[name].texture =  Injector.get("gl").createTexture();
-            this.textureCache[name].image = new Image();
-            this.textureCache[name].image.onload = () => {
-                this.handleTextureLoaded(name);
-            }.bind(this)
-            this.textureCache[name].image.src = url;
-        }
+        this.textureCache[name] = {};
+        this.textureCache[name].ready = false;
+        this.textureCache[name].texture =  Injector.get("gl").createTexture();
+        this.textureCache[name].image = new Image();
+        this.textureCache[name].image.onload = () => {
+            this.handleTextureLoaded(name);
+        }.bind(this)
+        this.textureCache[name].image.src = url;
     }
 
     handleTextureLoaded(name) {
@@ -55,6 +51,13 @@ class Texture {
          Injector.get("gl").bindTexture( Injector.get("gl").TEXTURE_2D, this.textureCache[name].compiledTexture);
 
         // check if all are completed
+        if (this.isReady()) {
+            console.log("Texture: All textures compiled");
+            this.resolve();
+        }
+    }
+
+    isReady(){
         this.allTextureCompiled = true;
         for (let prop in this.textureCache) {
 
@@ -66,11 +69,7 @@ class Texture {
                 }
             }
         }
-
-        if (this.allTextureCompiled) {
-            console.log("Texture: All textures compiled");
-            this.resolve();
-        }
+        return this.allTextureCompiled;
     }
 }
 
