@@ -1,17 +1,3 @@
-precision mediump float;
-
-uniform vec4 color;
-uniform sampler2D uSampler;
-
-// sun
-uniform vec3 uSunPos;
-
-
-varying vec2 vUv;
-varying lowp vec3 vColor;
-//varying lowp vec3 vNormals;
-varying vec3 vPosition;
-
 #define PI 3.141592
 #define iSteps 16
 #define jSteps 8
@@ -110,28 +96,4 @@ vec3 atmosphere(vec3 r, vec3 r0, vec3 pSun, float iSun, float rPlanet, float rAt
 
     // Calculate and return the final color.
     return iSun * (pRlh * kRlh * totalRlh + pMie * kMie * totalMie);
-}
-
-void main(void) {
-	vec2 tempUv = vec2(vUv.x, 1.0-vUv.y);
-
-	vec3 atmos = atmosphere(
-        normalize(vPosition),           // normalized ray direction
-        vec3(0,6372e3,0),               // ray origin
-        uSunPos,                        // position of the sun
-        22.0,                           // intensity of the sun
-        6371e3,                         // radius of the planet in meters
-        6471e3,                         // radius of the atmosphere in meters
-        vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
-        21e-6,                          // Mie scattering coefficient
-        8e3,                            // Rayleigh scale height
-        1.2e3,                          // Mie scale height
-        0.758                           // Mie preferred scattering direction
-    );
-
-	// Apply exposure.
-    atmos = 1.0 - exp(-1.0 * atmos);
-
-    // gl_FragColor = vec4(vNormals, 1.0);
-	gl_FragColor = vec4(atmos, 1) * vec4(vColor, 1.0) * color * texture2D(uSampler, tempUv);
 }

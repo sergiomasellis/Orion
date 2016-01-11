@@ -55,8 +55,7 @@ class Shader {
                     //check if all are completed
                     if (this.isReady()) {
                         console.log("Shader: All Shaders compiled");
-
-                        this.initProgram();
+                        this.resolve();
                     }
 
                 }.bind(this));
@@ -108,65 +107,6 @@ class Shader {
             //when success
             cb(url, shader);
         }
-
-        // return shader;
-    }
-
-    // Used to compile the shaders in the cache
-    initProgram() {
-
-        console.log("Shader: Creating Programs and Linking");
-
-        //create gl program
-        this.shaderProgram = Injector.get("gl").createProgram();
-
-        //attach the shaders to the program
-        for (var shader in this.shaderCache) {
-            if (this.shaderCache.hasOwnProperty(shader)) {
-                Injector.get("gl").attachShader(this.shaderProgram, this.shaderCache[shader]);
-            }
-        }
-
-        Injector.get("gl").linkProgram(this.shaderProgram);
-
-        this.useProgram();
-
-        if (!Injector.get("gl").getProgramParameter(this.shaderProgram, Injector.get("gl").LINK_STATUS)) {
-            throw new Error('Shader: Could not initialise shaders');
-            this.reject();
-        } else {
-            console.log("Shader: Program compiled");
-            this.resolve();
-        }
-    }
-
-    useProgram() {
-        //once buffer is setup use program
-        Injector.get("gl").useProgram(this.shaderProgram);
-        //setup uniforms/attributes
-        this.setupUniformsNAttribs();
-    }
-
-    setupUniformsNAttribs() {
-
-        //get color uniform
-        this.shaderProgram.color = Injector.get("gl").getUniformLocation(this.shaderProgram, 'color');
-
-        this.shaderProgram.position = Injector.get("gl").getAttribLocation(this.shaderProgram, 'position');
-        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.position); // <--- ?    
-
-        this.shaderProgram.uv = Injector.get("gl").getAttribLocation(this.shaderProgram, 'uv');
-        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.uv); // <--- ?
-
-        this.shaderProgram.vColor = Injector.get("gl").getAttribLocation(this.shaderProgram, 'aVertexColor');
-        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.vColor); // <--- ?
-
-        this.shaderProgram.normals = Injector.get("gl").getAttribLocation(this.shaderProgram, 'normals');
-        Injector.get("gl").enableVertexAttribArray(this.shaderProgram.normals); // <--- ?
-
-        this.shaderProgram.pMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "pMatrix");
-        this.shaderProgram.mvMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "mVMatrix");
-        this.shaderProgram.samplerUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSampler");
 
     }
 }

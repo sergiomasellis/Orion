@@ -16,9 +16,9 @@ class Entity {
         this.z = this.options.z || 0.0;
 
         // Before init check if game engine ready?
-        if(Injector.get("game").isReady){ 
-            this.init();
-        }
+        // if(Injector.get("game").isReady){ 
+        //     this.init();
+        // }
     }
 
     init() {

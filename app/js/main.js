@@ -24,7 +24,8 @@ class Main {
           ],
           models: [
             ['frinlet','js/models/frinlet.json'],
-            ['stormtrooper','js/models/stormtrooper.json']
+            ['stormtrooper','js/models/stormtrooper.json'],
+            ['cube','js/models/cube.json']
           ]
       });
 

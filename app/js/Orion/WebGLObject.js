@@ -1,6 +1,7 @@
 import Entity from "Orion/Entity";
 import Injector from 'Orion/Injector';
 import Shader from 'Orion/Shader';
+import Program from 'Orion/Program';
 import Models from 'Orion/Model';
 import Texture from 'Orion/Texture';
 import Utils from 'Orion/Utils';
@@ -21,6 +22,10 @@ class WebGLObject extends Entity {
         this.speed = this.options.speed || 8.05;
         this.color = this.options.color || [1.0, 1.0, 1.0, 1.0];
         this.scale = this.options.scale || {x:1, y:1, z:1};
+        this.theta = 0;
+
+        this.programName = this.options.programName || "base";
+        this.program = new Program(this.programName);
 
         // Run only after shaders are ready!
         if (!Models.bufferedModels[this.model]) this.initBuffers();
@@ -94,6 +99,9 @@ class WebGLObject extends Entity {
     draw() {
 
         Injector.dependencies.gl.uniform4fv(Shader.shaderProgram.color, this.color);
+
+        this.theta += 0.0125;
+        Injector.dependencies.gl.uniform3fv(Shader.shaderProgram.uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
 
         mat4.identity(this.mvMatrix);
         mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, this.z]);
