@@ -18,36 +18,52 @@ export default class Controller {
         this.direction.A = false;
         this.direction.S = false;
         this.direction.D = false;
-        
+
         this.mouse = {};
         this.mouse.down = {};
         this.mouse.movement = {x: 0, y:0};
         this.mouse.isDown = false;
+        this.mouse.lastX = 0;
+        this.mouse.lastY = 0;
+        this.lastMouseMovementTimer = 0;
 
-        this.init(); 
+        this.init();
     }
 
     init() {
         document.addEventListener("triggerKeydownEvent", this.move.bind(this), false);
         document.addEventListener("triggerKeyupEvent", this.stop.bind(this), false);
-        
+
         document.addEventListener("triggerMousedownEvent", (msg) => {
             this.mouse.down.x = msg.detail.e.pageX;
             this.mouse.down.y = msg.detail.e.pageY;
             this.mouse.isDown = true;
-
         }.bind(this), false);
-        
+
         document.addEventListener("triggerMouseupEvent", (e) => this.mouse.isDown = false, false);
-        
+
         document.addEventListener("triggerMousemoveEvent", (msg) => {
             this.mouse.x = msg.detail.e.pageX;
             this.mouse.y = msg.detail.e.pageY;
             this.mouse.movement.x = msg.detail.e.movementX || msg.detail.e.mozMovementX || msg.detail.e.webkitMovementX || 0.0;
             this.mouse.movement.y = msg.detail.e.movementY || msg.detail.e.mozMovementX || msg.detail.e.webkitMovementX || 0.0;
+
+            this.mouse.lastX = this.mouse.x;
+            this.mouse.lastY = this.mouse.y;
+
+            clearInterval(this.lastMouseMovementTimer);
+            this.lastMouseMovementTimer = setTimeout(function() {
+              if(this.mouse.lastY == this.mouse.y && this.mouse.lastX == this.mouse.x) {
+                this.mouse.movement.y = 0;
+                this.mouse.movement.x = 0;
+              }
+
+            }.bind(this), 500);
+
         }.bind(this), false);
+
     }
-    
+
 
     move(details) {
 
@@ -56,17 +72,14 @@ export default class Controller {
         }
 
         if (details.detail.keyCode === 83 || details.detail.keyCode === 40) {
-            // console.log("Moving Backwards");
             this.direction.S = true;
         }
 
         if (details.detail.keyCode === 65 || details.detail.keyCode === 37) {
-            // console.log("Moving Left");
             this.direction.A = true;
         }
 
         if (details.detail.keyCode === 68 || details.detail.keyCode === 39) {
-            // console.log("Moving Right");
             this.direction.D = true;
         }
 
@@ -79,17 +92,14 @@ export default class Controller {
         }
 
         if (details.detail.keyCode === 83 || details.detail.keyCode === 40) {
-            // console.log("Moving Backwards");
             this.direction.S = false;
         }
 
         if (details.detail.keyCode === 65 || details.detail.keyCode === 37) {
-            // console.log("Moving Left");
             this.direction.A = false;
         }
 
         if (details.detail.keyCode === 68 || details.detail.keyCode === 39) {
-            // console.log("Moving Right");
             this.direction.D = false;
         }
     }

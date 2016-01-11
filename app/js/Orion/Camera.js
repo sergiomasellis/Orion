@@ -17,7 +17,8 @@ class Camera {
         this.distance = this.options.distance || {x:0, y:0, z:0};
         this.nearClip = this.options.nearClip || 0.1;
         this.farClip = this.options.farClip || 1000.0;
-        this.fieldOfView = this.options.fieldOfView || Math.PI*0.3;
+        this.zoom = this.options.zoom || 1;
+        this.fieldOfView = this.options.fieldOfView || this.zoom;
         this.aspectRatio = this.options.aspectRatio || Injector.get("canvas").width / Injector.get("canvas").height;
 
         this.isFocused = this.options.focus || false;
@@ -29,8 +30,8 @@ class Camera {
         this.z = this.options.z || 0.0;
 
         // modes of camera behaviour
-        this.modes = ["follow", "orbit", "dolly", "pan"];
-        this.currentMode = this.options.currentMode || this.modes[1];
+        this.modes = ["follow", "orbit"];
+        this.currentMode = this.options.currentMode || this.modes[0];
 
         // frustum
         this.leftFrustum = vec3.fromValues(1.0, 0.0, 0.0);
@@ -46,6 +47,10 @@ class Camera {
         window.cam = this;
 
         this.pMatrix = mat4.create();
+
+        this.vx = 0;
+        this.vz = 0;
+        this.force = 0.05;
     }
 
     update(dt) {
@@ -63,16 +68,6 @@ class Camera {
                 case this.modes[1]:
                     this.orbit();
                 break;
-
-                // dolly around point
-                case this.modes[2]:
-                    this.dolly();
-                break;
-
-                // pan a point
-                case this.modes[3]:
-                    this.pan();
-                break;
             }
         }
 
@@ -84,7 +79,6 @@ class Camera {
         mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.y+Math.PI, [0.0, 1.0, 0.0]);
 
         mat4.translate(this.pMatrix, this.pMatrix, [0.0, this.distance.y, 0.0]);
-
         mat4.translate(this.pMatrix, this.pMatrix, [this.x, this.y, this.z]);
 
         Injector.get("gl").uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
@@ -109,39 +103,9 @@ class Camera {
         this.rotation.z += this.orbitAmount.z;
     }
 
-    dolly () {
-        // move towards a z until distance to point is 0
-        let distance = Math.round(Math.distance2D({x: this.x, y: this.z}, {x: -this.focus.x, y: -this.focus.z}));
-
-        //check distance
-        if( distance > 0  && distance < 40) {
-
-            console.log(Math.round(Math.distance2D({x: this.x, y: this.z}, {x: -this.focus.x, y: -this.focus.z})));
-
-            this.x  -= this.focus.x * 0.5;
-            // this.y  -= this.focus.y;
-            this.z  -= this.focus.z * 0.5;
-
-            // face the point
-            this.rotation.x = -this.focus.rotation.x;
-            this.rotation.y = -this.focus.rotation.y;
-            this.rotation.z = -this.focus.rotation.z;
-
-        }
-
-    }
-
-    pan () {
-        // sorta like orbit except the oribit of the ortation is based off camera position?
-        this.rotation.y += this.orbitAmount.y;
-        this.rotation.x += this.orbitAmount.x;
-        this.rotation.z += this.orbitAmount.z;
-    }
-
     follow () {
 
-        // follows moves camera behind point and rotates with a point
-
+        // follows moves camera behind point and rotates with a pointww
         this.x = -this.focus.x;
         this.y = -this.focus.y;
         this.z = -this.focus.z;

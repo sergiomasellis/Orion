@@ -9,40 +9,51 @@ class WelcomeScene extends Scene {
 
     init() {
 
-        var frinlet2 = new Player({
+        let playerObj = new Player({
             name: "Stevoid1990",
             model: "frinlet",
             texture: "frinlet"
         });
 
-        this.addEntity(frinlet2);
+        this.addEntity(playerObj);
 
 
         let pl = [];
         let gridPlane = 50;
 
-        for (let x = -gridPlane; x < gridPlane; x += 5) {
-            for (let z = -gridPlane; z < gridPlane; z += 5) {
+        // for (let x = -gridPlane; x < gridPlane; x += 5) {
+        //     for (let z = -gridPlane; z < gridPlane; z += 5) {
 
-                let name = "myPlane" + z + x;
+        //         let name = "myPlane" + z + x;
 
-                pl[x] = new Plane({
-                    name: name,
-                    texture: "stormtrooper",
-                    scale: {
-                        x: 3.0,
-                        y: 1.0,
-                        z: 3.0
-                    }
-                });
+        //         pl[x] = new Plane({
+        //             name: name,
+        //             texture: "stormtrooper",
+        //             scale: {
+        //                 x: 3.0,
+        //                 y: 1.0,
+        //                 z: 3.0
+        //             }
+        //         });
 
-                pl[x].x = x;
-                pl[x].z = z;
+        //         pl[x].x = x;
+        //         pl[x].z = z;
 
-                this.addEntity(pl[x]);
+        //         this.addEntity(pl[x]);
+        //     }
+        // }
+
+        new Plane({
+            name: name,
+            texture: "stormtrooper",
+            x: 0,
+            y: 0,
+            scale: {
+                x: 3.0,
+                y: 1.0,
+                z: 3.0
             }
-        }
-
+        });
 
 
         let st = [];
@@ -78,7 +89,7 @@ class WelcomeScene extends Scene {
                 y: -4.0,
                 z: -10.0
             },
-            focus: frinlet2
+            focus: playerObj
         }));
 
         this.setCurrentCamera(myCamera);

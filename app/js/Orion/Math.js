@@ -9,6 +9,6 @@ let math = {
     }
 };
 
-console.log("math created");
+// console.log("math created");
 
 export default Utils.extend(Math, math);

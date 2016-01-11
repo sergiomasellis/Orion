@@ -10,7 +10,7 @@ class WebGLObject extends Entity {
     init(options = {}) {
         //merge it
         Utils.extend(this.options, options);
-        
+
         // variables
         this.mvMatrix = mat4.create();
         this.texture = this.options.texture || "base";
@@ -37,7 +37,7 @@ class WebGLObject extends Entity {
         let colorBuffer = Injector.dependencies.gl.createBuffer();
         let normalBuffer = Injector.dependencies.gl.createBuffer();
         let polyCount = Models.modelCache[this.model].verts.length/3;
-    
+
         // sergio is awesome fsdfs
         //check
         if(Models.modelCache[this.model].vColor === undefined) {
@@ -47,7 +47,7 @@ class WebGLObject extends Entity {
         if(Models.modelCache[this.model].normals === undefined) {
             Models.modelCache[this.model].normals = Utils.fillArrayWith([0,0,0], polyCount);
         }
-        
+
         if(Models.modelCache[this.model].uv === undefined) {
             Models.modelCache[this.model].uv = Utils.fillArrayWith([0,0,0], polyCount*(2/3));
         }
@@ -62,7 +62,7 @@ class WebGLObject extends Entity {
         Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, vertBuffer);
         Injector.dependencies.gl.bufferData(Injector.dependencies.gl.ARRAY_BUFFER, vertices, Injector.dependencies.gl.STATIC_DRAW);
 
-        // bind uv buffer 
+        // bind uv buffer
         Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, uvBuffer);
         Injector.dependencies.gl.bufferData(Injector.dependencies.gl.ARRAY_BUFFER, uvs, Injector.dependencies.gl.STATIC_DRAW);
 
@@ -109,13 +109,10 @@ class WebGLObject extends Entity {
         Injector.dependencies.gl.vertexAttribPointer(Shader.shaderProgram.uv, 2, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
         Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].vColor);
-        Injector.dependencies.gl.vertexAttribPointer(Shader.shaderProgram.vColor, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);        
+        Injector.dependencies.gl.vertexAttribPointer(Shader.shaderProgram.vColor, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
         Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].normals);
         Injector.dependencies.gl.vertexAttribPointer(Shader.shaderProgram.normals, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
-
-        Injector.dependencies.controller.mouse.movement.x = 0;
-        Injector.dependencies.controller.mouse.movement.y = 0;
 
         Injector.dependencies.gl.uniformMatrix4fv(Shader.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
         Injector.dependencies.gl.uniform1i(Shader.shaderProgram.samplerUniform, Texture.textureCache[this.texture].id);

@@ -12,6 +12,7 @@ class Main {
       // Config engine first listing images and shaders
       Config.set({
           engine: "3d",
+          controller: true,
           textures: [
             ['base', 'img/baseTexture.png'],
             ['frinlet', 'img/character.png'],

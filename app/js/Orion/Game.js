@@ -13,7 +13,7 @@ import Texture from 'Orion/Texture';
 export default class Game {
     constructor(options = {}) {
 
-        this.options = Utils.extend(this.options, options);
+        // this.options = Utils.extend(this.options, options);
 
         // Get Context
         this.gl = new Context();
@@ -48,8 +48,10 @@ export default class Game {
         this.currentScene = 0;
 
         // Setup keyboard controls
-        this.controller = new Controller;
-        Injector.register('controller', this.controller);
+        if(Config.get("controller")) {
+            this.controller = new Controller;
+            Injector.register('controller', this.controller);
+        }
 
         // Setup gameOnReady Callback
         Injector.register('game', this);

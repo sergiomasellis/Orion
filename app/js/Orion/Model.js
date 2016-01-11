@@ -5,6 +5,7 @@ class Model {
         this.allModelsLoaded = false;
         this.readyCallbacks = [];
     }
+
     init() {}
 
     load(multipleArrayOfModels) {

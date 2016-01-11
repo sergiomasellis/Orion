@@ -27,13 +27,12 @@ class Input{
         this.canvas.requestPointerLock = this.canvas.requestPointerLock || this.canvas.mozRequestPointerLock || this.canvas.webkitRequestPointerLock;
         this.canvas.addEventListener('click', () => this.canvas.requestPointerLock());
 
-        // Unlock 
+        // Unlock
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
 
         if ("onpointerlockchange" in document) {
             document.addEventListener('pointerlockchange', this.pointerLockChange.bind(this), false);
-        } else if ("onmozpointerlockchange" in document) {
-            debugger;            
+        } else if ("onmozpointerlockchange" in document) {         
             document.addEventListener('mozpointerlockchange', this.pointerLockChange.bind(this), false);
         } else if ("onwebkitpointerlockchange" in document) {
             document.addEventListener('webkitpointerlockchange', this.pointerLockChange.bind(this), false);
@@ -51,7 +50,7 @@ class Input{
             // this.canvas.addEventListener('mousemove', this.handleMouseMove, false);
         }
     }
-    
+
     triggerKeyEvent(keyCode, type) {
         // if(keyCode === 27) this.pointerLockChange();
         if (window.CustomEvent) {
@@ -63,7 +62,7 @@ class Input{
 
 		return document.dispatchEvent(event);
     }
-    
+
     triggerMouseEvent(e, type) {
 
         // console.log("type of event is: ", type);
