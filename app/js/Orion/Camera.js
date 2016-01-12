@@ -1,5 +1,5 @@
 import Injector from 'Orion/Injector';
-import Shader from 'Orion/Shader';
+import Program from 'Orion/Program';
 import Utils from 'Orion/Utils';
 import math from 'Orion/Math';
 
@@ -81,7 +81,7 @@ class Camera {
         mat4.translate(this.pMatrix, this.pMatrix, [0.0, this.distance.y, 0.0]);
         mat4.translate(this.pMatrix, this.pMatrix, [this.x, this.y, this.z]);
 
-        Injector.get("gl").uniformMatrix4fv(Shader.shaderProgram.pMatrixUniform, false, this.pMatrix);
+        Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").pMatrixUniform, false, this.pMatrix);
 
     }
 

@@ -36,7 +36,7 @@ gulp.task('webserver', function() {
     browserSync({
       server: _browser_URL,
       port: port,
-      host: host 
+      host: host
     });
 });
 

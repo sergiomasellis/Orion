@@ -133,5 +133,5 @@ void main(void) {
     atmos = 1.0 - exp(-1.0 * atmos);
 
     // gl_FragColor = vec4(vNormals, 1.0);
-	gl_FragColor = vec4(atmos, 1) * vec4(vColor, 1.0) * color * texture2D(uSampler, tempUv);
+	gl_FragColor = vec4(vColor, 1.0) * color * texture2D(uSampler, tempUv);
 }

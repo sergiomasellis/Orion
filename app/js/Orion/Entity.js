@@ -4,7 +4,7 @@ import Injector from "Orion/Injector";
 class Entity {
 
     constructor(options = {}) {
-        
+
         this.options = Utils.extend(this.options, options);
 
         this.uuid = this.options.uuid || Utils.generateUUID();
@@ -16,13 +16,13 @@ class Entity {
         this.z = this.options.z || 0.0;
 
         // Before init check if game engine ready?
-        // if(Injector.get("game").isReady){ 
-        //     this.init();
-        // }
+        if(Injector.get("game").isReady){
+            this.init();
+        }
     }
 
     init() {
-        
+
     }
 
     update() {

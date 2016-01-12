@@ -17,6 +17,7 @@
 	- Multiple Texture Support for stormtrooper faces
 
 ## Completed
+	- Created the program class
 	- Promises for all async loading tasks - Devon
 	- Add Frinlet as contributor
 	- Vertex Colors

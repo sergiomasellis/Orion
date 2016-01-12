@@ -9,6 +9,7 @@ import Resource from 'Orion/Resource';
 import Shaders from 'Orion/Shader';
 import Models from 'Orion/Model';
 import Texture from 'Orion/Texture';
+import Program from 'Orion/Program';
 
 export default class Game {
     constructor(options = {}) {
@@ -56,17 +57,17 @@ export default class Game {
         // Setup gameOnReady Callback
         Injector.register('game', this);
 
-        // Get Resources
+        // Get Resources uses promises!
         Promise.all([
             Resource.load(Config.get("images")),
             Texture.load(Config.get("textures")),
             Shaders.load(Config.get("shaders")),
             Models.load(Config.get("models"))
         ]).then(() => {
+            return new Program;
+        }).then(() => {
             console.log("Game: All resources loaded and compiled");
             this.startGameEngine();
-        }).catch(err => {
-            console.error(err);
         });
     }
 

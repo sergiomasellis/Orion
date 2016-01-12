@@ -13,80 +13,64 @@ class WelcomeScene extends Scene {
 
     init() {
 
-        let sky = new Sky({
+        let sky = new Plane({
             scale: {
                 x: 2000,
                 y: 2000,
                 z: 2000
             }
         });
+        sky.rotation.x =  -90 * Math.PI / 180;
 
         this.addEntity(sky);
 
 
-        // let pl = [];
-        // let gridPlane = 50;
-
-        // for (let x = -gridPlane; x < gridPlane; x += 5) {
-        //     for (let z = -gridPlane; z < gridPlane; z += 5) {
-
-        //         let name = "myPlane" + z + x;
-
-        //         pl[x] = new Plane({
-        //             name: name,
-        //             texture: "stormtrooper",
-        //             scale: {
-        //                 x: 3.0,
-        //                 y: 1.0,
-        //                 z: 3.0
-        //             }
-        //         });
-
-        //         pl[x].x = x;
-        //         pl[x].z = z;
-
-        //         this.addEntity(pl[x]);
-        //     }
-        // }
-
-        // new Plane({
-        //     name: name,
-        //     texture: "stormtrooper",
-        //     x: 0,
-        //     y: 0,
+        // let cube = new Sky({
         //     scale: {
-        //         x: 3.0,
-        //         y: 1.0,
-        //         z: 3.0
+        //         x: 0.8,
+        //         y: 0.8,
+        //         z: 0.8
         //     }
         // });
 
+        // this.addEntity(cube);
 
-        // let st = [];
-        // let grid = 40;
 
-        // for (let x = -grid; x < grid; x += 5) {
-        //     for (let z = -grid; z < grid; z += 5) {
 
-        //         let name = "frinlet" + z + x;
+        let playerObj = new Player({
+            name: "Stevoid1990",
+            model: "frinlet",
+            texture: "frinlet"
+        });
 
-        //         st[x] = new StormTrooper({
-        //             name: name,
-        //             model: "stormtrooper",
-        //             texture: "stormtrooper",
-        //             scale: {
-        //                 x: 2.0,
-        //                 y: 2.0,
-        //                 z: 2.0
-        //             }
-        //         });
+        this.addEntity(playerObj);
 
-        //         st[x].x = x;
-        //         st[x].z = z;
 
-        //         this.addEntity(st[x]);
-        //     }
-        // }
+        let st = [];
+        let grid = 40;
+
+        for (let x = -grid; x < grid; x += 5) {
+            for (let z = -grid; z < grid; z += 5) {
+
+                let name = "frinlet" + z + x;
+
+                st[x] = new StormTrooper({
+                    name: name,
+                    model: "stormtrooper",
+                    texture: "stormtrooper",
+                    scale: {
+                        x: 2.0,
+                        y: 2.0,
+                        z: 2.0
+                    }
+                });
+
+                st[x].x = x;
+                st[x].z = z;
+
+                this.addEntity(st[x]);
+            }
+        }
 
         // Add camera set distance and set focus entity
         let myCamera = this.addCamera(new Camera({
@@ -95,7 +79,7 @@ class WelcomeScene extends Scene {
                 y: -4.0,
                 z: -10.0
             },
-            focus: sky
+            focus: playerObj
         }));
 
         this.setCurrentCamera(myCamera);
