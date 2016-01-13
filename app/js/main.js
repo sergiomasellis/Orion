@@ -20,7 +20,9 @@ class Main {
           ],
           shaders: [
             ['frag','js/shaders/frag.glsl'],
-            ['vert','js/shaders/vert.glsl']
+            ['vert','js/shaders/vert.glsl'],
+            ['frag','js/shaders/atmosphereFrag.glsl'],
+            ['vert','js/shaders/atmosphereVert.glsl']
           ],
           models: [
             ['frinlet','js/models/frinlet.json'],

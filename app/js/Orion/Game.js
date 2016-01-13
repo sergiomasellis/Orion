@@ -64,6 +64,7 @@ export default class Game {
             Shaders.load(Config.get("shaders")),
             Models.load(Config.get("models"))
         ]).then(() => {
+            // Creates Base program for basic model rendering
             return new Program;
         }).then(() => {
             console.log("Game: All resources loaded and compiled");

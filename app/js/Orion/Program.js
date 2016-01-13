@@ -6,10 +6,15 @@ class Program {
 
 	constructor(options = {}){
 
-        this.name = "base";
-        this.shaderProgram = null;
+        //merge it
+        this.options = Utils.extend(this.options, options);
 
-        Utils.extend(this.options, options);
+        this.name = this.options.name || "base";
+
+        this.vertShader = this.options.vertShader || "vert";
+        this.fragShader = this.options.fragShader || "frag";
+
+        this.shaderProgram = null;
 
 		return new Promise((resolve, reject) => {
             this.resolve = resolve;
@@ -30,12 +35,24 @@ class Program {
         // Register program
         Injector.register(this.name+"Program", this.shaderProgram);
 
+
         //attach the shaders to the program
-        for (var shader in Shader.shaderCache) {
-            if (Shader.shaderCache.hasOwnProperty(shader)) {
-                Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[shader]);
-            }
-        }
+        // for (var shader in Shader.shaderCache) {
+        //     if (Shader.shaderCache.hasOwnProperty(shader)) {
+                // Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[shader]);
+        //     }
+        // }
+
+        debugger;
+
+        // attach vert shader
+        Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[this.vertShader]);
+
+        // attach frag shader
+        Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[this.fragShader]);
+
+
+
 
         Injector.get("gl").linkProgram(this.shaderProgram);
 
@@ -67,7 +84,7 @@ class Program {
         this.shaderProgram.pMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "pMatrix");
         this.shaderProgram.mvMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "mVMatrix");
         this.shaderProgram.samplerUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSampler");
-        this.shaderProgram.uSunPosUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSunPos");
+        // this.shaderProgram.uSunPosUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSunPos");
 
     }
 

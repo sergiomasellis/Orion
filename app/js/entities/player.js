@@ -32,8 +32,8 @@ class Player extends WebGLObject {
             this.rotation.y -= this.turnRate * dt;
         }
 
-        this.rotation.y -= Injector.dependencies.controller.mouse.movement.x / this.mouseSensitivity;
-        this.rotation.x -= Injector.dependencies.controller.mouse.movement.y / this.mouseSensitivity;
+        // this.rotation.y -= Injector.dependencies.controller.mouse.movement.x / this.mouseSensitivity;
+        // this.rotation.x -= Injector.dependencies.controller.mouse.movement.y / this.mouseSensitivity;
     }
 
 }

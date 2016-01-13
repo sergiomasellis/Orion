@@ -1,6 +1,6 @@
 import Entity from "Orion/Entity";
 import Injector from 'Orion/Injector';
-import Shader from 'Orion/Shader';
+// import Shader from 'Orion/Shader';
 import Program from 'Orion/Program';
 import Models from 'Orion/Model';
 import Texture from 'Orion/Texture';
@@ -10,7 +10,7 @@ class WebGLObject extends Entity {
 
     init(options = {}) {
         //merge it
-        Utils.extend(this.options, options);
+        this.options = Utils.extend(this.options, options);
 
         // variables
         this.mvMatrix = mat4.create();

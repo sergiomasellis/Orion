@@ -3,12 +3,14 @@ import Utils from 'Orion/Utils';
 class Injector {
     constructor() {
         this.dependencies = {};
+
+        window.injector = this;
     }
 
     register(name, instance) {
-        let dep = {}; 
+        let dep = {};
             dep[name] = instance;
-            
+
         Utils.extend(this.dependencies, dep);
     }
 
