@@ -28,15 +28,15 @@ class SkyProgram extends Program {
 
 class Sky extends Plane {
 
-    draw() {
-        this.theta += 0.0125;
-        Injector.dependencies.gl.uniform3fv(Injector.get(this.programName).uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
+    // draw() {
+    //     this.theta += 0.0125;
+    //     Injector.dependencies.gl.uniform3fv(Injector.get(this.programName).uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
 
-        Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+    //     Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
-        // draw to canvas
-        Injector.dependencies.gl.drawArrays(Injector.dependencies.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);
-    }
+    //     // draw to canvas
+    //     Injector.dependencies.gl.drawArrays(Injector.dependencies.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);
+    // }
 }
 
 
@@ -47,22 +47,27 @@ class WelcomeScene extends Scene {
 
         Promise.all([
             Shaders.load([
+                ['frag','js/shaders/atmosphereFrag.glsl'],
+                ['vert','js/shaders/atmosphereVert.glsl']
             ]) // compile sky shader
         ])
-        .then(() => return new SkyProgram({name: "sky", fragShader: "atmosphereFrag", vertShader: "atmosphereVert"})) // initialize sky program
+        .then(() => {
+            console.log("compiling program!!!!")
+            return new SkyProgram({name: "sky", fragShader: "atmosphereFrag", vertShader: "atmosphereVert"})
+        }) // initialize sky program
         .then(() => {
 
             // Initialize sky entity
-            let sky = new Sky({
-                scale: {
-                    x: 2000,
-                    y: 2000,
-                    z: 2000
-                }
-            });
+            // let sky = new Sky({
+            //     scale: {
+            //         x: 2000,
+            //         y: 2000,
+            //         z: 2000
+            //     }
+            // });
 
-            sky.rotation.x =  -90 * Math.PI / 180;
-            this.addEntity(sky);
+            // sky.rotation.x =  -90 * Math.PI / 180;
+            // this.addEntity(sky);
         });
 
         // console.log(Injector);
@@ -88,31 +93,31 @@ class WelcomeScene extends Scene {
         this.addEntity(playerObj);
 
 
-        let st = [];
-        let grid = 40;
+        // let st = [];
+        // let grid = 40;
 
-        for (let x = -grid; x < grid; x += 5) {
-            for (let z = -grid; z < grid; z += 5) {
+        // for (let x = -grid; x < grid; x += 5) {
+        //     for (let z = -grid; z < grid; z += 5) {
 
-                let name = "frinlet" + z + x;
+        //         let name = "frinlet" + z + x;
 
-                st[x] = new StormTrooper({
-                    name: name,
-                    model: "stormtrooper",
-                    texture: "stormtrooper",
-                    scale: {
-                        x: 2.0,
-                        y: 2.0,
-                        z: 2.0
-                    }
-                });
+        //         st[x] = new StormTrooper({
+        //             name: name,
+        //             model: "stormtrooper",
+        //             texture: "stormtrooper",
+        //             scale: {
+        //                 x: 2.0,
+        //                 y: 2.0,
+        //                 z: 2.0
+        //             }
+        //         });
 
-                st[x].x = x;
-                st[x].z = z;
+        //         st[x].x = x;
+        //         st[x].z = z;
 
-                this.addEntity(st[x]);
-            }
-        }
+        //         this.addEntity(st[x]);
+        //     }
+        // }
 
         // Add camera set distance and set focus entity
         let myCamera = this.addCamera(new Camera({

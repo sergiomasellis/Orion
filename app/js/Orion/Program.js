@@ -10,7 +10,6 @@ class Program {
         this.options = Utils.extend(this.options, options);
 
         this.name = this.options.name || "base";
-
         this.vertShader = this.options.vertShader || "vert";
         this.fragShader = this.options.fragShader || "frag";
 
@@ -43,14 +42,12 @@ class Program {
         //     }
         // }
 
-        debugger;
 
         // attach vert shader
         Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[this.vertShader]);
 
         // attach frag shader
         Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[this.fragShader]);
-
 
 
 
@@ -63,7 +60,7 @@ class Program {
             throw new Error('Program: Could not initialise shaders');
             this.reject();
         } else {
-            console.log("Program: "+this.name+" compiled");
+            console.log("Program: "+this.name+" compiled", this.shaderProgram);
             this.resolve();
         }
     }

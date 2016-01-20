@@ -97,34 +97,39 @@ class WebGLObject extends Entity {
 
     draw() {
 
-        Injector.dependencies.gl.uniform4fv(Injector.get(this.programName).color, this.color);
+
+
 
         this.theta += 0.0125;
         Injector.dependencies.gl.uniform3fv(Injector.get(this.programName).uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
 
-        mat4.identity(this.mvMatrix);
-        mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, this.z]);
-        mat4.scale(this.mvMatrix, this.mvMatrix, [this.scale.x, this.scale.y, this.scale.z]);
-        mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
-        mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
-        mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.z, [0.0, 0.0, 1.0]);
+        if(this.programName === "baseProgram"){
+            Injector.dependencies.gl.uniform4fv(Injector.get(this.programName).color, this.color);
 
-        Injector.dependencies.gl.activeTexture(Injector.dependencies.gl.TEXTURE0 + Texture.textureCache[this.texture].id);
+            mat4.identity(this.mvMatrix);
+            mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, this.z]);
+            mat4.scale(this.mvMatrix, this.mvMatrix, [this.scale.x, this.scale.y, this.scale.z]);
+            mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
+            mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
+            mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.z, [0.0, 0.0, 1.0]);
 
-        Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].verts);
-        Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.activeTexture(Injector.dependencies.gl.TEXTURE0 + Texture.textureCache[this.texture].id);
 
-        Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].uvs);
-        Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).uv, 2, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].verts);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
-        Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].vColor);
-        Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).vColor, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].uvs);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).uv, 2, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
-        Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].normals);
-        Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).normals, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].vColor);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).vColor, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
-        Injector.dependencies.gl.uniformMatrix4fv(Injector.get(this.programName).mvMatrixUniform, false, this.mvMatrix);
-        Injector.dependencies.gl.uniform1i(Injector.get(this.programName).samplerUniform, Texture.textureCache[this.texture].id);
+            Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].normals);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).normals, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+
+            Injector.dependencies.gl.uniformMatrix4fv(Injector.get(this.programName).mvMatrixUniform, false, this.mvMatrix);
+            Injector.dependencies.gl.uniform1i(Injector.get(this.programName).samplerUniform, Texture.textureCache[this.texture].id);
+        }
 
         // draw to canvas
         Injector.dependencies.gl.drawArrays(Injector.dependencies.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);

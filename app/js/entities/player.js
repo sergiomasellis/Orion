@@ -6,7 +6,7 @@ class Player extends WebGLObject {
     init() {
         super.init();
 
-        this.color = [1, 0, 0, 1];
+        // this.color = [1, 0, 0, 1];
         this.rotation = {x:0, y:0, z:0};
         this.mouseSensitivity = 200;
         this.turnRate = 2.0;

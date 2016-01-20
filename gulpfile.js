@@ -11,6 +11,7 @@ var gulp = require("gulp"),
     browserSync = require('browser-sync'),
     opn = require('opn'),
     plumber = require('gulp-plumber');
+    //webpack = require('gulp-webpack');
 
 
 
@@ -91,6 +92,14 @@ gulp.task("scripts", function () {
       .pipe(sourcemaps.init())
       .pipe(babel({modules: "amd"}))
       .pipe(sourcemaps.write("."))
+      //.pipe(concat("bundle.js"))
       .pipe(gulp.dest("dist/js"))
       .pipe(browserSync.reload({stream: true}));
+});
+
+gulp.task("webpack", function () {
+    return gulp.src("dist/js/bundle.js")
+      .pipe(plumber())
+      .pipe(webpack())
+      .pipe(gulp.dest("dist/js"));
 });
