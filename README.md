@@ -16,7 +16,6 @@ The engine can be found within the app folder inside the orion folder.
 
 ## Other libs included
 - [https://github.com/toji/gl-matrix](GLmatrix) for matrix math
-- [http://requirejs.org/](RequireJS) for modules
 
 ## Todos
 - please check the [/TODO.md](TODO.md) file.
