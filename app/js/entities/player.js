@@ -1,5 +1,5 @@
-import Injector from 'Orion/Injector';
-import WebGLObject from 'Orion/WebGLObject';
+import Injector from '../Orion/Injector';
+import WebGLObject from '../Orion/WebGLObject';
 
 class Player extends WebGLObject {
 

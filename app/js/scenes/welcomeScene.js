@@ -1,17 +1,17 @@
-import Scene from "Orion/Scene";
-import Models from 'Orion/Model';
-import Shaders from 'Orion/Shader';
-import Plane from "Orion/Plane";
-import Camera from "Orion/Camera";
-import Injector from 'Orion/Injector';
+import Scene from "../Orion/Scene";
+import Models from '../Orion/Model';
+import Shaders from '../Orion/Shader';
+import Plane from "../Orion/Plane";
+import Camera from "../Orion/Camera";
+import Injector from '../Orion/Injector';
 
-import WebGLObject from 'Orion/WebGLObject';
+import WebGLObject from '../Orion/WebGLObject';
 
-import Player from "entities/player";
-import StormTrooper from "entities/StormTrooper";
+import Player from "../entities/player";
+import StormTrooper from "../entities/StormTrooper";
 
 
-import Program from "Orion/Program";
+import Program from "../Orion/Program";
 
 
 class SkyProgram extends Program {

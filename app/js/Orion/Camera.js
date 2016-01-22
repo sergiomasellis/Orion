@@ -1,7 +1,7 @@
-import Injector from 'Orion/Injector';
-import Program from 'Orion/Program';
-import Utils from 'Orion/Utils';
-import math from 'Orion/Math';
+import Injector from './Injector';
+import Program from './Program';
+import Utils from './Utils';
+import math from './Math';
 
 class Camera {
 

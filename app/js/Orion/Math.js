@@ -1,4 +1,4 @@
-import Utils from 'Orion/Utils';
+import Utils from './Utils';
 
 let math = {
     "distance2D": function(point1, point2){

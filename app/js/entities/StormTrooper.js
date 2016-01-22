@@ -1,4 +1,4 @@
-import WebGLObject from "Orion/WebGLObject";
+import WebGLObject from "../Orion/WebGLObject";
 
 class StormTrooper extends WebGLObject {
     update() {

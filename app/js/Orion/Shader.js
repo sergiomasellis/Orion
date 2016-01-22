@@ -1,4 +1,4 @@
-import Injector from 'Orion/Injector';
+import Injector from './Injector';
 
 
 class Shader {
@@ -38,6 +38,7 @@ class Shader {
             shaderResponse = false;
 
         shaderRequest.onreadystatechange = () => {
+            
             if (shaderRequest.readyState == 4 && shaderRequest.status == 200) {
                 this.shaderCache[id] = shaderRequest.responseText;
 
@@ -51,20 +52,18 @@ class Shader {
                     // if all shaders are compiled call every callback
                     this.shaderCompiled[completeShaderId].ready = true;
 
-                    // debugger;
                     //check if all are completed
                     if (this.isReady()) {
                         console.log("Shader: All Shaders compiled");
                         this.resolve();
                     }
 
-                }.bind(this));
-
+                });
 
                 return shaderResponse;
             }
 
-        }.bind(this);
+        };
 
         shaderRequest.open("GET", url, true);
         shaderRequest.send();

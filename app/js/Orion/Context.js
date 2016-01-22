@@ -1,5 +1,5 @@
-import Config from 'Orion/Config';
-import Injector from 'Orion/Injector';
+import Config from './Config';
+import Injector from './Injector';
 
 class Context {
     constructor() {

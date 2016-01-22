@@ -54,7 +54,7 @@ class Model {
 
 
             }
-        }.bind(this);
+        };
 
         modelRequest.open("GET", url, true);
         modelRequest.send();

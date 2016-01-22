@@ -1,5 +1,5 @@
-import Utils from 'Orion/Utils';
-import Injector from 'Orion/Injector';
+import Utils from './Utils';
+import Injector from './Injector';
 
 class Scene {
     constructor(options = {}) {
@@ -16,9 +16,8 @@ class Scene {
         }else{
             Injector.get("game").onReady(()=>{
                 this.init();
-            }.bind(this));
+            });
         }
-        // this.init();
     }
 
     init() {}

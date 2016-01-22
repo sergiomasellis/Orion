@@ -30,7 +30,7 @@ class Resource {
             if(this.isReady()){
                this.resolve();
             }
-        }.bind(this)
+        }
 
         this.resourceCache[url] = {};
         this.resourceCache[url].ready = false;

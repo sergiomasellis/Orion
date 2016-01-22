@@ -1,10 +1,10 @@
-import Entity from "Orion/Entity";
-import Injector from 'Orion/Injector';
+import Entity from "./Entity";
+import Injector from './Injector';
 // import Shader from 'Orion/Shader';
-import Program from 'Orion/Program';
-import Models from 'Orion/Model';
-import Texture from 'Orion/Texture';
-import Utils from 'Orion/Utils';
+import Program from './Program';
+import Models from './Model';
+import Texture from './Texture';
+import Utils from './Utils';
 
 class WebGLObject extends Entity {
 

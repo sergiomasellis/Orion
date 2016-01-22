@@ -1,5 +1,5 @@
-import WebGLObject from 'Orion/WebGLObject';
-import Models from 'Orion/Model';
+import WebGLObject from './WebGLObject';
+import Models from './Model';
 
 class Plane extends WebGLObject {
     init(){

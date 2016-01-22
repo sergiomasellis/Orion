@@ -1,6 +1,6 @@
-import Injector from 'Orion/Injector';
-import Utils from 'Orion/Utils';
-import Shader from 'Orion/Shader';
+import Injector from './Injector';
+import Utils from './Utils';
+import Shader from './Shader';
 
 class Program {
 

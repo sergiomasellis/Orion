@@ -1,10 +1,10 @@
 //From Engine
-import Config from 'Orion/Config';
-import Game from 'Orion/Game';
+import Config from './Orion/Config';
+import Game from './Orion/Game';
 
 
 //current game
-import welcomeScene from 'scenes/welcomeScene';
+import welcomeScene from './scenes/welcomeScene';
 
 class Main {
     constructor() {

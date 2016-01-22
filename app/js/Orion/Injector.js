@@ -1,4 +1,4 @@
-import Utils from 'Orion/Utils';
+import Utils from './Utils';
 
 class Injector {
     constructor() {

@@ -1,4 +1,4 @@
-import Injector from "Orion/Injector";
+import Injector from "./Injector";
 
 class Input{
     constructor(){

@@ -1,5 +1,5 @@
-import Utils from 'Orion/Utils';
-import Injector from "Orion/Injector";
+import Utils from './Utils';
+import Injector from "./Injector";
 
 class Entity {
 

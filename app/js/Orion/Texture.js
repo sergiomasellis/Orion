@@ -1,5 +1,5 @@
-import Config from "Orion/Config";
-import Injector from "Orion/Injector";
+import Config from "./Config";
+import Injector from "./Injector";
 
 class Texture {
 
@@ -28,7 +28,8 @@ class Texture {
         this.textureCache[name].image = new Image();
         this.textureCache[name].image.onload = () => {
             this.handleTextureLoaded(name);
-        }.bind(this)
+        }
+        
         this.textureCache[name].image.src = url;
     }
 

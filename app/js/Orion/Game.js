@@ -1,15 +1,15 @@
-﻿import Config from 'Orion/Config';
-import Utils from 'Orion/Utils';
+﻿import Config from './Config';
+import Utils from './Utils';
 
-import Injector from 'Orion/Injector';
-import Context from 'Orion/Context';
-import Controller from 'Orion/Controller';
+import Injector from './Injector';
+import Context from './Context';
+import Controller from './Controller';
 
-import Resource from 'Orion/Resource';
-import Shaders from 'Orion/Shader';
-import Models from 'Orion/Model';
-import Texture from 'Orion/Texture';
-import Program from 'Orion/Program';
+import Resource from './Resource';
+import Shaders from './Shader';
+import Models from './Model';
+import Texture from './Texture';
+import Program from './Program';
 
 export default class Game {
     constructor(options = {}) {
@@ -84,7 +84,8 @@ export default class Game {
         // let scenes know to init now
         this.readyCallbacks.forEach((func) => {
             func();
-        }.bind(this));
+        });
+        
         this.raf();
     }
 

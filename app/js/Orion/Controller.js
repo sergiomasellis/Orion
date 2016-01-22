@@ -1,6 +1,6 @@
-import Utils from 'Orion/Utils';
-import Injector from "Orion/Injector";
-import Input from "Orion/Input";
+import Utils from './Utils';
+import Injector from "./Injector";
+import Input from "./Input";
 
 export default class Controller {
     constructor(options = {}) {
@@ -38,7 +38,7 @@ export default class Controller {
             this.mouse.down.x = msg.detail.e.pageX;
             this.mouse.down.y = msg.detail.e.pageY;
             this.mouse.isDown = true;
-        }.bind(this), false);
+        }, false);
 
         document.addEventListener("triggerMouseupEvent", (e) => this.mouse.isDown = false, false);
 
@@ -52,15 +52,16 @@ export default class Controller {
             this.mouse.lastY = this.mouse.y;
 
             clearInterval(this.lastMouseMovementTimer);
-            this.lastMouseMovementTimer = setTimeout(function() {
+            
+            this.lastMouseMovementTimer = setTimeout(() => {
               if(this.mouse.lastY == this.mouse.y && this.mouse.lastX == this.mouse.x) {
                 this.mouse.movement.y = 0;
                 this.mouse.movement.x = 0;
               }
 
-            }.bind(this), 500);
+            }, 500);
 
-        }.bind(this), false);
+        }, false);
 
     }
 
