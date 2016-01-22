@@ -28,16 +28,18 @@ class SkyProgram extends Program {
 
 class Sky extends Plane {
 
-    // draw() {
-    //     Injector.get(this.programName).use();
+    draw() {
+        Injector.get(this.programName).use();
+        
+        // console.log(Injector.get(this.programName));
 
-    //     this.theta += 0.0125;
-    //     Injector.dependencies.gl.uniform3fv(Injector.get(this.programName).shaderProgram.uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
-    //     Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+        this.theta += 0.0125;
+        Injector.dependencies.gl.uniform3fv(Injector.get(this.programName).shaderProgram.uSunPosUniform, [0, 0.1, -1]);
+        Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
-    //     // draw to canvas
-    //     Injector.dependencies.gl.drawArrays(Injector.dependencies.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);
-    // }
+        // draw to canvas
+        Injector.dependencies.gl.drawArrays(Injector.dependencies.gl.TRIANGLES, 0, Models.bufferedModels[this.model].numItems);
+    }
 }
 
 
@@ -59,19 +61,27 @@ class WelcomeScene extends Scene {
             
             // Initialize sky entity
             let sky = new Sky({
-
                 scale: {
                     x: 2000,
                     y: 2000,
                     z: 2000
                 },
                 programName: "skyProgram"
+                
             });
 
-            // sky.rotation.x =  -90 * Math.PI / 180;
+            sky.rotation.x =  -90 * Math.PI / 180;
             this.addEntity(sky);
-        });
+            
+            // let example = new StormTrooper({
+            //     name: "Sergio",
+            //     model: "stormtrooper",
+            //     texture: "stormtrooper",
+            //     programName: "skyProgram"
+            // });
 
+            // this.addEntity(example);
+        });
 
 
         let playerObj = new Player({
@@ -81,6 +91,9 @@ class WelcomeScene extends Scene {
         });
 
         this.addEntity(playerObj);
+
+
+
 
 
         let st = [];
