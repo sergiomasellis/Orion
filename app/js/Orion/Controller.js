@@ -45,8 +45,8 @@ export default class Controller {
         document.addEventListener("triggerMousemoveEvent", (msg) => {
             this.mouse.x = msg.detail.e.pageX;
             this.mouse.y = msg.detail.e.pageY;
-            this.mouse.movement.x = msg.detail.e.movementX || msg.detail.e.mozMovementX || msg.detail.e.webkitMovementX || 0.0;
-            this.mouse.movement.y = msg.detail.e.movementY || msg.detail.e.mozMovementX || msg.detail.e.webkitMovementX || 0.0;
+            this.mouse.movement.x = msg.detail.e.movementX || msg.detail.e.mozMovementX || 0.0;
+            this.mouse.movement.y = msg.detail.e.movementY || msg.detail.e.mozMovementY || 0.0;
 
             this.mouse.lastX = this.mouse.x;
             this.mouse.lastY = this.mouse.y;

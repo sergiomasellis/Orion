@@ -37,8 +37,5 @@
     "run-sequence": "*",
     "vinyl-named": "^1.1.0",
     "webpack-stream": "^3.1.0"
-  },
-  "dependencies": {
-    "gulp-babel": "^5.3.0"
   }
 }

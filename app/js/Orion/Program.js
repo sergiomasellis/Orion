@@ -32,15 +32,7 @@ class Program {
         this.shaderProgram = Injector.get("gl").createProgram();
 
         // Register program
-        Injector.register(this.name+"Program", this.shaderProgram);
-
-
-        //attach the shaders to the program
-        // for (var shader in Shader.shaderCache) {
-        //     if (Shader.shaderCache.hasOwnProperty(shader)) {
-                // Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[shader]);
-        //     }
-        // }
+        Injector.register(this.name+"Program", this);
 
 
         // attach vert shader
@@ -49,12 +41,11 @@ class Program {
         // attach frag shader
         Injector.get("gl").attachShader(this.shaderProgram, Shader.shaderCache[this.fragShader]);
 
-
-
+        // Link Gl program to the webgl context
         Injector.get("gl").linkProgram(this.shaderProgram);
 
         // use program created
-        this.use();
+        // this.use();
 
         if (!Injector.get("gl").getProgramParameter(this.shaderProgram, Injector.get("gl").LINK_STATUS)) {
             throw new Error('Program: Could not initialise shaders');
@@ -81,7 +72,6 @@ class Program {
         this.shaderProgram.pMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "pMatrix");
         this.shaderProgram.mvMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "mVMatrix");
         this.shaderProgram.samplerUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSampler");
-        // this.shaderProgram.uSunPosUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSunPos");
 
     }
 

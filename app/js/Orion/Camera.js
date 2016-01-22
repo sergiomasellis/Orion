@@ -31,7 +31,7 @@ class Camera {
 
         // modes of camera behaviour
         this.modes = ["follow", "orbit"];
-        this.currentMode = this.options.currentMode || this.modes[1];
+        this.currentMode = this.options.currentMode || this.modes[0];
 
         // frustum
         this.leftFrustum = vec3.fromValues(1.0, 0.0, 0.0);
@@ -81,7 +81,7 @@ class Camera {
         mat4.translate(this.pMatrix, this.pMatrix, [0.0, this.distance.y, 0.0]);
         mat4.translate(this.pMatrix, this.pMatrix, [this.x, this.y, this.z]);
 
-        Injector.get("gl").uniformMatrix4fv(Injector.dependencies.baseProgram.pMatrixUniform, false, this.pMatrix);
+        Injector.get("gl").uniformMatrix4fv(Injector.dependencies.baseProgram.shaderProgram.pMatrixUniform, false, this.pMatrix);
 
     }
 

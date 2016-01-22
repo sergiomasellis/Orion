@@ -92,19 +92,17 @@ class WebGLObject extends Entity {
     }
 
     update() {
-
+       
     }
 
     draw() {
+        // console.log(Injector.get(this.programName));
+         Injector.get(this.programName).use();
 
 
-
-
-        this.theta += 0.0125;
-        Injector.dependencies.gl.uniform3fv(Injector.get(this.programName).uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
 
         if(this.programName === "baseProgram"){
-            Injector.dependencies.gl.uniform4fv(Injector.get(this.programName).color, this.color);
+            Injector.dependencies.gl.uniform4fv(Injector.get(this.programName).shaderProgram.color, this.color);
 
             mat4.identity(this.mvMatrix);
             mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, this.z]);
@@ -116,19 +114,25 @@ class WebGLObject extends Entity {
             Injector.dependencies.gl.activeTexture(Injector.dependencies.gl.TEXTURE0 + Texture.textureCache[this.texture].id);
 
             Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].verts);
-            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
             Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].uvs);
-            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).uv, 2, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).shaderProgram.uv, 2, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
             Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].vColor);
-            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).vColor, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).shaderProgram.vColor, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
             Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].normals);
-            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).normals, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).shaderProgram.normals, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
 
-            Injector.dependencies.gl.uniformMatrix4fv(Injector.get(this.programName).mvMatrixUniform, false, this.mvMatrix);
-            Injector.dependencies.gl.uniform1i(Injector.get(this.programName).samplerUniform, Texture.textureCache[this.texture].id);
+            Injector.dependencies.gl.uniformMatrix4fv(Injector.get(this.programName).shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+            Injector.dependencies.gl.uniform1i(Injector.get(this.programName).shaderProgram.samplerUniform, Texture.textureCache[this.texture].id);
+        } else {
+            this.theta += 0.0125;
+            Injector.dependencies.gl.uniform3fv(Injector.get(this.programName).uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
+    
+            Injector.dependencies.gl.bindBuffer(Injector.dependencies.gl.ARRAY_BUFFER, Models.bufferedModels[this.model].verts);
+            Injector.dependencies.gl.vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.dependencies.gl.FLOAT, false, 0, 0);
         }
 
         // draw to canvas

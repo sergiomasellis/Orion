@@ -27,7 +27,7 @@ gulp.task("watch", function() {
     gulp.watch("css/**", ["copy:css"]);
     gulp.watch("img/**", ["copy:img"]);
     gulp.watch("app/js/shaders/*.glsl", ["copy:glsl"]);
-    gulp.watch("app/js/**/*.js", ["scripts"]);
+    gulp.watch("app/js/**/*.js", ["webpack"]);
     gulp.watch("app/js/models/*.json", ['copy:models']);
 });
 
