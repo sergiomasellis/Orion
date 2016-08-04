@@ -17,27 +17,30 @@ class Fps {
 		this.fpsMin = Infinity;
 		this.fpsMax = 0;
 		this.framesFps = 0;
+
+        this.showFps = false;
 	}
 
 	// TIMER FUNCTIONS
     timerBegin() {
     	this.preUpdate();
-
-        this.startTime = Date.now();
     }
 
     timerEnd() {
-        let time = Date.now();
 
-        this.framesFps++;
+        if(this.showFps){
+            let time = Date.now();
 
-        if (time > this.prevTime + 1000) {
-            this.fpsValue = Math.round((this.framesFps * 1000) / (time - this.prevTime));
-            this.fpsMin = Math.min(this.fpsMin, this.fpsValue);
-            this.fpsMax = Math.max(this.fpsMax, this.fpsValue);
-            this.fpsContainer.innerHTML = this.fpsValue + ' FPS (' + this.fpsMin + '-' + this.fpsMax + ')';
-            this.prevTime = time;
-            this.framesFps = 0;
+            this.framesFps++;
+
+            if (time > this.prevTime + 1000) {
+                this.fpsValue = Math.round((this.framesFps * 1000) / (time - this.prevTime));
+                this.fpsMin = Math.min(this.fpsMin, this.fpsValue);
+                this.fpsMax = Math.max(this.fpsMax, this.fpsValue);
+                this.fpsContainer.innerHTML = this.fpsValue + ' FPS (' + this.fpsMin + '-' + this.fpsMax + ')';
+                this.prevTime = time;
+                this.framesFps = 0;
+            }
         }
 
         this.postUpdate();
