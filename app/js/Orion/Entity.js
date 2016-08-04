@@ -21,15 +21,9 @@ class Entity {
         }
     }
 
-    init() {
-
-    }
-
-    update() {
-    }
-
-    draw() {
-    }
+    init() {}
+    update() {}
+    draw() {}
 
 }
 

@@ -1,5 +1,6 @@
 ﻿import Config from './Config';
 import Utils from './Utils';
+import Fps from './Fps';
 
 import Injector from './Injector';
 import Context from './Context';
@@ -13,9 +14,6 @@ import Program from './Program';
 
 export default class Game {
     constructor(options = {}) {
-
-        // this.options = Utils.extend(this.options, options);
-
         // Get Context
         this.gl = new Context();
 
@@ -25,24 +23,6 @@ export default class Game {
     }
 
     init() {
-
-        // Select FPS div
-        this.fpsContainer = document.getElementById("fps");
-
-        // Timer for animation delta
-        this.lastTime = 0;
-        this.currentTime = 0;
-        this.deltaTime = 0;
-
-        // Initialize timer for FPS Calc
-        this.startTime = Date.now();
-        this.prevTime = this.startTime;
-
-        // Set default fps values
-        this.fpsValue = 0;
-        this.fpsMin = Infinity;
-        this.fpsMax = 0;
-        this.framesFps = 0;
 
         // List of Scenes
         this.sceneList = [];
@@ -78,7 +58,7 @@ export default class Game {
     }
 
     startGameEngine() {
-        console.log("Game: Engine Starting ");
+        console.log("Game: Engine Starting");
         this.isReady = true;
 
         // let scenes know to init now
@@ -92,17 +72,12 @@ export default class Game {
     // GAME LOOP FUNCTIONS
     raf() {
 
-        this.currentTime = Date.now();
-        this.deltaTime = (this.currentTime - this.lastTime) / 1000.0;
-
         // Loop over update and draw functions
-        this.timerBegin();
-        this.update(this.deltaTime);
+        Fps.timerBegin();
+        this.update(Fps.deltaTime);
         this.draw();
-        this.timerEnd();
-
-        this.lastTime = this.currentTime;
-
+        Fps.timerEnd();
+        
         // Call this.raf on every frame
         window.requestAnimationFrame(this.raf.bind(this));
     }
@@ -128,13 +103,8 @@ export default class Game {
             l = sl.length,
             gl = this.gl;
 
-
         // set viewport
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-
-
-
-        // window.polyCount = 0;
 
         // reset background to a grey color
         gl.clearColor(0.5, 0.5, 0.5, 1);
@@ -146,30 +116,8 @@ export default class Game {
                 i++;
             }
         }
-
     }
 
-    // TIMER FUNCTIONS
-    timerBegin() {
-        this.startTime = Date.now();
-    }
-
-    timerEnd() {
-        let time = Date.now();
-
-        this.framesFps++;
-
-        if (time > this.prevTime + 1000) {
-            this.fpsValue = Math.round((this.framesFps * 1000) / (time - this.prevTime));
-            this.fpsMin = Math.min(this.fpsMin, this.fpsValue);
-            this.fpsMax = Math.max(this.fpsMax, this.fpsValue);
-            this.fpsContainer.innerHTML = this.fpsValue + ' FPS (' + this.fpsMin + '-' + this.fpsMax + ')';
-            this.prevTime = time;
-            this.framesFps = 0;
-        }
-
-        return time;
-    }
 
     // SCENE FUNCTIONS
     addScene(scene) {
