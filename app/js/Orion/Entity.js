@@ -1,30 +1,27 @@
-import Utils from './Utils';
+import Utils from "./Utils";
 import Injector from "./Injector";
 
 class Entity {
+  constructor(options = {}) {
+    this.options = Utils.extend(this.options, options);
 
-    constructor(options = {}) {
+    this.uuid = this.options.uuid || Utils.generateUUID();
+    this.buffered = this.options.buffer || false;
+    this.rotation = this.options.rotation || { x: 0, y: 0, z: 0 };
 
-        this.options = Utils.extend(this.options, options);
+    this.x = this.options.x || 0.0;
+    this.y = this.options.y || 0.0;
+    this.z = this.options.z || 0.0;
 
-        this.uuid = this.options.uuid || Utils.generateUUID();
-        this.buffered = this.options.buffer || false;
-        this.rotation = this.options.rotation || {x:0, y:0, z:0};
-
-        this.x = this.options.x || 0.0;
-        this.y = this.options.y || 0.0;
-        this.z = this.options.z || 0.0;
-
-        // Before init check if game engine ready?
-        if(Injector.get("game").isReady){
-            this.init();
-        }
+    // Before init check if game engine ready?
+    if (Injector.get("game").isReady) {
+      this.init();
     }
+  }
 
-    init() {}
-    update() {}
-    draw() {}
-
+  init() {}
+  update() {}
+  draw() {}
 }
 
 export default Entity;
