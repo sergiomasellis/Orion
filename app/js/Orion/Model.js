@@ -1,7 +1,7 @@
 class Model {
     constructor() {
-        this.modelCache = {};
-        this.bufferedModels = {};
+        this.modelCache = new Map();
+        this.bufferedModels = new Map();
         this.allModelsLoaded = false;
         this.readyCallbacks = [];
     }
@@ -24,35 +24,31 @@ class Model {
         console.log("Model: Fetching - ", url);
 
         let modelRequest = new XMLHttpRequest();
-        this.modelCache[id] = {};
-        this.modelCache[id].ready = false;
+        this.modelCache.set(id, {});
+        this.modelCache.get(id).ready = false;
 
         modelRequest.onreadystatechange = () => {
-            if (modelRequest.readyState == 4 && modelRequest.status == 200) {
+            if (modelRequest.readyState === 4 && modelRequest.status === 200) {
 
-                // Get reponse text from ajax/XMLHttpRequest and parse from strings to JS using JSON.parse
-                this.modelCache[id] = JSON.parse(modelRequest.responseText);
-                this.modelCache[id].ready = true;
-                this.bufferedModels[id] = false;
+                // Get response text from ajax/XMLHttpRequest and parse from strings to JS using JSON.parse
+                this.modelCache.set(id, JSON.parse(modelRequest.responseText));
+                this.modelCache.get(id).ready = true;
+                this.bufferedModels.set(id, false);
 
-                // Asume all models are loaded unless this proves false;
+                // Assume all models are loaded unless this proves false;
                 this.allModelsLoaded = true;
-                for (var prop in this.modelCache) {
-                    if (this.modelCache.hasOwnProperty(prop)) {
-                        if (this.modelCache[prop].ready == false) {
-                            this.allModelsLoaded = false;
-                            break;
-                        }
+                this.modelCache.forEach((value, key) => {
+                    if(value.ready === false) {
+                        this.allModelsLoaded = false;
+                        return true;
                     }
-                }
+                });
 
                 // If all models are loaded then run all the functions in the readyCallbacks array
                 if (this.allModelsLoaded) {
                     console.log("Model: All Models Loaded");
                     this.resolve();
                 }
-
-
             }
         };
 

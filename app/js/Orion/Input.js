@@ -1,6 +1,6 @@
 import Injector from "./Injector";
 
-class Input{
+class Input {
     constructor(){
         this.canvas = Injector.get("canvas");
         this.init();

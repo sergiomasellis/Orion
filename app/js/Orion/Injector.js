@@ -2,20 +2,20 @@ import Utils from './Utils';
 
 class Injector {
     constructor() {
-        this.dependencies = {};
-
+        this.dependencies = new Map();
         window.injector = this;
     }
 
-    register(name, instance) {
-        let dep = {};
-            dep[name] = instance;
-
-        Utils.extend(this.dependencies, dep);
+    register(id, instance) {
+        if (!this.dependencies.has(id)){
+            return this.dependencies.set(id, instance);
+        }
     }
 
-    get(prop){
-        return this.dependencies[prop];
+    get(id){
+        if (this.dependencies.has(id)) {
+            return this.dependencies.get(id);
+        }
     }
 }
 

@@ -50,7 +50,7 @@ class Scene {
             while (i < l) {
                 el[i].update(dt);
                 i++;
-            };
+            }
         }
         
         if(cll) { 
@@ -70,7 +70,7 @@ class Scene {
             while (i < l) {
                 el[i].draw();
                 i++;
-            };
+            }
         }
     }
 }

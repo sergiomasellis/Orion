@@ -15,8 +15,7 @@ class Main {
           controller: true,
           textures: [
             ['base', 'img/baseTexture.png'],
-            ['frinlet', 'img/character.png'],
-            ['stormtrooper', 'img/stormtrooper.png']
+            ['frinlet', 'img/character.png']
           ],
           shaders: [
             ['frag','js/shaders/frag.glsl'],
@@ -24,7 +23,6 @@ class Main {
           ],
           models: [
             ['frinlet','js/models/frinlet.json'],
-            ['stormtrooper','js/models/stormtrooper.json'],
             ['cube','js/models/cube.json']
           ]
       });

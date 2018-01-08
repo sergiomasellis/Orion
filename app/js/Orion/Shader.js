@@ -39,7 +39,7 @@ class Shader {
 
         shaderRequest.onreadystatechange = () => {
             
-            if (shaderRequest.readyState == 4 && shaderRequest.status == 200) {
+            if (shaderRequest.readyState === 4 && shaderRequest.status === 200) {
                 this.shaderCache[id] = shaderRequest.responseText;
 
                 console.log("Shader: Added to cache: " + url);
@@ -73,7 +73,7 @@ class Shader {
         this.allShaderCompiled = true;
         for (let prop in this.shaderCompiled) {
             if (this.shaderCompiled.hasOwnProperty(prop)) {
-                if (this.shaderCompiled[prop].ready == false) {
+                if (this.shaderCompiled[prop].ready === false) {
                     this.allShaderCompiled = false;
                     break;
                 }
@@ -87,9 +87,9 @@ class Shader {
     compileShader(url, shaderText, type, cb) {
 
         let shader;
-        if (type == "frag") {
+        if (type === "frag") {
             shader = Injector.get("gl").createShader(Injector.get("gl").FRAGMENT_SHADER);
-        } else if (type == "vert") {
+        } else if (type === "vert") {
             shader = Injector.get("gl").createShader(Injector.get("gl").VERTEX_SHADER);
         } else {
             return null;

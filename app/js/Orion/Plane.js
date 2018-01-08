@@ -4,8 +4,8 @@ import Models from './Model';
 class Plane extends WebGLObject {
     init(){
 
-        Models.modelCache['primativePlane'] = {};
-        Models.modelCache['primativePlane'].verts = [
+        Models.modelCache.set('primativePlane', {});
+        Models.modelCache.get('primativePlane').verts = [
             -1.0, 0.0, 1.0,
             1.0, 0.0, 1.0,
             1.0, 0.0, -1.0,

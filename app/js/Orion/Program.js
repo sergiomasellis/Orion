@@ -6,7 +6,6 @@ class Program {
 
 	constructor(options = {}){
 
-        //merge it
         this.options = Utils.extend(this.options, options);
 
         this.name = this.options.name || "base";

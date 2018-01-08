@@ -28,7 +28,7 @@ class Texture {
         this.textureCache[name].image = new Image();
         this.textureCache[name].image.onload = () => {
             this.handleTextureLoaded(name);
-        }
+        };
         
         this.textureCache[name].image.src = url;
     }
@@ -64,7 +64,7 @@ class Texture {
 
             if (this.textureCache.hasOwnProperty(prop)) {
 
-                if (this.textureCache[prop].ready == false) {
+                if (this.textureCache[prop].ready === false) {
                     this.allTextureCompiled = false;
                     break;
                 }

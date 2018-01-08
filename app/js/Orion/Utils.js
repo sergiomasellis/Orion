@@ -5,12 +5,12 @@ class Utils {
     }
 
     fillArrayWith(arr, size) {
-                // [1,2,3], [1,2,3] 2
+        // [1,2,3], [1,2,3] 2
         let nArray = [];
 
         for (var i = 0; i < size; i++) {
             for (var j = 0; j < arr.length; j++) {
-                  nArray.push(arr[j]);
+                nArray.push(arr[j]);
             }
         }
 

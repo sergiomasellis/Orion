@@ -18,7 +18,7 @@ class Fps {
 		this.fpsMax = 0;
 		this.framesFps = 0;
 
-        this.showFps = false;
+        this.showFps = true;
 	}
 
 	// TIMER FUNCTIONS

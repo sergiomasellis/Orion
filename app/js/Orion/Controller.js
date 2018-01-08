@@ -54,7 +54,7 @@ export default class Controller {
             clearInterval(this.lastMouseMovementTimer);
             
             this.lastMouseMovementTimer = setTimeout(() => {
-              if(this.mouse.lastY == this.mouse.y && this.mouse.lastX == this.mouse.x) {
+              if(this.mouse.lastY === this.mouse.y && this.mouse.lastX === this.mouse.x) {
                 this.mouse.movement.y = 0;
                 this.mouse.movement.x = 0;
               }

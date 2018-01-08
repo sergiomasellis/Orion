@@ -9,7 +9,7 @@ class Resource {
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
-            if(urlOrArr.length == 0) {
+            if(urlOrArr.length === 0) {
                 // throw new Error("there are no reasources to load!");
                 resolve();
             }
@@ -49,7 +49,7 @@ class Resource {
 
             if (this.resourceCache.hasOwnProperty(prop)) {
 
-                if (this.resourceCache[prop].ready == false) {
+                if (this.resourceCache[prop].ready === false) {
                     this.allReasourcesLoaded = false;
                     break;
                 }

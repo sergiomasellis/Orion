@@ -33,7 +33,7 @@ class Context {
       // Add instances to the injector used in input.js
       Injector.register('canvas', this.canvas);
 
-      if(Config.get("engine") == "2d") {
+      if(Config.get("engine") === "2d") {
         Injector.register('context', this.context);
       }else{
         Injector.register('gl', this.gl);
