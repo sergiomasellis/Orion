@@ -17,13 +17,13 @@ export default class Game {
     this.gl = new Context();
 
     this.isReady = false;
-    this.readyCallbacks = [];
+    this.readyCallbacks = new Set();
     this.init();
   }
 
   init() {
     // List of Scenes
-    this.sceneList = [];
+    this.sceneList = new Map();
     this.currentScene = 0;
 
     // Setup keyboard controls
@@ -48,7 +48,7 @@ export default class Game {
   }
 
   onReady(func) {
-    this.readyCallbacks.push(func);
+    this.readyCallbacks.add(func);
   }
 
   startGameEngine() {
@@ -76,25 +76,16 @@ export default class Game {
   }
 
   update(dt) {
-    let i = 0,
-      sl = this.sceneList,
-      l = sl.length;
-
-    if (l > 0) {
+    if (this.sceneList.size > 0) {
       // Fastest possible loop
-      while (i < l) {
-        if (this.currentScene === i) sl[i].update(dt);
-        i++;
-      }
+      this.sceneList.forEach((value, index) => {
+        if (this.currentScene === index) this.sceneList.get(index).update(dt);
+      });
     }
   }
 
   draw() {
-    // console.log(this);
-    let i = 0,
-      sl = this.sceneList,
-      l = sl.length,
-      gl = this.gl;
+    let gl = this.gl;
 
     // set viewport
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -103,11 +94,11 @@ export default class Game {
     gl.clearColor(0.5, 0.5, 0.5, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    if (l > 0) {
-      while (i < l) {
-        if (this.currentScene === i) sl[i].draw();
-        i++;
-      }
+    if (this.sceneList.size > 0) {
+      // Fastest possible loop
+      this.sceneList.forEach((value, index) => {
+        if (this.currentScene === index) this.sceneList.get(index).draw();
+      });
     }
   }
 
@@ -115,7 +106,8 @@ export default class Game {
   addScene(scene) {
     this.onReady(() => {
       console.log("Game: Add Scene - ", scene.options.sceneName);
-      this.sceneList.push(scene);
+      let size = this.sceneList.size;
+      this.sceneList.set(size++, scene);
     });
     return scene;
   }
