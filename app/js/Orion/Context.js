@@ -8,12 +8,14 @@ class Context {
     this.canvas.focus();
 
     //get 2d context
-    this.context = Config.engine === "2d" ? this.canvas.getContext("2d") : this.canvas.getContext("webgl", { antialias: true }) || this.canvas.getContext("experimental-webgl");
+    this.context = Config.engine === "2d" ? this.canvas.getContext("2d") : this.canvas.getContext("webgl2") || this.canvas.getContext("webgl");
     this.setScale = true;
+
     this.gl = this.context; //set webgl context
 
     //enable depth test or you get weird shit.. D: (thanks frinlet)
     this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.depthFunc(this.gl.LEQUAL);
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     this.gl.enable(this.gl.BLEND);
     this.gl.enable(this.gl.CULL_FACE);

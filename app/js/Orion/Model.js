@@ -2,8 +2,8 @@ class Model {
   constructor() {
     this.modelCache = new Map();
     this.bufferedModels = new Map();
+    this.readyCallbacks = new Map();
     this.allModelsLoaded = false;
-    this.readyCallbacks = [];
   }
 
   init() {}

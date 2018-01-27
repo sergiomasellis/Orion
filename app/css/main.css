@@ -23,23 +23,18 @@ img {
 }
 
 canvas{
-    background: #000;
+    background: #fff;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges;
     -ms-interpolation-mode: nearest-neighbor;
+    width: 100vw;
+    height: 100vh;
+    display: block;
 }
 
-#preRenderCanvas{
+.vr {
     position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 5;
-}
-
-#mainCanvas {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 10;
-    /*zoom: 300%;*/
+    top:0;
+    right:0;
+    z-index: 9999;
 }

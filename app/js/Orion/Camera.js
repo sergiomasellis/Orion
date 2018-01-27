@@ -1,5 +1,6 @@
 import Injector from "./Injector";
 import Utils from "./Utils";
+import Config from "./Config";
 
 import * as glMatrix from "gl-matrix";
 
@@ -47,6 +48,14 @@ class Camera {
     this.vx = 0;
     this.vz = 0;
     this.force = 0.05;
+
+    // vr camera configs
+    this.vr = this.options.vr || Config.get("vr") || false;
+    this.vrStarted = false;
+    if (this.vr) {
+      this.pLeftEyeMatrix = glMatrix.mat4.create();
+      this.pRightEyeMatrix = glMatrix.mat4.create();
+    }
   }
 
   update() {
@@ -64,17 +73,55 @@ class Camera {
       }
     }
 
-    glMatrix.mat4.identity(this.pMatrix);
-    glMatrix.mat4.perspective(this.pMatrix, this.fieldOfView, Injector.get("gl").viewportWidth / Injector.get("gl").viewportHeight, this.nearClip, this.farClip);
-    glMatrix.mat4.translate(this.pMatrix, this.pMatrix, [0.0, 0.0, this.distance.z]);
+    if (this.vr && Injector.get("game").isVrStarted) {
+      // You can get the position, orientation, etc. of the display from the current frame's pose
+      // curFramePose is a VRPose object
 
-    glMatrix.mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
-    glMatrix.mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.y + Math.PI, [0.0, 1.0, 0.0]);
+      var curFramePose = Injector.get("vr").frameData.pose;
+      var curPos = curFramePose.position;
+      var curOrient = curFramePose.orientation;
 
-    glMatrix.mat4.translate(this.pMatrix, this.pMatrix, [0.0, this.distance.y, 0.0]);
-    glMatrix.mat4.translate(this.pMatrix, this.pMatrix, [this.x, this.y, this.z]);
+      let leftEyePosition = Injector.get("vr").frameData.leftProjectionMatrix;
 
-    Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pMatrixUniform, false, this.pMatrix);
+      // glMatrix.mat4.identity(leftEyePosition);
+      // glMatrix.mat4.perspective(leftEyePosition, this.fieldOfView, Injector.get("gl").viewportWidth / Injector.get("gl").viewportHeight, this.nearClip, this.farClip);
+      glMatrix.mat4.translate(leftEyePosition, leftEyePosition, [0.0, 0.0, this.distance.z]);
+
+      glMatrix.mat4.rotate(leftEyePosition, leftEyePosition, this.rotation.x, [1.0, 0.0, 0.0]);
+      glMatrix.mat4.rotate(leftEyePosition, leftEyePosition, this.rotation.y + Math.PI, [0.0, 1.0, 0.0]);
+
+      glMatrix.mat4.translate(leftEyePosition, leftEyePosition, [0.0, this.distance.y, 0.0]);
+      glMatrix.mat4.translate(leftEyePosition, leftEyePosition, [this.x, this.y, this.z]);
+
+      Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pMatrixUniform, false, leftEyePosition);
+
+      // somehow update right eye
+      let rightEyePosition = Injector.get("vr").frameData.rightProjectionMatrix;
+
+      // glMatrix.mat4.identity(rightEyePosition);
+      // glMatrix.mat4.perspective(rightEyePosition, this.fieldOfView, Injector.get("gl").viewportWidth / Injector.get("gl").viewportHeight, this.nearClip, this.farClip);
+      glMatrix.mat4.translate(rightEyePosition, rightEyePosition, [0.0, 0.0, this.distance.z]);
+
+      glMatrix.mat4.rotate(rightEyePosition, rightEyePosition, this.rotation.x, [1.0, 0.0, 0.0]);
+      glMatrix.mat4.rotate(rightEyePosition, rightEyePosition, this.rotation.y + Math.PI, [0.0, 1.0, 0.0]);
+
+      glMatrix.mat4.translate(rightEyePosition, rightEyePosition, [0.0, this.distance.y, 0.0]);
+      glMatrix.mat4.translate(rightEyePosition, rightEyePosition, [this.x, this.y, this.z]);
+
+      Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pMatrixUniform, false, rightEyePosition);
+    } else {
+      glMatrix.mat4.identity(this.pMatrix);
+      glMatrix.mat4.perspective(this.pMatrix, this.fieldOfView, Injector.get("gl").viewportWidth / Injector.get("gl").viewportHeight, this.nearClip, this.farClip);
+      glMatrix.mat4.translate(this.pMatrix, this.pMatrix, [0.0, 0.0, this.distance.z]);
+
+      glMatrix.mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
+      glMatrix.mat4.rotate(this.pMatrix, this.pMatrix, this.rotation.y + Math.PI, [0.0, 1.0, 0.0]);
+
+      glMatrix.mat4.translate(this.pMatrix, this.pMatrix, [0.0, this.distance.y, 0.0]);
+      glMatrix.mat4.translate(this.pMatrix, this.pMatrix, [this.x, this.y, this.z]);
+
+      Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pMatrixUniform, false, this.pMatrix);
+    }
   }
 
   lookAt(entity) {
@@ -95,7 +142,7 @@ class Camera {
   }
 
   follow() {
-    // follows moves camera behind point and rotates with a pointww
+    // follows moves camera behind point and rotates with a point
     this.x = -this.focus.x;
     this.y = -this.focus.y;
     this.z = -this.focus.z;

@@ -22,13 +22,13 @@ gulp.task("default", function(cb) {
 });
 
 gulp.task("watch", function() {
-
     gulp.watch('app/index.html', ["copy:html"]);
     gulp.watch("css/**", ["copy:css"]);
     gulp.watch("img/**", ["copy:img"]);
     gulp.watch("app/js/shaders/*.glsl", ["copy:glsl"]);
     gulp.watch("app/js/**/*.js", ["webpack"]);
-    gulp.watch("app/js/models/*.json", ['copy:models']);
+    gulp.watch("app/js/models/*.json", 
+    ['copy:models']);
 });
 
 gulp.task('webserver', function() {

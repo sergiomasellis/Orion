@@ -11,12 +11,17 @@ import Models from "./Model";
 import Texture from "./Texture";
 import Program from "./Program";
 
+// vr
+
+import Vr from "./Vr";
+
 export default class Game {
   constructor() {
     // Get Context
     this.gl = new Context();
 
     this.isReady = false;
+    this.isVrStarted = false;
     this.readyCallbacks = new Set();
     this.init();
   }
@@ -32,6 +37,8 @@ export default class Game {
       Injector.register("controller", this.controller);
     }
 
+    this.baseProgram = null;
+
     // Setup gameOnReady Callback
     Injector.register("game", this);
 
@@ -39,7 +46,13 @@ export default class Game {
     Promise.all([Resource.load(Config.get("images")), Texture.load(Config.get("textures")), Shaders.load(Config.get("shaders")), Models.load(Config.get("models"))])
       .then(() => {
         // Creates Base program for basic model rendering
-        return new Program();
+        this.baseProgram = new Program();
+      })
+      .then(() => {
+        if (Config.get("vr")) {
+          this.vr = new Vr();
+          Injector.register("vr", this.vr);
+        }
       })
       .then(() => {
         console.log("Game: All resources loaded and compiled");
@@ -60,7 +73,11 @@ export default class Game {
       func();
     });
 
-    this.raf();
+    if (this.vr.vrDisplay != null) {
+      this.vrRaf();
+    } else {
+      this.raf();
+    }
   }
 
   // GAME LOOP FUNCTIONS
@@ -75,11 +92,63 @@ export default class Game {
     window.requestAnimationFrame(this.raf.bind(this));
   }
 
+  vrRaf() {
+    // Loop over update and draw functions
+    Fps.timerBegin();
+    this.vrUpdate(Fps.deltaTime);
+    this.vrDraw();
+    Fps.timerEnd();
+
+    // Call this.raf on every frame
+    this.vr.vrDisplay.requestAnimationFrame(this.vrRaf.bind(this));
+  }
+
   update(dt) {
     if (this.sceneList.size > 0) {
       // Fastest possible loop
       this.sceneList.forEach((value, index) => {
         if (this.currentScene === index) this.sceneList.get(index).update(dt);
+      });
+      this.vr.update(dt);
+    }
+  }
+
+  vrUpdate(dt) {
+    if (this.sceneList.size > 0) {
+      // Fastest possible loop
+      this.sceneList.forEach((value, index) => {
+        if (this.currentScene === index) this.sceneList.get(index).update(dt);
+      });
+
+      this.vrDisplay.getFrameData(this.frameData);
+      this.vrDisplay.submitFrame();
+      this.vrUpdate(dt);
+    }
+  }
+
+  vrDraw() {
+    let gl = this.gl;
+
+    // left eye
+    gl.viewport(0, 0, gl.viewportWidth * 0.5, gl.viewportHeight);
+
+    // right eye.
+    gl.viewport(gl.viewportWidth * 0.5, 0, gl.viewportWidth * 0.5, gl.viewportHeight);
+
+    // reset background to a grey color
+    // gl.clearColor(0.5, 0.5, 0.5, 1);
+    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.clearColor(0.5, 0.5, 0.5, 1); // Clear to black, fully opaque
+    gl.clearDepth(1.0); // Clear everything
+    gl.enable(gl.DEPTH_TEST); // Enable depth testing
+    gl.depthFunc(gl.LEQUAL); // Near things obscure far things
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    if (this.sceneList.size > 0) {
+      // Fastest possible loop
+      this.sceneList.forEach((value, index) => {
+        if (this.currentScene === index) this.sceneList.get(index).draw();
       });
     }
   }
@@ -91,7 +160,13 @@ export default class Game {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
     // reset background to a grey color
-    gl.clearColor(0.5, 0.5, 0.5, 1);
+    // gl.clearColor(0.5, 0.5, 0.5, 1);
+    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.clearColor(0.5, 0.5, 0.5, 1); // Clear to black, fully opaque
+    gl.clearDepth(1.0); // Clear everything
+    gl.enable(gl.DEPTH_TEST); // Enable depth testing
+    gl.depthFunc(gl.LEQUAL); // Near things obscure far things
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     if (this.sceneList.size > 0) {

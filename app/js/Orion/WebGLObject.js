@@ -5,7 +5,6 @@ import Texture from "./Texture";
 import Utils from "./Utils";
 
 import * as glMatrix from "gl-matrix";
-// import OpenSimplexNoise from "open-simplex-noise";
 
 class WebGLObject extends Entity {
   init(options = {}) {
@@ -26,30 +25,12 @@ class WebGLObject extends Entity {
 
     this.programName = this.options.programName || "baseProgram";
 
-    // test
-    // const [width, height] = [888, 222];
-    // const canvas = document.querySelector("#mainCanvas2");
-    // const ctx = canvas.getContext("2d");
-    // const imageData = ctx.createImageData(width, height);
-    // const openSimplex = new OpenSimplexNoise(Date.now());
-
-    // for (let x = 0; x < width; x++) {
-    //   for (let y = 0; y < height; y++) {
-    //     const i = (x + y * width) * 4;
-    //     const value = (openSimplex.noise3D(x, y, 1) + 1) * 128;
-    //     imageData.data[i] = value;
-    //     imageData.data[i + 1] = value;
-    //     imageData.data[i + 2] = value;
-    //     imageData.data[i + 3] = 255;
-    //   }
-    // }
-    // ctx.putImageData(imageData, 0, 0);
-
     // Run only after shaders are ready!
     if (!Models.bufferedModels[this.model]) this.initBuffers();
   }
 
   initBuffers() {
+    // add textures
     Injector.get("gl").activeTexture(Injector.get("gl").TEXTURE0 + Texture.textureCache.get(this.texture).id);
     Injector.get("gl").bindTexture(Injector.get("gl").TEXTURE_2D, Texture.textureCache.get(this.texture).compiledTexture);
 
@@ -58,6 +39,7 @@ class WebGLObject extends Entity {
     let uvBuffer = Injector.get("gl").createBuffer();
     let colorBuffer = Injector.get("gl").createBuffer();
     let normalBuffer = Injector.get("gl").createBuffer();
+    let indexBuffer = Injector.get("gl").createBuffer();
 
     let polyCount = Models.modelCache.get(this.model).verts.length / 3;
 
@@ -73,11 +55,14 @@ class WebGLObject extends Entity {
       Models.modelCache.get(this.model).uv = Utils.fillArrayWith([0, 0, 0], polyCount * (2 / 3));
     }
 
+    // if (Models.modelCache.get(this.model).indices === undefined) {}
+
     // vertices
     let vertices = new Float32Array(Models.modelCache.get(this.model).verts);
     let uvs = new Float32Array(Models.modelCache.get(this.model).uv);
     let normals = new Float32Array(Models.modelCache.get(this.model).normals);
     let colors = new Float32Array(Models.modelCache.get(this.model).vColor);
+    let indices = new Uint16Array(Models.modelCache.get(this.model).indices);
 
     // bind vert buffers and add vertices to it
     Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, vertBuffer);
@@ -95,6 +80,10 @@ class WebGLObject extends Entity {
     Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, normalBuffer);
     Injector.get("gl").bufferData(Injector.get("gl").ARRAY_BUFFER, normals, Injector.get("gl").STATIC_DRAW);
 
+    // bind indices buffer
+    // Injector.get("gl").bindBuffer(Injector.get("gl").ELEMENT_ARRAY_BUFFER, indexBuffer);
+    // Injector.get("gl").bufferData(Injector.get("gl").ELEMENT_ARRAY_BUFFER, indices, Injector.get("gl").STATIC_DRAW);
+
     // this should be
     vertBuffer.itemSize = 3;
     vertBuffer.numItems = vertices.length / vertBuffer.itemSize;
@@ -105,6 +94,7 @@ class WebGLObject extends Entity {
     Models.bufferedModels.get(this.model).uvs = uvBuffer;
     Models.bufferedModels.get(this.model).vColor = colorBuffer;
     Models.bufferedModels.get(this.model).normals = normalBuffer;
+    // Models.bufferedModels.get(this.model).indices = indexBuffer;
   }
 
   update() {}
@@ -116,39 +106,57 @@ class WebGLObject extends Entity {
     if (this.programName === "baseProgram") {
       Injector.get("gl").uniform4fv(Injector.get(this.programName).shaderProgram.color, this.color);
 
-      glMatrix.mat4.identity(this.mvMatrix);
-      glMatrix.mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, this.z]);
-      glMatrix.mat4.scale(this.mvMatrix, this.mvMatrix, [this.scale.x, this.scale.y, this.scale.z]);
-      glMatrix.mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
-      glMatrix.mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
-      glMatrix.mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.z, [0.0, 0.0, 1.0]);
+      if (!Injector.get("game").isVrStarted) {
+        glMatrix.mat4.identity(this.mvMatrix);
+        glMatrix.mat4.translate(this.mvMatrix, this.mvMatrix, [this.x, 0.0, this.z]);
+        glMatrix.mat4.scale(this.mvMatrix, this.mvMatrix, [this.scale.x, this.scale.y, this.scale.z]);
+        glMatrix.mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.y, [0.0, 1.0, 0.0]);
+        glMatrix.mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.x, [1.0, 0.0, 0.0]);
+        glMatrix.mat4.rotate(this.mvMatrix, this.mvMatrix, this.rotation.z, [0.0, 0.0, 1.0]);
 
-      Injector.get("gl").activeTexture(Injector.get("gl").TEXTURE0 + Texture.textureCache.get(this.texture).id);
+        Injector.get("gl").activeTexture(Injector.get("gl").TEXTURE0 + Texture.textureCache.get(this.texture).id);
 
-      Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).verts);
-      Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.get("gl").FLOAT, false, 0, 0);
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).verts);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.get("gl").FLOAT, false, 0, 0);
 
-      Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).uvs);
-      Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.uv, 2, Injector.get("gl").FLOAT, false, 0, 0);
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).uvs);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.uv, 2, Injector.get("gl").FLOAT, false, 0, 0);
 
-      Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).vColor);
-      Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.vColor, 3, Injector.get("gl").FLOAT, false, 0, 0);
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).vColor);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.vColor, 3, Injector.get("gl").FLOAT, false, 0, 0);
 
-      Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).normals);
-      Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.normals, 3, Injector.get("gl").FLOAT, false, 0, 0);
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).normals);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.normals, 3, Injector.get("gl").FLOAT, false, 0, 0);
 
-      Injector.get("gl").uniformMatrix4fv(Injector.get(this.programName).shaderProgram.mvMatrixUniform, false, this.mvMatrix);
-      Injector.get("gl").uniform1i(Injector.get(this.programName).shaderProgram.samplerUniform, Texture.textureCache.get(this.texture).id);
-    } else {
-      this.theta += 0.0125;
-      Injector.get("gl").uniform3fv(Injector.get(this.programName).uSunPosUniform, [0, Math.cos(this.theta) * 0.3 + 0.2, -1]);
+        Injector.get("gl").uniformMatrix4fv(Injector.get(this.programName).shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+        Injector.get("gl").uniform1i(Injector.get(this.programName).shaderProgram.samplerUniform, Texture.textureCache.get(this.texture).id);
+      } else {
+        Injector.get("gl").activeTexture(Injector.get("gl").TEXTURE0 + Texture.textureCache.get(this.texture).id);
 
-      Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).verts);
-      Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.get("gl").FLOAT, false, 0, 0);
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).verts);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.position, 3, Injector.get("gl").FLOAT, false, 0, 0);
+
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).uvs);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.uv, 2, Injector.get("gl").FLOAT, false, 0, 0);
+
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).vColor);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.vColor, 3, Injector.get("gl").FLOAT, false, 0, 0);
+
+        Injector.get("gl").bindBuffer(Injector.get("gl").ARRAY_BUFFER, Models.bufferedModels.get(this.model).normals);
+        Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.normals, 3, Injector.get("gl").FLOAT, false, 0, 0);
+
+        Injector.get("gl").uniform1i(Injector.get(this.programName).shaderProgram.samplerUniform, Texture.textureCache.get(this.texture).id);
+        Injector.get("gl").uniformMatrix4fv(Injector.get(this.programName).shaderProgram.mvMatrixUniform, false, Injector.get("vr").frameData.leftViewMatrix);
+      }
     }
 
     // draw to canvas
+    // console.log(Models.bufferedModels.get(this.model).numItems);
     Injector.get("gl").drawArrays(Injector.get("gl").TRIANGLES, 0, Models.bufferedModels.get(this.model).numItems);
+    Injector.get("gl").flush();
+
+    Utils.resizeCanvasToDisplaySize(Injector.get("canvas"));
+    // Injector.get("gl").drawElements(Injector.get("gl").TRIANGLES, Models.modelCache.get(this.model).verts.length, Injector.get("gl").UNSIGNED_BYTE, 0);
   }
 }
 

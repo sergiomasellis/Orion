@@ -1,23 +1,15 @@
+#version 300 es
 precision mediump float;
 
 uniform vec4 color;
 uniform sampler2D uSampler;
 
+in vec2 vUv;
+in lowp vec3 vColor;
+in vec3 vPosition;
 
-varying vec3 vLightWeighting;
-
-
-varying vec2 vUv;
-varying lowp vec3 vColor;
-varying vec3 vPosition;
-
-#define PI 3.141592
-#define iSteps 16
-#define jSteps 8
-
+out vec4 myOutputColor;
 
 void main(void) {
-	vec2 tempUv = vec2(vUv.x, 1.0-vUv.y);
-    // gl_FragColor = vec4(vNormals, 1.0);
-	gl_FragColor = vec4(vColor * vLightWeighting, 1.0) * color * texture2D(uSampler, tempUv);
+	myOutputColor = vec4(vColor, 1.0) * color * texture(uSampler, vec2(vUv.x, 1.0-vUv.y));
 }

@@ -13,6 +13,7 @@ class Main {
       Config.set({
           engine: "3d",
           controller: true,
+          vr: true,
           textures: [
             ['base', 'img/baseTexture.png'],
             ['frinlet', 'img/character.png']
