@@ -66,6 +66,11 @@ class Program {
     this.shaderProgram.pMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "pMatrix");
     this.shaderProgram.mvMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "mVMatrix");
     this.shaderProgram.samplerUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "uSampler");
+
+
+    // vr eye positions
+    this.shaderProgram.pLeftEyeMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "pLeftEyeMatrix");
+    this.shaderProgram.pRightEyeMatrixUniform = Injector.get("gl").getUniformLocation(this.shaderProgram, "pRightEyeMatrix");
   }
 
   attributes() {

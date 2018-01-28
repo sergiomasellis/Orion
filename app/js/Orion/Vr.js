@@ -23,7 +23,7 @@ class Vr {
         if (displays.length > 0) {
           this.vrDisplay = displays[0];
           var btn = document.querySelector(".vr button");
-          console.log(Injector.get("canvas"));
+        
           btn.addEventListener("click", () => {
             this.vrDisplay.requestPresent([{ source: Injector.get("canvas") }]).then(() => {
               console.log("Presenting to WebVR display");

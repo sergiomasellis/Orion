@@ -93,7 +93,7 @@ class Camera {
       glMatrix.mat4.translate(leftEyePosition, leftEyePosition, [0.0, this.distance.y, 0.0]);
       glMatrix.mat4.translate(leftEyePosition, leftEyePosition, [this.x, this.y, this.z]);
 
-      Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pMatrixUniform, false, leftEyePosition);
+      Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pLeftEyeMatrixUniform, false, leftEyePosition);
 
       // somehow update right eye
       let rightEyePosition = Injector.get("vr").frameData.rightProjectionMatrix;
@@ -108,7 +108,7 @@ class Camera {
       glMatrix.mat4.translate(rightEyePosition, rightEyePosition, [0.0, this.distance.y, 0.0]);
       glMatrix.mat4.translate(rightEyePosition, rightEyePosition, [this.x, this.y, this.z]);
 
-      Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pMatrixUniform, false, rightEyePosition);
+      Injector.get("gl").uniformMatrix4fv(Injector.get("baseProgram").shaderProgram.pRightEyeMatrixUniform, false, rightEyePosition);
     } else {
       glMatrix.mat4.identity(this.pMatrix);
       glMatrix.mat4.perspective(this.pMatrix, this.fieldOfView, Injector.get("gl").viewportWidth / Injector.get("gl").viewportHeight, this.nearClip, this.farClip);

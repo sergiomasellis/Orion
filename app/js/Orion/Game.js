@@ -73,20 +73,22 @@ export default class Game {
       func();
     });
 
-    if (this.vr.vrDisplay != null) {
-      this.vrRaf();
-    } else {
-      this.raf();
-    }
+    this.raf();
   }
 
   // GAME LOOP FUNCTIONS
   raf() {
     // Loop over update and draw functions
-    Fps.timerBegin();
+    // Fps.timerBegin();
     this.update(Fps.deltaTime);
     this.draw();
-    Fps.timerEnd();
+    // Fps.timerEnd();
+
+    // Check if vr is ready
+    if (this.isVrStarted) {
+      this.vrRaf();
+      return false;
+    }
 
     // Call this.raf on every frame
     window.requestAnimationFrame(this.raf.bind(this));
@@ -94,10 +96,10 @@ export default class Game {
 
   vrRaf() {
     // Loop over update and draw functions
-    Fps.timerBegin();
+    // Fps.timerBegin();
     this.vrUpdate(Fps.deltaTime);
     this.vrDraw();
-    Fps.timerEnd();
+    // Fps.timerEnd();
 
     // Call this.raf on every frame
     this.vr.vrDisplay.requestAnimationFrame(this.vrRaf.bind(this));
@@ -109,7 +111,7 @@ export default class Game {
       this.sceneList.forEach((value, index) => {
         if (this.currentScene === index) this.sceneList.get(index).update(dt);
       });
-      this.vr.update(dt);
+      // console.log('updating')
     }
   }
 
@@ -120,20 +122,12 @@ export default class Game {
         if (this.currentScene === index) this.sceneList.get(index).update(dt);
       });
 
-      this.vrDisplay.getFrameData(this.frameData);
-      this.vrDisplay.submitFrame();
-      this.vrUpdate(dt);
+      this.vr.vrDisplay.getFrameData(this.vr.frameData);
     }
   }
 
   vrDraw() {
     let gl = this.gl;
-
-    // left eye
-    gl.viewport(0, 0, gl.viewportWidth * 0.5, gl.viewportHeight);
-
-    // right eye.
-    gl.viewport(gl.viewportWidth * 0.5, 0, gl.viewportWidth * 0.5, gl.viewportHeight);
 
     // reset background to a grey color
     // gl.clearColor(0.5, 0.5, 0.5, 1);
@@ -145,10 +139,18 @@ export default class Game {
     gl.depthFunc(gl.LEQUAL); // Near things obscure far things
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    // console.log("in vr draw");
+
     if (this.sceneList.size > 0) {
       // Fastest possible loop
       this.sceneList.forEach((value, index) => {
-        if (this.currentScene === index) this.sceneList.get(index).draw();
+        gl.viewport(0, 0, Injector.get("canvas").width * 0.5, Injector.get("canvas").height);
+        this.sceneList.get(index).draw();
+
+        gl.viewport(Injector.get("canvas").width * 0.5, 0, Injector.get("canvas").width * 0.5, Injector.get("canvas").height);
+        this.sceneList.get(index).draw();
+
+        this.vr.vrDisplay.submitFrame();
       });
     }
   }
@@ -158,6 +160,8 @@ export default class Game {
 
     // set viewport
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+
+    // console.log('in draw')
 
     // reset background to a grey color
     // gl.clearColor(0.5, 0.5, 0.5, 1);

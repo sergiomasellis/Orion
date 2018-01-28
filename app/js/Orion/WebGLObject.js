@@ -146,16 +146,24 @@ class WebGLObject extends Entity {
         Injector.get("gl").vertexAttribPointer(Injector.get(this.programName).shaderProgram.normals, 3, Injector.get("gl").FLOAT, false, 0, 0);
 
         Injector.get("gl").uniform1i(Injector.get(this.programName).shaderProgram.samplerUniform, Texture.textureCache.get(this.texture).id);
+
+        // left eye
         Injector.get("gl").uniformMatrix4fv(Injector.get(this.programName).shaderProgram.mvMatrixUniform, false, Injector.get("vr").frameData.leftViewMatrix);
+        Injector.get("gl").drawArrays(Injector.get("gl").TRIANGLES, 0, Models.bufferedModels.get(this.model).numItems);
+
+        // right eye
+        Injector.get("gl").uniformMatrix4fv(Injector.get(this.programName).shaderProgram.mvMatrixUniform, false, Injector.get("vr").frameData.rightViewMatrix);
+        Injector.get("gl").drawArrays(Injector.get("gl").TRIANGLES, 0, Models.bufferedModels.get(this.model).numItems);
+        // Injector.get("gl").flush();
       }
     }
 
     // draw to canvas
     // console.log(Models.bufferedModels.get(this.model).numItems);
-    Injector.get("gl").drawArrays(Injector.get("gl").TRIANGLES, 0, Models.bufferedModels.get(this.model).numItems);
+    // Injector.get("gl").drawArrays(Injector.get("gl").TRIANGLES, 0, Models.bufferedModels.get(this.model).numItems);
     Injector.get("gl").flush();
 
-    Utils.resizeCanvasToDisplaySize(Injector.get("canvas"));
+    // Utils.resizeCanvasToDisplaySize(Injector.get("canvas"));
     // Injector.get("gl").drawElements(Injector.get("gl").TRIANGLES, Models.modelCache.get(this.model).verts.length, Injector.get("gl").UNSIGNED_BYTE, 0);
   }
 }
