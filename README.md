@@ -1,6 +1,6 @@
 ![](http://i.imgur.com/9bSkoUB.png)
 
-####WebGL Game Engine
+#### WebGL Game Engine
 
 Orion is a ES6 Webgl engine written by Sergio Masellis in collab with Ryan Collins.
 
