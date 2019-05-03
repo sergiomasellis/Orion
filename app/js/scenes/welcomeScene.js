@@ -20,31 +20,31 @@ class WelcomeScene extends Scene {
 
     this.addEntity(playerObj);
 
-    // let st = [];
-    // let grid = 40;
+    let st = [];
+    let grid = 40;
 
-    // for (let x = -grid; x < grid; x += 5) {
-    //     for (let z = -grid; z < grid; z += 5) {
+    for (let x = -grid; x < grid; x += 5) {
+        for (let z = -grid; z < grid; z += 5) {
 
-    //         let name = "planes" + z + x;
+            let name = "planes" + z + x;
 
-    //         st[x] = new Plane({
-    //             name: name,
-    //             model: "cube",
-    //             texture: "base",
-    //             scale: {
-    //                 x: 1.0,
-    //                 y: 1.0,
-    //                 z: 1.0
-    //             }
-    //         });
+            st[x] = new StormTrooper({
+                name: name,
+                model: "frinlet",
+                texture: "frinlet",
+                scale: {
+                    x: 1.0,
+                    y: 1.0,
+                    z: 1.0
+                }
+            });
 
-    //         st[x].x = x;
-    //         st[x].z = z;
+            st[x].x = x;
+            st[x].z = z;
 
-    //         this.addEntity(st[x]);
-    //     }
-    // }
+            this.addEntity(st[x]);
+        }
+    }
 
     let terrain = new Plane({
       width: 1,

@@ -1,15 +1,34 @@
 import Injector from "./Injector";
-import Program from "./Program";
+// import Program from "./Program";
 import Utils from "./Utils";
-import math from "./Math";
+// import math from "./Math";
 
 class Vr {
   constructor(options = {}) {
     this.options = Utils.extend(this.options, options);
+    this.willInit = false;
+    
+    try {
+      
+      this.frameData = new VRFrameData() || null;
+      this.vrDisplay = null;
+      this.willInit = true;
+
+    } catch (error) {
+        console.info('WebVR 1.1 Not supported');
+        this.willInit = false;
+    }
+    
+    
     // We reuse this every frame to avoid generating garbage
-    this.frameData = new VRFrameData();
-    this.vrDisplay = null;
-    this.init();
+
+    
+
+
+    if(this.willInit) {
+      this.init();
+    }
+    
   }
 
   init() {

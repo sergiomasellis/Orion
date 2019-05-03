@@ -12,7 +12,6 @@ import Texture from "./Texture";
 import Program from "./Program";
 
 // vr
-
 import Vr from "./Vr";
 
 export default class Game {

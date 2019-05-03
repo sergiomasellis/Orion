@@ -4,7 +4,7 @@ import Injector from "./Injector";
 class Context {
   constructor() {
     //select canvas
-    this.canvas = document.getElementById("mainCanvas");
+    this.canvas = document.getElementById("mainCanvas") ||  document.body.appendChild(document.createElement("canvas"));
     this.canvas.focus();
 
     //get 2d context
